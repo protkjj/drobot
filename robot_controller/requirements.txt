@@ -1,0 +1,8 @@
+# Pygame 2D Simulation (ROS 없이 사용 가능)
+pygame>=2.5.0
+
+# PyBullet 3D Simulation (선택사항 - Ubuntu/Linux 권장)
+# pybullet>=3.2.5
+
+# 기타 유틸리티
+numpy>=1.20.0
