@@ -16,6 +16,13 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
 
+    - Class: rviz_default_plugins/Map
+      Name: Map
+      Value: true
+      Topic:
+        Value: /map
+      Color Scheme: map
+
     - Class: rviz_default_plugins/RobotModel
       Name: RobotModel
       Value: true
@@ -40,8 +47,14 @@ Visualization Manager:
       Size (m): 0.05
       Color: 255; 0; 0
 
+    - Class: rviz_default_plugins/Image
+      Name: Camera
+      Value: true
+      Topic:
+        Value: /camera/image_raw
+
   Global Options:
-    Fixed Frame: base_footprint
+    Fixed Frame: map
     Frame Rate: 30
 
   Name: root

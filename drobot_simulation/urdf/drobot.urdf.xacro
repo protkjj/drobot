@@ -15,7 +15,8 @@
   <xacro:property name="wheel_radius" value="0.05"/>
   <xacro:property name="wheel_width" value="0.04"/>
   <xacro:property name="wheel_mass" value="0.2"/>
-  <xacro:property name="wheel_base" value="0.24"/>  <!-- 바퀴 간 거리 -->
+  <xacro:property name="wheel_base" value="0.24"/>  <!-- 좌우 바퀴 간 거리 -->
+  <xacro:property name="wheel_separation_length" value="0.20"/>  <!-- 앞뒤 바퀴 간 거리 -->
 
   <!-- 프로펠러 파라미터 -->
   <xacro:property name="prop_radius" value="0.08"/>
@@ -57,8 +58,8 @@
              izz="${m*r*r/2}"/>
   </xacro:macro>
 
-  <!-- 바퀴 매크로 -->
-  <xacro:macro name="wheel" params="prefix y_offset">
+  <!-- 바퀴 매크로 (4바퀴 지원) -->
+  <xacro:macro name="wheel" params="prefix x_offset y_offset">
     <link name="${prefix}_wheel">
       <visual>
         <geometry>
@@ -83,7 +84,7 @@
     <joint name="${prefix}_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="${prefix}_wheel"/>
-      <origin xyz="0 ${y_offset} 0" rpy="0 0 0"/>
+      <origin xyz="${x_offset} ${y_offset} 0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <dynamics damping="0.1" friction="0.1"/>
     </joint>
@@ -175,42 +176,16 @@
   </gazebo>
 
   <!-- ==================== -->
-  <!-- WHEELS (바퀴)        -->
+  <!-- WHEELS (4바퀴 스키드 스티어) -->
   <!-- ==================== -->
 
-  <xacro:wheel prefix="left" y_offset="${wheel_base/2}"/>
-  <xacro:wheel prefix="right" y_offset="${-wheel_base/2}"/>
+  <!-- 앞바퀴 -->
+  <xacro:wheel prefix="front_left"  x_offset="${wheel_separation_length/2}"  y_offset="${wheel_base/2}"/>
+  <xacro:wheel prefix="front_right" x_offset="${wheel_separation_length/2}"  y_offset="${-wheel_base/2}"/>
 
-  <!-- 캐스터 휠 (보조 바퀴) -->
-  <link name="caster_wheel">
-    <visual>
-      <geometry>
-        <sphere radius="${wheel_radius * 0.5}"/>
-      </geometry>
-      <material name="gray"/>
-    </visual>
-    <collision>
-      <geometry>
-        <sphere radius="${wheel_radius * 0.5}"/>
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
-    </inertial>
-  </link>
-
-  <joint name="caster_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="caster_wheel"/>
-    <origin xyz="${-body_length/2 + 0.03} 0 ${-wheel_radius * 0.5}" rpy="0 0 0"/>
-  </joint>
-
-  <gazebo reference="caster_wheel">
-    <mu1>0.001</mu1>
-    <mu2>0.001</mu2>
-    <material>Gazebo/Grey</material>
-  </gazebo>
+  <!-- 뒷바퀴 -->
+  <xacro:wheel prefix="rear_left"   x_offset="${-wheel_separation_length/2}" y_offset="${wheel_base/2}"/>
+  <xacro:wheel prefix="rear_right"  x_offset="${-wheel_separation_length/2}" y_offset="${-wheel_base/2}"/>
 
   <!-- ==================== -->
   <!-- PROPELLERS (프로펠러) -->
@@ -242,6 +217,40 @@
     <origin xyz="0 0 ${body_height + 0.01}" rpy="0 0 0"/>
   </joint>
 
+  <!-- Camera -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.02 0.04 0.02"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.02 0.04 0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <xacro:box_inertia m="0.05" x="0.02" y="0.04" z="0.02"/>
+    </inertial>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${body_length/2} 0 ${body_height/2 + 0.02}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Camera optical frame (ROS convention: Z forward, X right, Y down) -->
+  <link name="camera_optical_frame"/>
+
+  <joint name="camera_optical_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="camera_optical_frame"/>
+    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+  </joint>
+
   <!-- LiDAR (옵션) -->
   <link name="lidar_link">
     <visual>
@@ -271,11 +280,15 @@
   <!-- GAZEBO PLUGINS       -->
   <!-- ==================== -->
 
-  <!-- Differential Drive (지상 모드) -->
+  <!-- Skid Steer Drive (4바퀴) -->
   <gazebo>
     <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
-      <left_joint>left_wheel_joint</left_joint>
-      <right_joint>right_wheel_joint</right_joint>
+      <!-- 왼쪽 바퀴들 -->
+      <left_joint>front_left_wheel_joint</left_joint>
+      <left_joint>rear_left_wheel_joint</left_joint>
+      <!-- 오른쪽 바퀴들 -->
+      <right_joint>front_right_wheel_joint</right_joint>
+      <right_joint>rear_right_wheel_joint</right_joint>
       <wheel_separation>${wheel_base}</wheel_separation>
       <wheel_radius>${wheel_radius}</wheel_radius>
       <max_linear_acceleration>1.0</max_linear_acceleration>
@@ -292,8 +305,12 @@
   <gazebo>
     <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
       <topic>joint_states</topic>
-      <joint_name>left_wheel_joint</joint_name>
-      <joint_name>right_wheel_joint</joint_name>
+      <!-- 4바퀴 조인트 -->
+      <joint_name>front_left_wheel_joint</joint_name>
+      <joint_name>front_right_wheel_joint</joint_name>
+      <joint_name>rear_left_wheel_joint</joint_name>
+      <joint_name>rear_right_wheel_joint</joint_name>
+      <!-- 프로펠러 조인트 -->
       <joint_name>front_left_propeller_joint</joint_name>
       <joint_name>front_right_propeller_joint</joint_name>
       <joint_name>rear_left_propeller_joint</joint_name>
@@ -333,6 +350,27 @@
         </range>
       </lidar>
       <visualize>true</visualize>
+    </sensor>
+  </gazebo>
+
+  <!-- Camera Sensor -->
+  <gazebo reference="camera_link">
+    <sensor name="camera" type="camera">
+      <topic>camera/image_raw</topic>
+      <update_rate>30</update_rate>
+      <gz_frame_id>camera_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>100</far>
+        </clip>
+      </camera>
     </sensor>
   </gazebo>
 

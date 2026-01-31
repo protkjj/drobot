@@ -21,6 +21,16 @@ install(
   DESTINATION share/${PROJECT_NAME}/
 )
 
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python scripts
+install(PROGRAMS
+  drobot_simulation/odom_to_tf.py
+  drobot_simulation/auto_explorer.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
