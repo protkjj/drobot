@@ -7,25 +7,48 @@ SLAM + Nav2 + Auto Explorer 한번에 실행
 
 실행 방법:
   ros2 launch drobot_simulation auto_explore.launch.py
-  ros2 launch drobot_simulation auto_explore.launch.py world:=full_world
+  ros2 launch drobot_simulation auto_explore.launch.py world:=f1_circuit
+  ros2 launch drobot_simulation auto_explore.launch.py world:=warehouse
 """
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, GroupAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, GroupAction, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from nav2_common.launch import RewrittenYaml
 
+# 맵별 기본 스폰 위치 (장애물 없는 안전한 위치)
+WORLD_SPAWN_POSITIONS = {
+    'full_world': (1.0, 1.0),
+    'empty': (0.0, 0.0),          # 10x10m 맵 중앙
+    'simple_room': (0.0, 0.0),
+    'warehouse': (0.0, -3.0),      # 선반 아래쪽 빈 공간
+    'f1_circuit': (0.0, 3.5),      # 트랙 위 (빨간/파란 경계 사이)
+    'office_maze': (-4.0, -3.0),   # 미로 코너 빈 공간
+}
 
-def generate_launch_description():
+
+def launch_setup(context, *args, **kwargs):
     pkg_drobot_sim = get_package_share_directory('drobot_simulation')
 
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    world = LaunchConfiguration('world', default='full_world')
-    spawn_x = LaunchConfiguration('spawn_x', default='0.0')
-    spawn_y = LaunchConfiguration('spawn_y', default='0.0')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    world = LaunchConfiguration('world')
+
+    # 월드 이름 가져오기
+    world_name = context.launch_configurations.get('world', 'full_world')
+
+    # 사용자가 spawn 위치를 지정했는지 확인
+    user_spawn_x = context.launch_configurations.get('spawn_x', None)
+    user_spawn_y = context.launch_configurations.get('spawn_y', None)
+
+    # 기본 스폰 위치 (맵별)
+    default_x, default_y = WORLD_SPAWN_POSITIONS.get(world_name, (0.0, 0.0))
+
+    # 사용자 지정값이 없으면 기본값 사용
+    spawn_x = user_spawn_x if user_spawn_x else str(default_x)
+    spawn_y = user_spawn_y if user_spawn_y else str(default_y)
 
     # Nav2 params
     nav2_params = os.path.join(pkg_drobot_sim, 'config', 'nav2_params.yaml')
@@ -37,14 +60,14 @@ def generate_launch_description():
         convert_types=True
     )
 
-    # 1. Simulation
+    # 1. Simulation (맵별 기본 스폰 위치 적용)
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_drobot_sim, 'launch', 'simulation.launch.py')
         ),
         launch_arguments={
-            'use_sim_time': use_sim_time,
-            'world': world,
+            'use_sim_time': 'true',
+            'world': world_name,
             'spawn_x': spawn_x,
             'spawn_y': spawn_y,
         }.items()
@@ -175,14 +198,19 @@ def generate_launch_description():
         ]
     )
 
-    return LaunchDescription([
-        DeclareLaunchArgument('use_sim_time', default_value='true'),
-        DeclareLaunchArgument('world', default_value='full_world'),
-        DeclareLaunchArgument('spawn_x', default_value='0.0'),
-        DeclareLaunchArgument('spawn_y', default_value='0.0'),
-
+    return [
         simulation,
         localization,
         slam_and_nav2,
         auto_explorer,
+    ]
+
+
+def generate_launch_description():
+    return LaunchDescription([
+        DeclareLaunchArgument('use_sim_time', default_value='true'),
+        DeclareLaunchArgument('world', default_value='full_world'),
+        DeclareLaunchArgument('spawn_x', default_value=''),  # 빈값 = 맵별 기본값 사용
+        DeclareLaunchArgument('spawn_y', default_value=''),  # 빈값 = 맵별 기본값 사용
+        OpaqueFunction(function=launch_setup),
     ])

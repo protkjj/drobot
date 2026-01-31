@@ -37,16 +37,15 @@ ekf_filter_node:
     odom0_queue_size: 10
 
     # ========== 센서 2: IMU ==========
-    # IMU는 roll/pitch 자세와 가속도만 사용
-    # yaw는 오도메트리에서 가져옴 (IMU yaw 드리프트 방지)
+    # IMU에서 회전 속도(yaw rate)도 사용하여 localization 개선
     imu0: /imu
     imu0_config: [false, false, false,
                   true,  true,  false,
-                  false, false, false,
-                  true,  true,  false,
+                  false, false, true,
+                  true,  true,  true,
                   true,  true,  false]
-    # orientation:       roll, pitch, yaw(사용안함)
-    # angular velocity:  roll, pitch, yaw(사용안함)
+    # orientation:       roll, pitch, yaw(사용안함 - drift 때문)
+    # angular velocity:  roll, pitch, yaw(사용!)  <- 회전 속도 사용
     # linear accel:      x,    y,     z(사용안함)
     imu0_differential: false
     imu0_relative: false

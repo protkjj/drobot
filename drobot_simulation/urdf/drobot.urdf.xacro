@@ -141,7 +141,8 @@
       <geometry>
         <mesh filename="package://drobot_simulation/meshes/drobot_body.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <origin xyz="0 0 -0.05" rpy="1.5708 0 0"/>
+      <!-- STL 원점 보정: 로봇 중심으로 이동 -->
+      <origin xyz="-0.18 0.2 -0.05" rpy="1.5708 0 0"/>
       <material name="orange"/>
     </visual>
     <collision>
@@ -237,7 +238,8 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="0 0 ${body_height + 0.05}" rpy="0 0 0"/>
+    <!-- LiDAR 위치 보정: 스캔이 앞+오른쪽으로 밀려서 앞+오른쪽으로 이동 -->
+    <origin xyz="0.05 -0.05 ${body_height + 0.05}" rpy="0 0 0"/>
   </joint>
 
   <!-- ==================== -->
@@ -305,7 +307,7 @@
           </horizontal>
         </scan>
         <range>
-          <min>0.1</min>
+          <min>0.35</min>
           <max>12.0</max>
           <resolution>0.01</resolution>
         </range>

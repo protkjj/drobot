@@ -18,7 +18,7 @@ amcl:
     lambda_short: 0.1
     laser_likelihood_max_dist: 2.0
     laser_max_range: 12.0
-    laser_min_range: 0.1
+    laser_min_range: 0.35
     laser_model_type: "likelihood_field"
     max_beams: 60
     max_particles: 2000
@@ -107,13 +107,13 @@ controller_server:
       sim_time: 1.7
       linear_granularity: 0.05
       angular_granularity: 0.025
-      transform_tolerance: 0.2
+      transform_tolerance: 0.5
       xy_goal_tolerance: 0.25
       trans_stopped_velocity: 0.25
       short_circuit_trajectory_evaluation: true
       stateful: true
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
+      BaseObstacle.scale: 0.10        # 0.02 → 0.10 (벽 회피 5배 강화)
       PathAlign.scale: 32.0
       PathAlign.forward_point_distance: 0.1
       GoalAlign.scale: 24.0
@@ -136,12 +136,12 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.22            # 실제 로봇 반경 (0.30x0.20 → 대각선/2 ≈ 0.18, 여유 포함)
+      robot_radius: 0.01            # 최소화 (Start occupied 방지)
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0     # 더 가파른 비용 곡선 (벽 근처 회피하면서도 통과 가능)
-        inflation_radius: 0.35       # 좁은 통로 통과 가능 (총 ~0.57m)
+        cost_scaling_factor: 2.5     # 좁은 통로 통과 허용하면서 넓은 길 선호
+        inflation_radius: 0.35       # LiDAR min range와 동일 (좁은 통로 통과)
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: true
@@ -159,9 +159,9 @@ local_costmap:
           marking: true
           data_type: "LaserScan"
           raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
+          raytrace_min_range: 0.35
           obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
+          obstacle_min_range: 0.35
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: true
@@ -175,7 +175,7 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: true
-      robot_radius: 0.22            # local_costmap과 동일
+      robot_radius: 0.01            # 최소화 (Start occupied 방지)
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -190,16 +190,16 @@ global_costmap:
           marking: true
           data_type: "LaserScan"
           raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
+          raytrace_min_range: 0.35
           obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
+          obstacle_min_range: 0.35
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: true
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0     # local_costmap과 동일
-        inflation_radius: 0.35       # 좁은 통로 통과 가능
+        cost_scaling_factor: 2.5     # local_costmap과 동일
+        inflation_radius: 0.35       # 좁은 통로 통과
       always_send_full_costmap: true
 
 planner_server:
@@ -245,7 +245,7 @@ behavior_server:
       plugin: "nav2_behaviors::AssistedTeleop"
     global_frame: odom
     robot_base_frame: base_footprint
-    transform_tolerance: 0.1
+    transform_tolerance: 0.5
     use_sim_time: true
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
@@ -286,7 +286,7 @@ collision_monitor:
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "cmd_vel"
     state_topic: "collision_monitor_state"
-    transform_tolerance: 0.2
+    transform_tolerance: 0.5
     source_timeout: 1.0
     base_shift_correction: true
     stop_pub_timeout: 2.0
