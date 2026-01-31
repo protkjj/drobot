@@ -58,16 +58,9 @@
              izz="${m*r*r/2}"/>
   </xacro:macro>
 
-  <!-- 바퀴 매크로 (4바퀴 지원) -->
+  <!-- 바퀴 매크로 (visual 제거 - 통째 STL에 포함) -->
   <xacro:macro name="wheel" params="prefix x_offset y_offset">
     <link name="${prefix}_wheel">
-      <visual>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-        <material name="black"/>
-      </visual>
       <collision>
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
@@ -143,14 +136,13 @@
   <link name="base_footprint"/>
 
   <link name="base_link">
-    <visual>
+    <!-- 통째 STL -->
+    <visual name="body_mesh">
       <geometry>
-        <!-- STL 파일로 교체하려면 아래 주석 해제 -->
-        <!-- <mesh filename="package://drobot_simulation/meshes/drone_body.stl" scale="0.001 0.001 0.001"/> -->
-        <box size="${body_length} ${body_width} ${body_height}"/>
+        <mesh filename="package://drobot_simulation/meshes/drobot_body.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
-      <material name="blue"/>
+      <origin xyz="0 0 -0.05" rpy="1.5708 0 0"/>
+      <material name="orange"/>
     </visual>
     <collision>
       <geometry>
@@ -188,27 +180,11 @@
   <xacro:wheel prefix="rear_right"  x_offset="${-wheel_separation_length/2}" y_offset="${-wheel_base/2}"/>
 
   <!-- ==================== -->
-  <!-- PROPELLERS (프로펠러) -->
-  <!-- ==================== -->
-
-  <!-- 쿼드콥터 배치: X 형태 -->
-  <xacro:propeller prefix="front_left"  x_offset="${arm_length * 0.707}"  y_offset="${arm_length * 0.707}"  rotation_dir="cw"/>
-  <xacro:propeller prefix="front_right" x_offset="${arm_length * 0.707}"  y_offset="${-arm_length * 0.707}" rotation_dir="ccw"/>
-  <xacro:propeller prefix="rear_left"   x_offset="${-arm_length * 0.707}" y_offset="${arm_length * 0.707}"  rotation_dir="ccw"/>
-  <xacro:propeller prefix="rear_right"  x_offset="${-arm_length * 0.707}" y_offset="${-arm_length * 0.707}" rotation_dir="cw"/>
-
-  <!-- ==================== -->
   <!-- SENSORS              -->
   <!-- ==================== -->
 
-  <!-- IMU -->
+  <!-- IMU (visual 제거 - STL에 포함) -->
   <link name="imu_link">
-    <visual>
-      <geometry>
-        <box size="0.02 0.02 0.01"/>
-      </geometry>
-      <material name="orange"/>
-    </visual>
   </link>
 
   <joint name="imu_joint" type="fixed">
@@ -217,14 +193,8 @@
     <origin xyz="0 0 ${body_height + 0.01}" rpy="0 0 0"/>
   </joint>
 
-  <!-- Camera -->
+  <!-- Camera (visual 제거 - STL에 포함) -->
   <link name="camera_link">
-    <visual>
-      <geometry>
-        <box size="0.02 0.04 0.02"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
     <collision>
       <geometry>
         <box size="0.02 0.04 0.02"/>
@@ -251,14 +221,8 @@
     <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
   </joint>
 
-  <!-- LiDAR (옵션) -->
+  <!-- LiDAR (visual 제거 - STL에 포함) -->
   <link name="lidar_link">
-    <visual>
-      <geometry>
-        <cylinder radius="0.03" length="0.04"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
     <collision>
       <geometry>
         <cylinder radius="0.03" length="0.04"/>
@@ -312,11 +276,6 @@
       <joint_name>front_right_wheel_joint</joint_name>
       <joint_name>rear_left_wheel_joint</joint_name>
       <joint_name>rear_right_wheel_joint</joint_name>
-      <!-- 프로펠러 조인트 -->
-      <joint_name>front_left_propeller_joint</joint_name>
-      <joint_name>front_right_propeller_joint</joint_name>
-      <joint_name>rear_left_propeller_joint</joint_name>
-      <joint_name>rear_right_propeller_joint</joint_name>
     </plugin>
   </gazebo>
 
