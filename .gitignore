@@ -41,6 +41,10 @@ build/
 *.bak
 *.log
 
+# ROS 2 TF frame debugging files
+frames_*.gv
+frames_*.pdf
+
 # Large files (optional - uncomment if needed)
 # *.step
 # *.stl
