@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>drobot_simulation</name>
+  <version>0.1.0</version>
+  <description>
+    Drobot Gazebo Simulation Package
+    Ground + Flight Hybrid Robot (Caltech M4 inspired)
+  </description>
+
+  <maintainer email="drobot@example.com">Drobot Team</maintainer>
+  <license>MIT</license>
+
+  <author>이강준</author>
+  <author>김동욱</author>
+  <author>이태호</author>
+  <author>권현우</author>
+  <author>권해찬</author>
+  <author>송은서</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- ROS 2 Core -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <!-- URDF/Xacro -->
+  <depend>xacro</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>joint_state_publisher_gui</depend>
+
+  <!-- Gazebo -->
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+
+  <!-- Visualization -->
+  <depend>rviz2</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
