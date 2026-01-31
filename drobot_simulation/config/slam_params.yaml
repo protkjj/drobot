@@ -35,16 +35,16 @@ slam_toolbox:
     debug_logging: false
 
     # ===== 키프레임 생성 빈도 (더 자주 생성하여 정확도 향상) =====
-    minimum_travel_distance: 0.2  # 0.5 → 0.2m (더 자주 키프레임 생성)
-    minimum_travel_heading: 0.2   # 0.5 → 0.2rad (회전 시에도 자주 생성)
+    minimum_travel_distance: 0.15  # 0.2 → 0.15m (더 자주 키프레임 생성)
+    minimum_travel_heading: 0.15   # 0.2 → 0.15rad (회전 시에도 더 자주 생성)
 
     # ===== 스캔 버퍼 (더 많은 스캔 저장) =====
     scan_buffer_size: 20          # 10 → 20
     scan_buffer_maximum_scan_distance: 12.0  # LiDAR 범위에 맞춤
 
     # ===== 스캔 매칭 파라미터 =====
-    link_match_minimum_response_fine: 0.15  # 0.1 → 0.15 (더 엄격한 매칭)
-    link_scan_maximum_distance: 2.0         # 1.5 → 2.0
+    link_match_minimum_response_fine: 0.1   # 0.15 → 0.1 (매칭 기준 완화로 드리프트 방지)
+    link_scan_maximum_distance: 2.5         # 2.0 → 2.5 (더 넓은 범위)
 
     # ===== Loop Closure (같은 장소 재인식 - 매우 중요!) =====
     do_loop_closing: true
@@ -55,9 +55,9 @@ slam_toolbox:
     loop_match_minimum_response_fine: 0.5   # 0.45 → 0.5
 
     # Correlation Parameters (스캔 매칭 정확도)
-    correlation_search_space_dimension: 0.4  # 0.5 → 0.4 (더 정밀한 검색)
-    correlation_search_space_resolution: 0.008  # 0.01 → 0.008
-    correlation_search_space_smear_deviation: 0.08
+    correlation_search_space_dimension: 0.5  # 0.4 → 0.5 (검색 범위 확대)
+    correlation_search_space_resolution: 0.01  # 0.005 → 0.01 (안정성)
+    correlation_search_space_smear_deviation: 0.03  # Must be between 0.0025 and 0.05
 
     # Loop Closure Parameters
     loop_search_space_dimension: 10.0  # 8.0 → 10.0 (더 넓은 검색)

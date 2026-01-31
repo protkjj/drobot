@@ -37,6 +37,8 @@ def launch_setup(context, *args, **kwargs):
     # Launch arguments 값 가져오기
     use_sim_time = LaunchConfiguration('use_sim_time')
     world_name = LaunchConfiguration('world').perform(context)
+    spawn_x = LaunchConfiguration('spawn_x').perform(context)
+    spawn_y = LaunchConfiguration('spawn_y').perform(context)
 
     # World 파일 경로
     world_file = os.path.join(pkg_drobot_sim, 'worlds', f'{world_name}.sdf')
@@ -72,15 +74,15 @@ def launch_setup(context, *args, **kwargs):
         }.items()
     )
 
-    # 로봇 스폰 (거실 빈 공간에서 시작)
+    # 로봇 스폰 (월드에 따라 위치 조절 가능)
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
         arguments=[
             '-topic', 'robot_description',
             '-name', 'drobot',
-            '-x', '-1.0',
-            '-y', '-2.0',
+            '-x', spawn_x,
+            '-y', spawn_y,
             '-z', '0.1'
         ],
         output='screen'
@@ -127,6 +129,16 @@ def generate_launch_description():
             'world',
             default_value='empty',
             description='World name (empty, f1_circuit, simple_room, warehouse, office_maze)'
+        ),
+        DeclareLaunchArgument(
+            'spawn_x',
+            default_value='0.0',
+            description='Robot spawn X position'
+        ),
+        DeclareLaunchArgument(
+            'spawn_y',
+            default_value='0.0',
+            description='Robot spawn Y position'
         ),
 
         # OpaqueFunction으로 런타임에 월드 경로 결정

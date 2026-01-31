@@ -15,7 +15,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, GroupAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node, SetRemap
+from launch_ros.actions import Node
 from nav2_common.launch import RewrittenYaml
 
 
@@ -24,6 +24,8 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     world = LaunchConfiguration('world', default='full_world')
+    spawn_x = LaunchConfiguration('spawn_x', default='0.0')
+    spawn_y = LaunchConfiguration('spawn_y', default='0.0')
 
     # Nav2 params
     nav2_params = os.path.join(pkg_drobot_sim, 'config', 'nav2_params.yaml')
@@ -43,12 +45,14 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'world': world,
+            'spawn_x': spawn_x,
+            'spawn_y': spawn_y,
         }.items()
     )
 
-    # 2. Localization (EKF)
+    # 2. Localization (EKF) - Gazebo 시작 후 대기
     localization = TimerAction(
-        period=3.0,
+        period=5.0,  # Gazebo /clock 안정화 대기
         actions=[
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -59,13 +63,14 @@ def generate_launch_description():
         ]
     )
 
-    # 3. SLAM (커스텀 파라미터 사용 + lifecycle 관리)
+    # 3. SLAM + Nav2 (lifecycle으로 통합 관리)
     slam_params = os.path.join(pkg_drobot_sim, 'config', 'slam_params.yaml')
-    slam = TimerAction(
-        period=5.0,
+
+    slam_and_nav2 = TimerAction(
+        period=8.0,  # Gazebo + EKF 안정화 후 시작
         actions=[
             GroupAction([
-                # SLAM Toolbox Node
+                # SLAM Toolbox (lifecycle 노드로 관리)
                 Node(
                     package='slam_toolbox',
                     executable='async_slam_toolbox_node',
@@ -73,7 +78,7 @@ def generate_launch_description():
                     output='screen',
                     parameters=[slam_params, {'use_sim_time': use_sim_time}],
                 ),
-                # Lifecycle Manager for SLAM
+                # Lifecycle Manager for SLAM (먼저 SLAM 활성화)
                 Node(
                     package='nav2_lifecycle_manager',
                     executable='lifecycle_manager',
@@ -82,18 +87,10 @@ def generate_launch_description():
                     parameters=[{
                         'use_sim_time': use_sim_time,
                         'autostart': True,
-                        'node_names': ['slam_toolbox']
+                        'node_names': ['slam_toolbox'],
+                        'bond_timeout': 0.0,  # SLAM은 bond 비활성화 (호환성)
                     }],
                 ),
-            ])
-        ]
-    )
-
-    # 4. Nav2 (SLAM mode - custom nodes without docking_server)
-    nav2_nodes = TimerAction(
-        period=8.0,
-        actions=[
-            GroupAction([
                 # Controller Server
                 Node(
                     package='nav2_controller',
@@ -160,9 +157,9 @@ def generate_launch_description():
         ]
     )
 
-    # 5. Auto Explorer (wait for everything to start)
+    # 4. Auto Explorer (SLAM + Nav2 lifecycle 활성화 후 시작)
     auto_explorer = TimerAction(
-        period=18.0,
+        period=18.0,  # SLAM(8s) + lifecycle 활성화(~10s) 대기
         actions=[
             Node(
                 package='drobot_simulation',
@@ -181,10 +178,11 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         DeclareLaunchArgument('world', default_value='full_world'),
+        DeclareLaunchArgument('spawn_x', default_value='0.0'),
+        DeclareLaunchArgument('spawn_y', default_value='0.0'),
 
         simulation,
         localization,
-        slam,
-        nav2_nodes,
+        slam_and_nav2,
         auto_explorer,
     ])
