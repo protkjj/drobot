@@ -1,420 +1,534 @@
 #!/usr/bin/env python3
 """
-Auto Explorer Node - Improved Version
-자동으로 미탐색 영역(frontier)을 찾아 탐색하는 노드
+Auto Explorer Node - Optimized Version v2
+빠르고 효율적인 Frontier 기반 탐색
 
-개선 사항:
-- 로봇 현재 위치 기반 frontier 선택
-- 거리 + 크기 + 참신함을 고려한 점수 시스템
-- Stuck 감지 및 복구
-- 더 나은 탐색 영역 기억
+주요 개선:
+- NumPy 기반 빠른 frontier 탐지
+- 가장 가까운 frontier 우선 탐색 (Greedy)
+- Costmap 클리어 기능 추가 (Start occupied 해결)
+- 적극적인 recovery 전략
+- 빠른 탐색 주기
 """
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
 from nav_msgs.msg import OccupancyGrid, Odometry
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Twist
 from nav2_msgs.action import NavigateToPose
+from nav2_msgs.srv import ClearEntireCostmap
 from action_msgs.msg import GoalStatus
+from scipy import ndimage
 import numpy as np
-import random
 import math
+from collections import deque
+import time
 
 
 class AutoExplorer(Node):
     def __init__(self):
         super().__init__('auto_explorer')
 
-        # Parameters
-        self.declare_parameter('min_frontier_size', 3)  # 더 작은 frontier도 탐색
-        self.declare_parameter('exploration_timeout', 60.0)
-        self.declare_parameter('goal_tolerance', 0.5)
+        # Parameters - 더 공격적인 탐색
+        self.declare_parameter('min_frontier_size', 3)
+        self.declare_parameter('exploration_timeout', 15.0)  # 목표당 최대 시간 (30→15초)
+        self.declare_parameter('safety_margin', 2)  # 줄임: 4 → 2
+        self.declare_parameter('max_goal_distance', 5.0)  # 줄임: 8 → 5
+        self.declare_parameter('min_goal_distance', 0.4)  # 줄임: 0.8 → 0.4
 
         self.min_frontier_size = self.get_parameter('min_frontier_size').value
         self.exploration_timeout = self.get_parameter('exploration_timeout').value
-        self.goal_tolerance = self.get_parameter('goal_tolerance').value
+        self.safety_margin = self.get_parameter('safety_margin').value
+        self.max_goal_distance = self.get_parameter('max_goal_distance').value
+        self.min_goal_distance = self.get_parameter('min_goal_distance').value
 
-        # Map subscription
+        # Subscriptions
         self.map_sub = self.create_subscription(
             OccupancyGrid, '/map', self.map_callback, 10
         )
-
-        # Odometry subscription (로봇 현재 위치)
         self.odom_sub = self.create_subscription(
             Odometry, '/odom', self.odom_callback, 10
         )
 
+        # Cmd_vel for recovery rotation
+        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+
         # Nav2 action client
         self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+
+        # Costmap clear services
+        self.clear_global_costmap = self.create_client(
+            ClearEntireCostmap, '/global_costmap/clear_entirely_global_costmap'
+        )
+        self.clear_local_costmap = self.create_client(
+            ClearEntireCostmap, '/local_costmap/clear_entirely_local_costmap'
+        )
 
         # State
         self.current_map = None
         self.map_info = None
-        self.is_exploring = False
+        self.is_navigating = False
         self.goal_handle = None
+        self.current_goal = None
+        self.goal_start_time = None
 
-        # 로봇 현재 위치
+        # Robot pose
         self.robot_x = 0.0
         self.robot_y = 0.0
+        self.robot_yaw = 0.0
 
-        # 탐색 기록 (더 많이 저장)
-        self.explored_goals = []  # [(x, y, timestamp), ...]
-        self.failed_goals = []    # 실패한 목표들 (블랙리스트)
-        self.consecutive_failures = 0  # 연속 실패 횟수
+        # Exploration tracking
+        self.failed_goals = set()  # (gx, gy) 그리드 좌표
+        self.visited_cells = set()
+        self.consecutive_failures = 0
+        self.total_goals = 0
+        self.successful_goals = 0
 
-        # 탐색 모드
-        self.exploration_mode = 'normal'  # 'normal', 'recovery', 'random'
+        # Progress tracking
+        self.last_coverage = 0.0
+        self.exploration_start_time = None
+        self.last_robot_pos = None
+        self.stuck_count = 0
 
-        # Timer for exploration
-        self.explore_timer = self.create_timer(2.0, self.explore_callback)  # 더 자주 체크
+        # Timer - 더 빠른 주기
+        self.explore_timer = self.create_timer(1.0, self.explore_callback)  # 2.5 → 1.0초
+        self.timeout_timer = self.create_timer(1.0, self.check_timeout)
 
-        self.get_logger().info('Improved Auto Explorer initialized!')
+        self.get_logger().info('Optimized Auto Explorer started!')
 
     def odom_callback(self, msg):
-        """로봇 위치 업데이트"""
         self.robot_x = msg.pose.pose.position.x
         self.robot_y = msg.pose.pose.position.y
+        q = msg.pose.pose.orientation
+        self.robot_yaw = math.atan2(2 * (q.w * q.z + q.x * q.y),
+                                     1 - 2 * (q.y * q.y + q.z * q.z))
 
     def map_callback(self, msg):
-        """지도 업데이트 콜백"""
         self.current_map = np.array(msg.data).reshape((msg.info.height, msg.info.width))
         self.map_info = msg.info
 
-    def find_frontiers(self):
-        """미탐색 영역(frontier) 찾기 - 최적화 버전"""
+        if self.exploration_start_time is None:
+            self.exploration_start_time = time.time()
+
+        # Coverage 계산
+        total = self.current_map.size
+        known = np.sum(self.current_map != -1)
+        self.last_coverage = (known / total) * 100
+
+    def check_timeout(self):
+        """목표 타임아웃 및 진행 체크"""
+        if not self.is_navigating or not self.goal_start_time:
+            return
+
+        elapsed = time.time() - self.goal_start_time
+
+        # 시간 타임아웃
+        if elapsed > self.exploration_timeout:
+            self.get_logger().warn(f'Goal timeout ({elapsed:.0f}s), cancelling...')
+            self.cancel_goal()
+            return
+
+        # 진행 체크 - 5초마다 위치 변화 확인
+        if elapsed > 5.0 and hasattr(self, 'nav_start_pos'):
+            dist_moved = math.sqrt(
+                (self.robot_x - self.nav_start_pos[0])**2 +
+                (self.robot_y - self.nav_start_pos[1])**2
+            )
+            # 5초 동안 0.3m 미만 이동 = stuck
+            if dist_moved < 0.3:
+                self.get_logger().warn(f'No progress ({dist_moved:.2f}m in {elapsed:.0f}s), cancelling...')
+                self.cancel_goal()
+                return
+            # 진행 중이면 시작 위치 업데이트
+            self.nav_start_pos = (self.robot_x, self.robot_y)
+
+    def cancel_goal(self):
+        """현재 목표 취소"""
+        if self.goal_handle:
+            self.goal_handle.cancel_goal_async()
+        self.is_navigating = False
+        self.consecutive_failures += 1
+        if self.current_goal:
+            gx, gy = self.world_to_grid(self.current_goal[0], self.current_goal[1])
+            if gx is not None:
+                self.failed_goals.add((gx // 5, gy // 5))  # 5셀 단위로 블랙리스트
+
+    def find_frontiers_fast(self):
+        """NumPy 기반 빠른 frontier 탐지"""
         if self.current_map is None:
             return []
 
-        frontiers = []
-        height, width = self.current_map.shape
+        # 자유 공간과 미탐색 영역 마스크
+        free = (self.current_map == 0)
+        unknown = (self.current_map == -1)
 
-        # Frontier: 탐색된 영역(0)과 미탐색 영역(-1)의 경계
-        for y in range(1, height - 1):
-            for x in range(1, width - 1):
-                if self.current_map[y, x] == 0:  # 자유 공간
-                    # 주변에 미탐색 영역(-1)이 있는지 확인
-                    neighbors = self.current_map[y-1:y+2, x-1:x+2].flatten()
-                    if -1 in neighbors:
-                        # 장애물 근처는 제외 (안전한 frontier만)
-                        if 100 not in neighbors:
-                            frontiers.append((x, y))
+        # 미탐색 영역 팽창 (인접 셀 찾기)
+        unknown_dilated = ndimage.binary_dilation(unknown, iterations=1)
 
-        return frontiers
+        # Frontier = 자유 공간 AND 미탐색 영역 인접
+        frontier_mask = free & unknown_dilated
 
-    def cluster_frontiers(self, frontiers):
-        """Frontier들을 클러스터링"""
-        if not frontiers:
+        # 장애물 근처 제외
+        occupied = (self.current_map == 100)
+        obstacle_nearby = ndimage.binary_dilation(occupied, iterations=self.safety_margin)
+        frontier_mask = frontier_mask & ~obstacle_nearby
+
+        # Frontier 좌표 추출
+        frontier_points = np.argwhere(frontier_mask)
+
+        return frontier_points  # (y, x) 형태
+
+    def cluster_frontiers(self, frontier_points):
+        """Frontier 클러스터링 - 연결된 영역 찾기"""
+        if len(frontier_points) == 0:
             return []
 
-        frontier_set = set(frontiers)
+        # 라벨링으로 연결 영역 찾기
+        frontier_mask = np.zeros_like(self.current_map, dtype=bool)
+        for y, x in frontier_points:
+            frontier_mask[y, x] = True
+
+        labeled, num_features = ndimage.label(frontier_mask)
+
         clusters = []
-        visited = set()
-
-        for fx, fy in frontiers:
-            if (fx, fy) in visited:
-                continue
-
-            # BFS로 인접한 frontier들 그룹화
-            cluster = []
-            queue = [(fx, fy)]
-
-            while queue:
-                x, y = queue.pop(0)
-                if (x, y) in visited:
-                    continue
-                visited.add((x, y))
-                cluster.append((x, y))
-
-                # 인접한 frontier 찾기 (더 넓은 범위)
-                for dx in [-2, -1, 0, 1, 2]:
-                    for dy in [-2, -1, 0, 1, 2]:
-                        nx, ny = x + dx, y + dy
-                        if (nx, ny) in frontier_set and (nx, ny) not in visited:
-                            queue.append((nx, ny))
-
-            if len(cluster) >= self.min_frontier_size:
-                # 클러스터의 가장 안전한 점 찾기 (중심에서 가장 가까운 자유 공간)
-                cx = sum(p[0] for p in cluster) // len(cluster)
-                cy = sum(p[1] for p in cluster) // len(cluster)
-
-                # 중심점이 안전한지 확인, 아니면 클러스터 내 다른 점 사용
-                safe_point = self.find_safe_goal_point(cx, cy, cluster)
-                if safe_point:
-                    clusters.append((safe_point[0], safe_point[1], len(cluster)))
+        for i in range(1, num_features + 1):
+            points = np.argwhere(labeled == i)
+            if len(points) >= self.min_frontier_size:
+                # 클러스터 중심
+                cy, cx = points.mean(axis=0).astype(int)
+                clusters.append({
+                    'center_grid': (cx, cy),
+                    'size': len(points),
+                    'points': points
+                })
 
         return clusters
 
-    def find_safe_goal_point(self, cx, cy, cluster):
-        """목표점 주변이 안전한지 확인하고 안전한 점 반환"""
-        if self.current_map is None:
-            return (cx, cy)
-
-        height, width = self.current_map.shape
-
-        # 중심점 주변 검사
-        for radius in range(0, 10):
-            for dx in range(-radius, radius + 1):
-                for dy in range(-radius, radius + 1):
-                    nx, ny = cx + dx, cy + dy
-                    if 0 <= nx < width and 0 <= ny < height:
-                        # 자유 공간이고 장애물에서 충분히 떨어진 곳
-                        if self.current_map[ny, nx] == 0:
-                            if self.is_safe_position(nx, ny):
-                                return (nx, ny)
-
-        return None
-
-    def is_safe_position(self, gx, gy, safety_margin=3):
-        """해당 위치가 안전한지 확인 (장애물에서 충분히 떨어져 있는지)"""
-        if self.current_map is None:
-            return False
-
-        height, width = self.current_map.shape
-
-        for dx in range(-safety_margin, safety_margin + 1):
-            for dy in range(-safety_margin, safety_margin + 1):
-                nx, ny = gx + dx, gy + dy
-                if 0 <= nx < width and 0 <= ny < height:
-                    if self.current_map[ny, nx] == 100:  # 장애물
-                        return False
-        return True
-
     def grid_to_world(self, gx, gy):
-        """그리드 좌표를 월드 좌표로 변환"""
         if self.map_info is None:
             return None, None
-
         wx = self.map_info.origin.position.x + (gx + 0.5) * self.map_info.resolution
         wy = self.map_info.origin.position.y + (gy + 0.5) * self.map_info.resolution
         return wx, wy
 
     def world_to_grid(self, wx, wy):
-        """월드 좌표를 그리드 좌표로 변환"""
         if self.map_info is None:
             return None, None
-
         gx = int((wx - self.map_info.origin.position.x) / self.map_info.resolution)
         gy = int((wy - self.map_info.origin.position.y) / self.map_info.resolution)
         return gx, gy
 
-    def calculate_frontier_score(self, wx, wy, size):
-        """Frontier 점수 계산 (높을수록 좋음)"""
-        # 1. 로봇과의 거리 (너무 가깝지도, 멀지도 않은 게 좋음)
-        dist_to_robot = math.sqrt((wx - self.robot_x)**2 + (wy - self.robot_y)**2)
+    def is_goal_valid(self, gx, gy):
+        """목표가 유효한지 확인"""
+        if self.current_map is None or self.map_info is None:
+            return False
 
-        # 최소 거리 임계값: 0.5m 미만은 무시 (goal_tolerance보다 작으면 의미 없음)
-        if dist_to_robot < 0.5:
-            return -1  # 너무 가까운 frontier는 제외
+        h, w = self.current_map.shape
+        if not (0 <= gx < w and 0 <= gy < h):
+            return False
 
-        # 이상적인 거리: 1.5~5m
-        if dist_to_robot < 1.0:
-            distance_score = 0.5  # 약간 가까움
-        elif dist_to_robot < 1.5:
-            distance_score = 0.8
-        elif dist_to_robot < 5.0:
-            distance_score = 1.0  # 이상적
-        elif dist_to_robot < 10.0:
-            distance_score = 0.8
-        else:
-            distance_score = 0.5  # 너무 멀음
+        # 자유 공간인지
+        if self.current_map[gy, gx] != 0:
+            return False
 
-        # 2. 탐색 기록과의 거리 (이미 가본 곳에서 멀수록 좋음)
-        min_dist_to_explored = float('inf')
-        for ex, ey, _ in self.explored_goals[-30:]:  # 최근 30개
-            dist = math.sqrt((wx - ex)**2 + (wy - ey)**2)
-            min_dist_to_explored = min(min_dist_to_explored, dist)
+        # 블랙리스트 체크
+        if (gx // 5, gy // 5) in self.failed_goals:
+            return False
 
-        if min_dist_to_explored == float('inf'):
-            novelty_score = 1.0
-        elif min_dist_to_explored < 0.8:
-            return -1  # 이미 가본 곳 근처는 완전히 제외
-        elif min_dist_to_explored < 1.5:
-            novelty_score = 0.3  # 낮은 점수
-        elif min_dist_to_explored < 2.5:
-            novelty_score = 0.6
-        else:
-            novelty_score = 1.0
+        # 장애물과 거리 체크
+        margin = self.safety_margin
+        y_min, y_max = max(0, gy - margin), min(h, gy + margin + 1)
+        x_min, x_max = max(0, gx - margin), min(w, gx + margin + 1)
+        region = self.current_map[y_min:y_max, x_min:x_max]
+        if np.any(region == 100):
+            return False
 
-        # 3. 실패한 목표 근처인지 (블랙리스트)
-        for fx, fy in self.failed_goals[-20:]:
-            dist = math.sqrt((wx - fx)**2 + (wy - fy)**2)
-            if dist < 1.5:
-                return -1  # 블랙리스트 근처는 제외
+        return True
 
-        # 4. 크기 점수 (크면 좋지만 너무 치우치지 않게)
-        size_score = min(1.0, size / 20.0)
-
-        # 최종 점수 (참신함에 가중치를 더 줌)
-        total_score = (distance_score * 0.3 +
-                      novelty_score * 0.5 +
-                      size_score * 0.2)
-
-        return total_score
+    def find_nearest_valid_point(self, gx, gy, max_search=20):
+        """가장 가까운 유효한 점 찾기 (나선형 탐색)"""
+        for r in range(max_search):
+            for dx in range(-r, r + 1):
+                for dy in range(-r, r + 1):
+                    if abs(dx) == r or abs(dy) == r:  # 테두리만
+                        nx, ny = gx + dx, gy + dy
+                        if self.is_goal_valid(nx, ny):
+                            return nx, ny
+        return None, None
 
     def select_best_frontier(self, clusters):
-        """가장 좋은 frontier 선택"""
+        """가장 좋은 frontier 선택 - 거리 기반 greedy"""
         if not clusters:
             return None
 
-        best_cluster = None
-        best_score = -float('inf')
+        robot_gx, robot_gy = self.world_to_grid(self.robot_x, self.robot_y)
+        if robot_gx is None:
+            return None
 
-        scored_clusters = []
+        best = None
+        best_score = -1
 
-        for cx, cy, size in clusters:
-            wx, wy = self.grid_to_world(cx, cy)
+        for cluster in clusters:
+            cx, cy = cluster['center_grid']
+
+            # 유효한 점 찾기
+            vx, vy = self.find_nearest_valid_point(cx, cy)
+            if vx is None:
+                continue
+
+            wx, wy = self.grid_to_world(vx, vy)
             if wx is None:
                 continue
 
-            score = self.calculate_frontier_score(wx, wy, size)
+            dist = math.sqrt((wx - self.robot_x)**2 + (wy - self.robot_y)**2)
 
-            # 음수 점수는 무효한 frontier (너무 가깝거나 이미 방문한 곳)
-            if score < 0:
+            # 거리 필터
+            if dist < self.min_goal_distance or dist > self.max_goal_distance:
                 continue
 
-            scored_clusters.append((cx, cy, size, score, wx, wy))
+            # 점수: 가까울수록 + 크기 클수록 좋음
+            # 가까운 거리 우선 (greedy)
+            dist_score = 1.0 / (dist + 0.1)
+            size_score = min(cluster['size'] / 20.0, 1.0)
+
+            # 방향 보너스 (현재 방향과 일치하면)
+            goal_angle = math.atan2(wy - self.robot_y, wx - self.robot_x)
+            angle_diff = abs(self.normalize_angle(goal_angle - self.robot_yaw))
+            dir_score = 1.0 - (angle_diff / math.pi)
+
+            score = dist_score * 0.5 + size_score * 0.2 + dir_score * 0.3
 
             if score > best_score:
                 best_score = score
-                best_cluster = (cx, cy, size)
+                best = {
+                    'world': (wx, wy),
+                    'grid': (vx, vy),
+                    'dist': dist,
+                    'size': cluster['size'],
+                    'score': score
+                }
 
-        # 디버그 로그
-        if scored_clusters:
-            scored_clusters.sort(key=lambda x: x[3], reverse=True)
-            top_3 = scored_clusters[:3]
-            self.get_logger().info(f'Top frontiers: ' +
-                ', '.join([f'({c[4]:.1f},{c[5]:.1f})={c[3]:.2f}' for c in top_3]))
-        else:
-            self.get_logger().info('No valid frontiers (all filtered out)')
+        return best
 
-        return best_cluster
+    def normalize_angle(self, angle):
+        while angle > math.pi:
+            angle -= 2 * math.pi
+        while angle < -math.pi:
+            angle += 2 * math.pi
+        return angle
+
+    def do_backup_move(self):
+        """약간 후진하여 occupied 상태 탈출"""
+        self.get_logger().info('Recovery: Backing up...')
+        twist = Twist()
+        twist.linear.x = -0.1  # 후진
+        for _ in range(10):
+            self.cmd_pub.publish(twist)
+            time.sleep(0.1)
+        twist.linear.x = 0.0
+        self.cmd_pub.publish(twist)
+
+    def clear_costmaps(self):
+        """Costmap 클리어 - Start occupied 문제 해결"""
+        self.get_logger().info('Clearing costmaps...')
+
+        # Global costmap clear
+        if self.clear_global_costmap.wait_for_service(timeout_sec=1.0):
+            req = ClearEntireCostmap.Request()
+            self.clear_global_costmap.call_async(req)
+
+        # Local costmap clear
+        if self.clear_local_costmap.wait_for_service(timeout_sec=1.0):
+            req = ClearEntireCostmap.Request()
+            self.clear_local_costmap.call_async(req)
+
+        time.sleep(0.5)  # costmap 업데이트 대기
+
+    def do_recovery_rotation(self):
+        """제자리 회전으로 주변 스캔 + costmap 클리어"""
+        self.get_logger().info('Recovery: Clearing costmaps and rotating...')
+
+        # 먼저 costmap 클리어
+        self.clear_costmaps()
+
+        # 회전
+        twist = Twist()
+        twist.angular.z = 0.5
+        for _ in range(15):  # 더 오래 회전
+            self.cmd_pub.publish(twist)
+            time.sleep(0.1)
+        twist.angular.z = 0.0
+        self.cmd_pub.publish(twist)
+
+        time.sleep(0.3)
+
+        # 회전 후 다시 costmap 클리어
+        self.clear_costmaps()
+
+    def get_random_free_goal(self):
+        """랜덤 자유 공간 목표"""
+        if self.current_map is None:
+            return None
+
+        free_cells = np.argwhere(self.current_map == 0)
+        if len(free_cells) == 0:
+            return None
+
+        # 로봇에서 적당한 거리의 랜덤 점
+        robot_gx, robot_gy = self.world_to_grid(self.robot_x, self.robot_y)
+        if robot_gx is None:
+            return None
+
+        # 거리 계산
+        distances = np.sqrt((free_cells[:, 1] - robot_gx)**2 +
+                           (free_cells[:, 0] - robot_gy)**2)
+
+        # 1~4m 거리의 셀들
+        valid_mask = (distances > 20) & (distances < 80)  # 그리드 셀 단위 (0.05m)
+        valid_cells = free_cells[valid_mask]
+
+        if len(valid_cells) == 0:
+            return None
+
+        # 랜덤 선택
+        idx = np.random.randint(len(valid_cells))
+        gy, gx = valid_cells[idx]
+
+        if self.is_goal_valid(gx, gy):
+            return self.grid_to_world(gx, gy)
+
+        return None
 
     def explore_callback(self):
-        """주기적으로 탐색 수행"""
-        if self.is_exploring:
+        """탐색 메인 루프"""
+        if self.is_navigating:
             return
 
         if self.current_map is None:
-            self.get_logger().info('Waiting for map data...')
+            self.get_logger().info('Waiting for map...')
             return
 
-        # Wait for Nav2
-        if not self.nav_client.wait_for_server(timeout_sec=1.0):
-            self.get_logger().warn('Nav2 not available yet...')
+        if not self.nav_client.wait_for_server(timeout_sec=0.5):
             return
 
-        # Recovery 모드 체크
-        if self.consecutive_failures >= 3:
-            self.get_logger().warn(f'Multiple failures ({self.consecutive_failures}), trying recovery...')
-            self.exploration_mode = 'recovery'
-            self.consecutive_failures = 0
+        # 진행 상황 로깅
+        elapsed = time.time() - (self.exploration_start_time or time.time())
+        self.get_logger().info(
+            f'Coverage: {self.last_coverage:.1f}% | '
+            f'Goals: {self.successful_goals}/{self.total_goals} | '
+            f'Time: {elapsed:.0f}s'
+        )
 
-        # Find frontiers
-        frontiers = self.find_frontiers()
-        clusters = self.cluster_frontiers(frontiers)
-
-        if not clusters:
-            self.get_logger().info('No frontiers found! Map exploration complete!')
+        # 탐색 완료 체크
+        if self.last_coverage > 95:
+            self.get_logger().info('🎉 Exploration complete!')
             return
 
-        self.get_logger().info(f'Found {len(clusters)} frontier clusters (mode: {self.exploration_mode})')
-
-        # Frontier 선택
-        if self.exploration_mode == 'recovery':
-            # Recovery 모드: 랜덤하게 먼 곳 선택
-            random.shuffle(clusters)
-            goal_cluster = clusters[0] if clusters else None
-            self.exploration_mode = 'normal'
+        # Stuck 체크
+        current_pos = (round(self.robot_x, 1), round(self.robot_y, 1))
+        if current_pos == self.last_robot_pos:
+            self.stuck_count += 1
         else:
-            # Normal 모드: 점수 기반 선택
-            goal_cluster = self.select_best_frontier(clusters)
+            self.stuck_count = 0
+        self.last_robot_pos = current_pos
 
-        # 모든 frontier가 필터링되면 랜덤 방향으로 탐색
-        if goal_cluster is None:
-            self.get_logger().info('No valid frontiers, trying random exploration...')
-            # 랜덤 방향으로 2~4m 이동
-            angle = random.uniform(0, 2 * math.pi)
-            distance = random.uniform(2.0, 4.0)
-            rx = self.robot_x + distance * math.cos(angle)
-            ry = self.robot_y + distance * math.sin(angle)
-            self.send_goal(rx, ry)
-            current_time = self.get_clock().now().nanoseconds / 1e9
-            self.explored_goals.append((rx, ry, current_time))
+        # 연속 실패 또는 stuck 시 recovery
+        if self.consecutive_failures >= 3 or self.stuck_count >= 5:
+            self.get_logger().warn('Stuck detected! Recovery mode...')
+
+            # 먼저 약간 후진 시도 (Start occupied 탈출)
+            self.do_backup_move()
+
+            self.do_recovery_rotation()
+            self.consecutive_failures = 0
+            self.stuck_count = 0
+            self.failed_goals.clear()  # 블랙리스트 초기화
             return
 
-        if goal_cluster:
-            gx, gy, size = goal_cluster
-            wx, wy = self.grid_to_world(gx, gy)
+        # 최근 실패가 많으면 costmap 클리어 후 진행
+        if self.consecutive_failures >= 1:
+            self.clear_costmaps()
 
-            if wx is not None:
-                self.send_goal(wx, wy)
-                # 탐색 기록에 추가
-                current_time = self.get_clock().now().nanoseconds / 1e9
-                self.explored_goals.append((wx, wy, current_time))
+        # Frontier 탐지
+        frontier_points = self.find_frontiers_fast()
+        clusters = self.cluster_frontiers(frontier_points)
 
-                # 오래된 기록 정리 (50개 초과 시)
-                if len(self.explored_goals) > 50:
-                    self.explored_goals = self.explored_goals[-50:]
+        goal = None
+
+        if clusters:
+            # 최적 frontier 선택
+            best = self.select_best_frontier(clusters)
+            if best:
+                goal = best['world']
+                self.get_logger().info(
+                    f'Target: ({goal[0]:.2f}, {goal[1]:.2f}) '
+                    f'dist={best["dist"]:.1f}m size={best["size"]}'
+                )
+
+        if goal is None:
+            # Frontier 없으면 랜덤 탐색
+            self.get_logger().info('No frontier, trying random goal...')
+            result = self.get_random_free_goal()
+            if result:
+                goal = result
+
+        if goal:
+            self.send_goal(goal[0], goal[1])
+        else:
+            self.get_logger().warn('No valid goal found')
+            self.do_recovery_rotation()
 
     def send_goal(self, x, y):
-        """Nav2에 목표점 전송"""
-        self.is_exploring = True
+        """Nav2로 목표 전송"""
+        self.is_navigating = True
         self.current_goal = (x, y)
+        self.goal_start_time = time.time()
+        self.nav_start_pos = (self.robot_x, self.robot_y)  # 진행 체크용
+        self.total_goals += 1
 
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose.header.frame_id = 'map'
         goal_msg.pose.header.stamp = self.get_clock().now().to_msg()
         goal_msg.pose.pose.position.x = x
         goal_msg.pose.pose.position.y = y
-        goal_msg.pose.pose.orientation.w = 1.0
 
-        self.get_logger().info(f'Sending goal: ({x:.2f}, {y:.2f}) [robot at ({self.robot_x:.2f}, {self.robot_y:.2f})]')
+        # 목표 방향
+        angle = math.atan2(y - self.robot_y, x - self.robot_x)
+        goal_msg.pose.pose.orientation.z = math.sin(angle / 2)
+        goal_msg.pose.pose.orientation.w = math.cos(angle / 2)
 
-        send_goal_future = self.nav_client.send_goal_async(
-            goal_msg,
-            feedback_callback=self.feedback_callback
-        )
-        send_goal_future.add_done_callback(self.goal_response_callback)
+        future = self.nav_client.send_goal_async(goal_msg)
+        future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):
-        """목표 전송 응답 콜백"""
         self.goal_handle = future.result()
 
         if not self.goal_handle.accepted:
             self.get_logger().warn('Goal rejected')
-            self.is_exploring = False
+            self.is_navigating = False
             self.consecutive_failures += 1
-            if hasattr(self, 'current_goal'):
-                self.failed_goals.append(self.current_goal)
             return
 
-        self.get_logger().info('Goal accepted')
         result_future = self.goal_handle.get_result_async()
         result_future.add_done_callback(self.goal_result_callback)
 
     def goal_result_callback(self, future):
-        """목표 도달 결과 콜백"""
         result = future.result()
         status = result.status
 
         if status == GoalStatus.STATUS_SUCCEEDED:
-            self.get_logger().info('Goal reached! Looking for next frontier...')
-            self.consecutive_failures = 0  # 성공하면 리셋
+            self.get_logger().info('✓ Goal reached')
+            self.consecutive_failures = 0
+            self.successful_goals += 1
         else:
-            self.get_logger().warn(f'Goal failed with status: {status}')
+            self.get_logger().warn(f'✗ Goal failed (status: {status})')
             self.consecutive_failures += 1
-            if hasattr(self, 'current_goal'):
-                self.failed_goals.append(self.current_goal)
-                # 실패 목록 정리
-                if len(self.failed_goals) > 30:
-                    self.failed_goals = self.failed_goals[-30:]
+            if self.current_goal:
+                gx, gy = self.world_to_grid(self.current_goal[0], self.current_goal[1])
+                if gx is not None:
+                    self.failed_goals.add((gx // 5, gy // 5))
 
-        self.is_exploring = False
-
-    def feedback_callback(self, feedback_msg):
-        """네비게이션 피드백"""
-        # 진행 상황 모니터링 가능
-        pass
+        self.is_navigating = False
 
 
 def main(args=None):
@@ -424,7 +538,11 @@ def main(args=None):
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        pass
+        node.get_logger().info(
+            f'\n=== Final Stats ===\n'
+            f'Coverage: {node.last_coverage:.1f}%\n'
+            f'Goals: {node.successful_goals}/{node.total_goals}'
+        )
     finally:
         node.destroy_node()
         rclpy.shutdown()
