@@ -59,12 +59,23 @@
     <!-- ============================================== -->
 
     <!-- 거실 외벽 -->
-    <model name="room_wall_n">
+    <!-- 북쪽 벽 - 사무실 통로용 출입구 (폭 4m 열림, x=-2 ~ x=2) -->
+    <model name="room_wall_n1">
       <static>true</static>
-      <pose>0 4 0.5 0 0 0</pose>
+      <pose>-3 4 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>8 0.1 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>8 0.1 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>2 0.1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2 0.1 1</size></box></geometry>
+          <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="room_wall_n2">
+      <static>true</static>
+      <pose>3 4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2 0.1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2 0.1 1</size></box></geometry>
           <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
         </visual>
       </link>
@@ -79,41 +90,53 @@
         </visual>
       </link>
     </model>
-    <model name="room_wall_e">
+    <!-- 동쪽 벽 - 창고 통로용 출입구 (폭 4m 열림, y=-2 ~ y=2) -->
+    <model name="room_wall_e1">
       <static>true</static>
-      <pose>4 0 0.5 0 0 0</pose>
+      <pose>4 3 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.1 8 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.1 8 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.1 2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.1 2 1</size></box></geometry>
           <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
         </visual>
       </link>
     </model>
+    <model name="room_wall_e2">
+      <static>true</static>
+      <pose>4 -3 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.1 2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.1 2 1</size></box></geometry>
+          <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <!-- 서쪽 벽 - 트랙 통로용 출입구 (폭 4m 열림, y=-2 ~ y=2) -->
     <model name="room_wall_w1">
       <static>true</static>
-      <pose>-4 2 0.5 0 0 0</pose>
+      <pose>-4 3 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.1 4 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.1 4 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.1 2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.1 2 1</size></box></geometry>
           <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="room_wall_w2">
       <static>true</static>
-      <pose>-4 -2.5 0.5 0 0 0</pose>
+      <pose>-4 -3 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.1 3 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.1 3 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.1 2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.1 2 1</size></box></geometry>
           <material><ambient>0.9 0.85 0.8 1</ambient><diffuse>0.9 0.85 0.8 1</diffuse></material>
         </visual>
       </link>
     </model>
 
-    <!-- 거실 가구 -->
+    <!-- 거실 가구 (간격 넓힘) -->
     <model name="sofa">
       <static>true</static>
-      <pose>2.5 0 0.3 0 0 1.57</pose>
+      <pose>2.0 -2.5 0.3 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>2 0.7 0.6</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>2 0.7 0.6</size></box></geometry>
@@ -123,37 +146,37 @@
     </model>
     <model name="coffee_table">
       <static>true</static>
-      <pose>0.5 0 0.2 0 0 0</pose>
+      <pose>0 -2.5 0.2 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>1 0.6 0.4</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>1 0.6 0.4</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.8 0.5 0.4</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 0.5 0.4</size></box></geometry>
           <material><ambient>0.4 0.25 0.1 1</ambient><diffuse>0.4 0.25 0.1 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="tv_stand">
       <static>true</static>
-      <pose>-2 0 0.3 0 0 0</pose>
+      <pose>-2.5 -2.5 0.3 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>1.5 0.4 0.6</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>1.5 0.4 0.6</size></box></geometry>
+        <collision name="collision"><geometry><box><size>1.2 0.4 0.6</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.2 0.4 0.6</size></box></geometry>
           <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="bookshelf">
       <static>true</static>
-      <pose>3 3 0.6 0 0 0</pose>
+      <pose>2.5 2.5 0.6 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.4 1.5 1.2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.4 1.5 1.2</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.4 1.2 1.2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.4 1.2 1.2</size></box></geometry>
           <material><ambient>0.35 0.2 0.1 1</ambient><diffuse>0.35 0.2 0.1 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="plant1">
       <static>true</static>
-      <pose>-3 3 0.3 0 0 0</pose>
+      <pose>-2.5 2.5 0.3 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry></collision>
         <visual name="visual"><geometry><cylinder><radius>0.2</radius><length>0.6</length></cylinder></geometry>
@@ -197,22 +220,23 @@
         </visual>
       </link>
     </model>
+    <!-- 창고 서쪽 벽 - 통로 입구 4m 열림 (y=-2 ~ y=2) -->
     <model name="wh_wall_w1">
       <static>true</static>
-      <pose>9 3 0.75 0 0 0</pose>
+      <pose>9 3.5 0.75 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.15 4 1.5</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.15 4 1.5</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.15 3 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.15 3 1.5</size></box></geometry>
           <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="wh_wall_w2">
       <static>true</static>
-      <pose>9 -3 0.75 0 0 0</pose>
+      <pose>9 -3.5 0.75 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>0.15 4 1.5</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.15 4 1.5</size></box></geometry>
+        <collision name="collision"><geometry><box><size>0.15 3 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.15 3 1.5</size></box></geometry>
           <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
         </visual>
       </link>
@@ -317,22 +341,23 @@
         </visual>
       </link>
     </model>
+    <!-- 사무실 남쪽 벽 - 통로 입구 4m 열림 (x=-2 ~ x=2) -->
     <model name="off_wall_s1">
       <static>true</static>
-      <pose>-3 10 0.5 0 0 0</pose>
+      <pose>-3.5 10 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>4 0.1 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>4 0.1 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>3 0.1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3 0.1 1</size></box></geometry>
           <material><ambient>0.8 0.8 0.75 1</ambient><diffuse>0.8 0.8 0.75 1</diffuse></material>
         </visual>
       </link>
     </model>
     <model name="off_wall_s2">
       <static>true</static>
-      <pose>3 10 0.5 0 0 0</pose>
+      <pose>3.5 10 0.5 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>4 0.1 1</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>4 0.1 1</size></box></geometry>
+        <collision name="collision"><geometry><box><size>3 0.1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3 0.1 1</size></box></geometry>
           <material><ambient>0.8 0.8 0.75 1</ambient><diffuse>0.8 0.8 0.75 1</diffuse></material>
         </visual>
       </link>
@@ -610,10 +635,10 @@
     <!-- 구역 연결 통로 -->
     <!-- ============================================== -->
 
-    <!-- 거실 -> 창고 통로 벽 -->
+    <!-- 거실 -> 창고 통로 벽 (폭 4m로 확장: y=-2 ~ y=2) -->
     <model name="corridor1_n">
       <static>true</static>
-      <pose>6.5 1.5 0.5 0 0 0</pose>
+      <pose>6.5 2 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>5 0.1 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>5 0.1 1</size></box></geometry>
@@ -623,7 +648,7 @@
     </model>
     <model name="corridor1_s">
       <static>true</static>
-      <pose>6.5 -1.5 0.5 0 0 0</pose>
+      <pose>6.5 -2 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>5 0.1 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>5 0.1 1</size></box></geometry>
@@ -632,10 +657,10 @@
       </link>
     </model>
 
-    <!-- 거실 -> 사무실 통로 벽 -->
+    <!-- 거실 -> 사무실 통로 벽 (폭 4m로 확장: x=-2 ~ x=2) -->
     <model name="corridor2_e">
       <static>true</static>
-      <pose>1.5 7 0.5 0 0 0</pose>
+      <pose>2 7 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>0.1 6 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>0.1 6 1</size></box></geometry>
@@ -645,7 +670,7 @@
     </model>
     <model name="corridor2_w">
       <static>true</static>
-      <pose>-1.5 7 0.5 0 0 0</pose>
+      <pose>-2 7 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>0.1 6 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>0.1 6 1</size></box></geometry>
@@ -654,10 +679,10 @@
       </link>
     </model>
 
-    <!-- 거실 -> 트랙 통로 벽 -->
+    <!-- 거실 -> 트랙 통로 벽 (폭 4m로 확장: y=-2 ~ y=2) -->
     <model name="corridor3_n">
       <static>true</static>
-      <pose>-8.5 1 0.5 0 0 0</pose>
+      <pose>-8.5 2 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>9 0.1 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>9 0.1 1</size></box></geometry>
@@ -667,7 +692,7 @@
     </model>
     <model name="corridor3_s">
       <static>true</static>
-      <pose>-8.5 -1 0.5 0 0 0</pose>
+      <pose>-8.5 -2 0.5 0 0 0</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>9 0.1 1</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>9 0.1 1</size></box></geometry>

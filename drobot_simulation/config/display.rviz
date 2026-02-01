@@ -17,11 +17,27 @@ Visualization Manager:
       Plane Cell Count: 10
 
     - Class: rviz_default_plugins/Map
-      Name: Map
+      Name: Map (SLAM)
       Value: true
       Topic:
         Value: /map
       Color Scheme: map
+
+    - Class: rviz_default_plugins/Map
+      Name: Global Costmap
+      Value: true
+      Topic:
+        Value: /global_costmap/costmap
+      Color Scheme: costmap
+      Alpha: 0.5
+
+    - Class: rviz_default_plugins/Map
+      Name: Local Costmap
+      Value: true
+      Topic:
+        Value: /local_costmap/costmap
+      Color Scheme: costmap
+      Alpha: 0.7
 
     - Class: rviz_default_plugins/RobotModel
       Name: RobotModel
@@ -32,7 +48,7 @@ Visualization Manager:
 
     - Class: rviz_default_plugins/TF
       Name: TF
-      Value: true
+      Value: false
       Show Names: true
       Show Arrows: true
       Show Axes: true
@@ -47,11 +63,38 @@ Visualization Manager:
       Size (m): 0.05
       Color: 255; 0; 0
 
-    - Class: rviz_default_plugins/Image
-      Name: Camera
+    # ===== Navigation 관련 추가 =====
+
+    - Class: rviz_default_plugins/Path
+      Name: Global Path (계획된 경로)
       Value: true
       Topic:
-        Value: /camera/image_raw
+        Value: /plan
+      Color: 0; 255; 0
+      Line Width: 0.05
+      Alpha: 1.0
+
+    - Class: rviz_default_plugins/Path
+      Name: Local Path (DWB 경로)
+      Value: true
+      Topic:
+        Value: /local_plan
+      Color: 255; 255; 0
+      Line Width: 0.03
+      Alpha: 1.0
+
+    - Class: rviz_default_plugins/Marker
+      Name: Goal Marker
+      Value: true
+      Topic:
+        Value: /goal_marker
+
+    - Class: rviz_default_plugins/PoseArray
+      Name: Particle Cloud
+      Value: false
+      Topic:
+        Value: /particle_cloud
+      Arrow Length: 0.1
 
   Global Options:
     Fixed Frame: map
@@ -63,21 +106,25 @@ Visualization Manager:
     - Class: rviz_default_plugins/Select
     - Class: rviz_default_plugins/FocusCamera
     - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetGoal
+      Topic: /goal_pose
+    - Class: nav2_rviz_plugins/GoalTool
+      Topic: /goal_pose
 
   Value: true
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.0
+      Distance: 8.0
       Focal Point:
         X: 0
         Y: 0
         Z: 0
-      Pitch: 0.5
+      Pitch: 1.2
       Yaw: 0.8
       Name: Current View
 Window Geometry:
-  Height: 800
-  Width: 1200
-  X: 100
-  Y: 100
+  Height: 900
+  Width: 1400
+  X: 50
+  Y: 50

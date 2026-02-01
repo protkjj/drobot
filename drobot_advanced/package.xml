@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>drobot_advanced</name>
+  <version>4.0.0</version>
+  <description>
+    Drobot VER4 - Advanced Integration
+
+    Features (Planned):
+    - Isaac Sim integration for photorealistic simulation
+    - Isaac Lab for reinforcement learning training
+    - PX4 Autopilot for drone flight control
+    - Hybrid ground/air navigation
+    - 3D SLAM with RTAB-Map
+  </description>
+  <maintainer email="user@example.com">kjkj</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <!-- Future dependencies (commented until needed) -->
+  <!-- <depend>px4_msgs</depend> -->
+  <!-- <depend>mavros_msgs</depend> -->
+  <!-- <depend>rtabmap_ros</depend> -->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
