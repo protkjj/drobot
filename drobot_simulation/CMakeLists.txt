@@ -10,13 +10,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(xacro REQUIRED)
 
-# Install directories
+# Install directories (urdf, meshes, worlds moved to drobot_description)
 install(
   DIRECTORY
     launch
-    urdf
-    meshes
-    worlds
     config
   DESTINATION share/${PROJECT_NAME}/
 )
@@ -26,7 +23,6 @@ ament_python_install_package(${PROJECT_NAME})
 
 # Install Python scripts
 install(PROGRAMS
-  drobot_simulation/odom_to_tf.py
   drobot_simulation/auto_explorer.py
   DESTINATION lib/${PROJECT_NAME}
 )

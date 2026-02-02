@@ -9,11 +9,22 @@ ROS 2 Jazzy + Gazebo Harmonic
   ros2 launch drobot_simulation simulation.launch.py world:=warehouse
 
 사용 가능한 월드:
-  - empty (기본, 장애물 있는 방)
-  - f1_circuit (F1 서킷)
-  - simple_room (거실)
-  - warehouse (창고)
-  - office_maze (사무실)
+  기본 월드:
+    - empty (기본, 장애물 있는 방)
+    - full_world (복잡한 맵)
+    - f1_circuit (F1 서킷)
+    - simple_room (거실)
+    - warehouse (창고)
+    - office_maze (사무실)
+
+  생성된 월드 (worlds/generated/):
+    - room_generated (랜덤 장애물)
+    - maze_generated (미로)
+    - road_test (도로 + 움직이는 차량)
+
+월드 생성하기:
+  cd drobot_description/scripts
+  python3 world_generator.py --type room --size 10 10 --obstacles 8
 """
 import os
 from ament_index_python.packages import get_package_share_directory
@@ -28,11 +39,12 @@ from ros_gz_bridge.actions import RosGzBridge
 
 def launch_setup(context, *args, **kwargs):
     # 패키지 경로
-    pkg_drobot_sim = get_package_share_directory('drobot_simulation')
+    pkg_drobot_desc = get_package_share_directory('drobot_description')  # URDF, meshes, worlds
+    pkg_drobot_sim = get_package_share_directory('drobot_simulation')    # config, launch
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
-    # URDF 파일 경로
-    urdf_file = os.path.join(pkg_drobot_sim, 'urdf', 'drobot.urdf.xacro')
+    # URDF 파일 경로 (drobot_description)
+    urdf_file = os.path.join(pkg_drobot_desc, 'urdf', 'drobot.urdf.xacro')
 
     # Launch arguments 값 가져오기
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -40,8 +52,17 @@ def launch_setup(context, *args, **kwargs):
     spawn_x = LaunchConfiguration('spawn_x').perform(context)
     spawn_y = LaunchConfiguration('spawn_y').perform(context)
 
-    # World 파일 경로
-    world_file = os.path.join(pkg_drobot_sim, 'worlds', f'{world_name}.sdf')
+    # World 파일 경로 (drobot_description)
+    # 기본 폴더와 generated 폴더 모두 확인
+    world_file = os.path.join(pkg_drobot_desc, 'worlds', f'{world_name}.sdf')
+    if not os.path.exists(world_file):
+        # generated 폴더에서 찾기
+        world_file = os.path.join(pkg_drobot_desc, 'worlds', 'generated', f'{world_name}.sdf')
+    if not os.path.exists(world_file):
+        print(f"[WARNING] World file not found: {world_name}.sdf")
+        print(f"  Searched: worlds/ and worlds/generated/")
+        # 기본 empty 월드로 폴백
+        world_file = os.path.join(pkg_drobot_desc, 'worlds', 'empty.sdf')
 
     # URDF를 xacro로 처리
     robot_description = ParameterValue(

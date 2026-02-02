@@ -5,8 +5,12 @@ Evaluates driving rules and constraints during navigation.
 """
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
+import logging
 import yaml
 import os
+
+# 로거 설정
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -60,7 +64,7 @@ class RuleEngine:
 
             return True
         except Exception as e:
-            print(f"Failed to load rules: {e}")
+            logger.error(f"Failed to load rules: {e}")
             return False
 
     def check_forbidden_zone(

@@ -17,12 +17,13 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     # 패키지 경로
-    pkg_drobot_sim = get_package_share_directory('drobot_simulation')
+    pkg_drobot_desc = get_package_share_directory('drobot_description')  # URDF, meshes, worlds
+    pkg_drobot_sim = get_package_share_directory('drobot_simulation')    # config, launch
 
-    # URDF 파일 경로
-    urdf_file = os.path.join(pkg_drobot_sim, 'urdf', 'drobot.urdf.xacro')
+    # URDF 파일 경로 (drobot_description)
+    urdf_file = os.path.join(pkg_drobot_desc, 'urdf', 'drobot.urdf.xacro')
 
-    # RViz 설정 파일 경로
+    # RViz 설정 파일 경로 (drobot_simulation)
     rviz_config = os.path.join(pkg_drobot_sim, 'config', 'display.rviz')
 
     # Launch arguments

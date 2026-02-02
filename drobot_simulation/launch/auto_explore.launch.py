@@ -21,12 +21,17 @@ from nav2_common.launch import RewrittenYaml
 
 # 맵별 기본 스폰 위치 (장애물 없는 안전한 위치)
 WORLD_SPAWN_POSITIONS = {
+    # 기본 월드
     'full_world': (1.0, 1.0),
     'empty': (0.0, 0.0),          # 10x10m 맵 중앙
     'simple_room': (0.0, 0.0),
     'warehouse': (0.0, -3.0),      # 선반 아래쪽 빈 공간
     'f1_circuit': (0.0, 3.5),      # 트랙 위 (빨간/파란 경계 사이)
     'office_maze': (-4.0, -3.0),   # 미로 코너 빈 공간
+    # 생성된 월드 (worlds/generated/)
+    'room_generated': (0.0, 0.0),     # 15x15 방 중앙
+    'maze_generated': (-8.0, -8.0),   # 20x20 미로 코너에서 시작
+    'road_test': (0.0, -3.0),         # 도로 옆에서 시작
 }
 
 

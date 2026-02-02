@@ -90,6 +90,48 @@
 
 ---
 
+## 구조 리팩토링 (중요)
+
+### 중복 파일 정리
+- [ ] `nav2_params.yaml` 중복 제거 (simulation/ vs navigation/)
+- [ ] `config.py` 중복 제거
+- [ ] `navigation.launch.py` 중복 제거
+
+### 패키지 역할 분리
+- [ ] **drobot_description** 분리 (urdf/, meshes/ 만)
+- [ ] **drobot_simulation** 정리 (worlds/, simulation.launch.py 만)
+- [ ] **drobot_navigation** 통합 (auto_explorer, goal_navigator, nav2 설정)
+- [ ] **drobot_bringup** 생성 (통합 런치 파일)
+
+### 현재 문제점
+```
+drobot_simulation/     # 시뮬레이션 + 자동탐색 + Nav2 (너무 많음!)
+drobot_navigation/     # 목표 네비 (simulation과 중복)
+drobot_advanced/       # 빈 껍데기
+```
+
+### 목표 구조
+```
+drobot_description/    # 로봇 모델만
+drobot_simulation/     # 시뮬레이션만
+drobot_navigation/     # 네비게이션 전체
+drobot_bringup/        # 통합 런치
+drobot_advanced/       # PX4, Isaac
+```
+
+---
+
+## 월드 생성 시스템
+
+### 동적 맵 생성
+- [ ] SDF 베이스 템플릿 (고정: physics, lighting, ground, 외벽)
+- [ ] Python 동적 컨텐츠 생성기 (내부 벽, 가구, 장애물)
+- [ ] YAML 설정 파일 → SDF 자동 생성
+- [ ] ROS2 Spawn Service로 런타임 객체 추가/삭제
+- [ ] Procedural 맵 생성 (maze, warehouse 등)
+
+---
+
 ## 기타 개선사항
 
 ### 시각화

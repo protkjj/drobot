@@ -13,7 +13,7 @@ from typing import Optional, Tuple
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Twist
+from geometry_msgs.msg import PoseStamped, Twist
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from visualization_msgs.msg import Marker
@@ -174,9 +174,10 @@ class GoalNavigator(Node):
         self.goals_attempted += 1
 
         # Create goal message
+        # Note: stamp=Time(0) tells Nav2 to use latest TF (avoids extrapolation errors)
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose.header.frame_id = 'map'
-        goal_msg.pose.header.stamp = self.get_clock().now().to_msg()
+        # goal_msg.pose.header.stamp defaults to Time(0) - use latest TF
         goal_msg.pose.pose.position.x = x
         goal_msg.pose.pose.position.y = y
 

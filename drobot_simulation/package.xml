@@ -20,11 +20,18 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Robot Description -->
+  <depend>drobot_description</depend>
+
   <!-- ROS 2 Core -->
   <depend>rclpy</depend>
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
+
+  <!-- Python Dependencies -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
 
   <!-- URDF/Xacro -->
   <depend>xacro</depend>

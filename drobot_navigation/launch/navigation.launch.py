@@ -11,18 +11,25 @@ import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 
 # World-specific spawn positions
 WORLD_SPAWN_POSITIONS = {
+    # 기본 월드
     'empty': (0.0, 0.0),
     'full_world': (1.0, 1.0),
+    'simple_room': (0.0, 0.0),
     'warehouse': (0.0, -3.0),
     'f1_circuit': (0.0, 3.5),
     'office_maze': (-4.0, -3.0),
+    # 생성된 월드 (worlds/generated/)
+    'room_generated': (0.0, 0.0),
+    'maze_generated': (-8.0, -8.0),
+    'road_test': (0.0, -3.0),
+    'road_simple': (0.0, -1.0),
+    'param_test': (0.0, 0.0),
 }
 
 
@@ -67,7 +74,7 @@ def launch_setup(context):
         parameters=[ekf_params, {'use_sim_time': True}],
     )
 
-    # SLAM Toolbox
+    # SLAM Toolbox (async mode for real-time mapping)
     slam_node = Node(
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
@@ -77,6 +84,7 @@ def launch_setup(context):
     )
 
     # Nav2 Lifecycle Manager for SLAM
+    # bond_timeout: 0.0 disables heartbeat monitoring (recommended for simulation)
     slam_lifecycle = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -85,7 +93,7 @@ def launch_setup(context):
         parameters=[{
             'use_sim_time': True,
             'autostart': True,
-            'bond_timeout': 10.0,
+            'bond_timeout': 0.0,
             'node_names': ['slam_toolbox']
         }],
     )
@@ -137,7 +145,8 @@ def launch_setup(context):
         parameters=[nav2_params],
     )
 
-    # Nav2 Lifecycle Manager
+    # Nav2 Lifecycle Manager for Navigation
+    # bond_timeout: 0.0 disables heartbeat monitoring (recommended for simulation)
     nav_lifecycle = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -146,6 +155,7 @@ def launch_setup(context):
         parameters=[{
             'use_sim_time': True,
             'autostart': True,
+            'bond_timeout': 0.0,
             'node_names': [
                 'controller_server',
                 'planner_server',
@@ -185,7 +195,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'world',
             default_value='empty',
-            description='World name (empty, warehouse, f1_circuit, office_maze)'
+            description='World name (empty, warehouse, f1_circuit, office_maze, param_test)'
         ),
         OpaqueFunction(function=launch_setup),
     ])

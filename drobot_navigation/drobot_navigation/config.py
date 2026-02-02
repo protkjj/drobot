@@ -3,16 +3,10 @@ Configuration for Drobot Navigation VER1.
 
 Clean, organized parameters for goal-based autonomous navigation.
 """
-import math
 
 
 class Config:
     """Navigation configuration constants."""
-
-    # ==================== Robot Physical ====================
-    ROBOT_RADIUS = 0.12             # m - robot collision radius
-    MAX_LINEAR_SPEED = 0.22         # m/s - maximum forward speed
-    MAX_ANGULAR_SPEED = 0.8         # rad/s - maximum rotation speed
 
     # ==================== Safety ====================
     COLLISION_STOP_DIST = 0.40      # m - emergency stop distance
