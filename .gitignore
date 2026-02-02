@@ -48,3 +48,6 @@ frames_*.pdf
 # Large files (optional - uncomment if needed)
 # *.step
 # *.stl
+
+# External packages (clone separately)
+px4_msgs/

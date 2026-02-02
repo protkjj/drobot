@@ -4,6 +4,26 @@
 
 4바퀴 스키드 스티어 주행 + 쿼드콥터 비행이 가능한 하이브리드 로봇 프로젝트
 
+## 프로젝트 로드맵
+
+```
+[Phase 1] 지상 주행 - 2D Navigation ✅ 완료
+    ├── Nav2 + SLAM Toolbox
+    ├── Frontier-based 자동 탐색
+    └── 4바퀴 스키드 스티어 제어
+           ↓
+[Phase 2] 드론 비행 - 3D Control 🚧 진행중
+    ├── PX4 SITL + Gazebo ✅
+    ├── QGroundControl ✅
+    ├── ROS 2 연동 (Micro XRCE-DDS) ✅
+    └── 호버링/이륙/착륙 테스트
+           ↓
+[Phase 3] 하이브리드 - 지상+비행 전환 (예정)
+    ├── 모드 전환 로직 (주행 ↔ 비행)
+    ├── 3D SLAM (RTAB-Map, Octomap)
+    └── 3D 경로 계획
+```
+
 ## 패키지 구조
 
 ```
@@ -16,7 +36,7 @@ drobot/
 
 ## 빠른 시작
 
-### 1. 설치
+### 1. 설치 (지상 주행)
 ```bash
 # 필수 패키지
 sudo apt update && sudo apt install -y \
@@ -31,7 +51,7 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-### 2. 실행
+### 2. 실행 (지상 주행)
 ```bash
 # 터미널 열 때마다 실행
 source ~/drobot/install/setup.bash
@@ -138,6 +158,96 @@ ros2 launch drobot_simulation simulation.launch.py
 # 다른 터미널에서 키보드 조종
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
+
+---
+
+## PX4 드론 비행 (Phase 2)
+
+### PX4 설치
+```bash
+# 의존성
+sudo apt install -y git make cmake python3-pip python3-jinja2 python3-empy \
+  python3-toml python3-numpy python3-packaging python3-jsonschema libfuse2 \
+  gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl \
+  libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev
+
+# PX4 클론 및 설치
+cd ~
+git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+cd PX4-Autopilot
+bash ./Tools/setup/ubuntu.sh
+sudo reboot
+
+# 첫 빌드 (10-20분 소요)
+cd ~/PX4-Autopilot
+make px4_sitl gz_x500
+```
+
+### QGroundControl 설치
+```bash
+# 사전 설정
+sudo usermod -aG dialout "$(id -un)"
+sudo systemctl mask --now ModemManager.service
+
+# 다운로드 (브라우저에서)
+# https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/download_and_install.html
+
+# 실행 권한
+chmod +x ~/Downloads/QGroundControl-x86_64.AppImage
+```
+
+### Micro XRCE-DDS Agent 설치 (ROS 2 브릿지)
+```bash
+cd ~
+git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
+cd Micro-XRCE-DDS-Agent
+mkdir build && cd build
+cmake ..
+make -j$(nproc)
+sudo make install
+sudo ldconfig
+```
+
+### px4_msgs 설치
+```bash
+cd ~/drobot
+git clone https://github.com/PX4/px4_msgs.git -b release/1.15
+colcon build --packages-select px4_msgs
+source install/setup.bash
+```
+
+### PX4 드론 실행 (터미널 4개)
+
+| 터미널 | 명령어 |
+|--------|--------|
+| T1 | `cd ~/PX4-Autopilot && make px4_sitl gz_x500` |
+| T2 | `MicroXRCEAgent udp4 -p 8888` |
+| T3 | `~/Downloads/QGroundControl-x86_64.AppImage` |
+| T4 | `source ~/drobot/install/setup.bash && ros2 topic list` |
+
+### 이륙 테스트
+```bash
+# PX4 콘솔(pxh>)에서
+commander takeoff
+
+# 착륙
+commander land
+```
+
+### 유용한 PX4 명령어 (pxh>)
+
+| 명령어 | 설명 |
+|--------|------|
+| `commander arm` | 시동 |
+| `commander disarm` | 시동 끄기 |
+| `commander takeoff` | 이륙 |
+| `commander land` | 착륙 |
+| `commander mode posctl` | 위치 제어 모드 |
+| `param set COM_RCL_EXCEPT 4` | RC 없이 Offboard 허용 |
+| `param set NAV_DLL_ACT 0` | GCS 끊김 failsafe 비활성화 |
+| `param save` | 파라미터 저장 |
+
+---
 
 ## 명령어 요약
 

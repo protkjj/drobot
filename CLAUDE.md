@@ -9,15 +9,17 @@
 ## 프로젝트 로드맵
 
 ```
-[Phase 1] 지상 주행 - 2D Navigation (현재)
+[Phase 1] 지상 주행 - 2D Navigation ✅ 완료
     ├── Nav2 + SLAM Toolbox
     ├── Frontier-based 자동 탐색
     └── 4바퀴 스키드 스티어 제어
            ↓
-[Phase 2] 드론 비행 - 3D Control (예정)
-    ├── PX4 Autopilot + MAVROS
-    ├── 쿼드콥터 프로펠러 제어
-    └── 호버링/이륙/착륙
+[Phase 2] 드론 비행 - 3D Control 🚧 진행중
+    ├── PX4 SITL + Gazebo ✅
+    ├── QGroundControl ✅
+    ├── Micro XRCE-DDS Agent (ROS 2 브릿지) ✅
+    ├── px4_msgs 패키지 ✅
+    └── 호버링/이륙/착륙 테스트
            ↓
 [Phase 3] 하이브리드 - 지상+비행 전환 (최종 목표)
     ├── 모드 전환 로직 (주행 ↔ 비행)
@@ -154,11 +156,14 @@ SLAM   EKF (odom→base_footprint TF 발행)
 - [ ] 탐색 성공률 개선
 - [ ] Waypoint 저장/이동
 
-### Phase 2 (드론 비행) - 예정
-- [ ] PX4 SITL 설치 및 연동
-- [ ] MAVROS 브릿지 구성
-- [ ] 프로펠러 제어 구현
+### Phase 2 (드론 비행) - 진행중
+- [x] PX4 SITL 설치 및 연동
+- [x] QGroundControl 설치
+- [x] Micro XRCE-DDS Agent 설치 (ROS 2 브릿지)
+- [x] px4_msgs 패키지 설치
 - [ ] 호버링/이륙/착륙 테스트
+- [ ] drobot에 PX4 플러그인 연동
+- [ ] 프로펠러 제어 구현
 
 ### Phase 3 (하이브리드) - 최종
 - [ ] 주행 ↔ 비행 모드 전환 로직
@@ -166,6 +171,48 @@ SLAM   EKF (odom→base_footprint TF 발행)
 - [ ] RTAB-Map 3D SLAM 연동
 - [ ] Octomap 3D 경로 계획
 - [ ] Isaac Sim 마이그레이션 (선택)
+
+## PX4 드론 비행 설정
+
+### 설치 완료 항목
+- PX4-Autopilot: `~/PX4-Autopilot`
+- QGroundControl: `~/Downloads/QGroundControl-x86_64.AppImage`
+- Micro XRCE-DDS Agent: 시스템 설치 완료
+- px4_msgs: `~/drobot/px4_msgs`
+
+### PX4 실행 순서 (터미널 4개)
+| 순서 | 터미널 | 명령어 |
+|------|--------|--------|
+| 1 | T1 | `cd ~/PX4-Autopilot && make px4_sitl gz_x500` |
+| 2 | T2 | `MicroXRCEAgent udp4 -p 8888` |
+| 3 | T3 | `~/Downloads/QGroundControl-x86_64.AppImage` |
+| 4 | T4 | `source ~/drobot/install/setup.bash && ros2 topic list` |
+
+### PX4 콘솔 명령어 (pxh>)
+| 명령어 | 설명 |
+|--------|------|
+| `commander arm` | 시동 |
+| `commander disarm` | 시동 끄기 |
+| `commander takeoff` | 이륙 |
+| `commander land` | 착륙 |
+| `commander mode posctl` | 위치 제어 모드 |
+| `listener vehicle_local_position` | 위치 확인 |
+| `param set COM_RCL_EXCEPT 4` | RC 없이 Offboard 허용 |
+| `param set NAV_RCL_ACT 0` | RC 끊김 failsafe 비활성화 |
+| `param set NAV_DLL_ACT 0` | GCS 끊김 failsafe 비활성화 |
+| `param save` | 파라미터 저장 |
+
+### ROS 2 PX4 토픽
+```bash
+# 토픽 목록
+ros2 topic list | grep fmu
+
+# 위치 확인
+ros2 topic echo /fmu/out/vehicle_local_position
+
+# 상태 확인
+ros2 topic echo /fmu/out/vehicle_status
+```
 
 ## 주요 명령어
 
