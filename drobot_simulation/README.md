@@ -7,19 +7,19 @@ ROS 2 Jazzy + Gazebo Harmonic 시뮬레이션 패키지
 ```
 drobot_simulation/
 ├── launch/
+│   ├── auto_explore.launch.py # 자동 탐색 (SLAM + Nav2 + Frontier)
 │   ├── simulation.launch.py   # Gazebo + RViz 시뮬레이션
 │   ├── display.launch.py      # RViz 시각화 (Gazebo 없이)
-│   └── slam.launch.py         # SLAM 실행
-├── urdf/
-│   └── drobot.urdf.xacro      # 로봇 모델 (LiDAR, 카메라, IMU 포함)
-├── meshes/                     # STL 파일 (여기에 넣으세요)
-│   ├── drone_body.stl         # 본체 (Onshape에서 export)
-│   └── propeller.stl          # 프로펠러
-├── worlds/
-│   └── empty.sdf              # Gazebo 월드 (장애물 포함)
+│   └── localization.launch.py # EKF 로컬라이제이션
+├── urdf/                       # → drobot_description/urdf로 이동됨
+├── meshes/                     # → drobot_description/meshes로 이동됨
+│   └── drobot_body.stl        # 전체 로봇 STL (20MB)
+├── worlds/                     # → drobot_description/worlds로 이동됨
 ├── config/
-│   ├── display.rviz           # RViz 설정
-│   └── slam_params.yaml       # SLAM 파라미터
+│   ├── nav2_params.yaml       # Nav2 설정 (VER0 자동 탐색용)
+│   ├── slam_params.yaml       # SLAM 설정
+│   ├── ekf.yaml               # EKF 설정
+│   └── ros_gz_bridge.yaml     # Gazebo 브릿지 설정
 ├── CMakeLists.txt
 └── package.xml
 ```

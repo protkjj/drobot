@@ -1,5 +1,10 @@
-# Nav2 Parameters for Drobot Navigation VER1
-# 안전 최우선 설정
+# =============================================================================
+# Nav2 Parameters for Drobot - VER1 목표 기반 자율주행 (Goal Navigation)
+# =============================================================================
+# 용도: navigation.launch.py (SLAM Toolbox와 함께 사용)
+# 특징: 빠르고 공격적, 장애물 회피 강화
+# 참고: drobot_simulation/config/nav2_params.yaml은 VER0 자동 탐색용 (더 느림)
+# =============================================================================
 
 bt_navigator:
   ros__parameters:

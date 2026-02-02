@@ -255,39 +255,43 @@ pkill -9 -f "rviz|gz"
 ```
 drobot/
 ├── CLAUDE.md                    # 이 파일
+├── README.md                    # 사용법 가이드
 ├── files/                       # SolidWorks 원본 파일
 │   └── drobot v0.2.STL
-└── drobot_simulation/
-    ├── urdf/drobot.urdf.xacro   # 로봇 모델
-    ├── meshes/
-    │   ├── drobot_body.stl      # 전체 STL (현재 사용)
-    │   ├── body.stl             # 본체만 (미사용)
-    │   ├── leg_*.stl            # 다리 4개 (미사용)
-    │   └── wheel_*.stl          # 바퀴 4개 (미사용)
-    ├── worlds/                   # Gazebo 월드들
-    │   ├── full_world.sdf
-    │   ├── warehouse.sdf
-    │   ├── f1_circuit.sdf
-    │   └── office_maze.sdf
-    ├── launch/
-    │   ├── simulation.launch.py      # 시뮬레이션
-    │   ├── auto_explore.launch.py    # 자동 탐색 (맵별 스폰 위치 포함)
-    │   └── localization.launch.py    # EKF
-    ├── config/
-    │   ├── nav2_params.yaml     # Nav2 설정
-    │   ├── slam_params.yaml     # SLAM 설정
-    │   ├── ekf.yaml             # EKF 설정
-    │   └── ros_gz_bridge.yaml   # Gazebo 브릿지
-    └── drobot_simulation/
-        └── auto_explorer.py     # 자동 탐색 노드
+├── px4_msgs/                    # PX4 ROS 2 메시지 (외부 패키지)
+├── drobot_description/          # 공용 리소스
+│   ├── urdf/drobot.urdf.xacro   # 로봇 모델
+│   ├── meshes/
+│   │   └── drobot_body.stl      # 전체 STL (20MB)
+│   └── worlds/                   # Gazebo 월드들
+│       ├── empty.sdf, full_world.sdf, warehouse.sdf
+│       ├── f1_circuit.sdf, office_maze.sdf
+│       └── generated/            # 자동 생성 월드
+├── drobot_simulation/           # VER0 자동 탐색
+│   ├── launch/
+│   │   ├── auto_explore.launch.py    # 자동 탐색 (메인)
+│   │   ├── simulation.launch.py      # 시뮬레이션만
+│   │   └── localization.launch.py    # EKF
+│   ├── config/
+│   │   ├── nav2_params.yaml     # Nav2 설정 (탐색용)
+│   │   ├── slam_params.yaml     # SLAM 설정
+│   │   └── ekf.yaml             # EKF 설정
+│   └── drobot_simulation/
+│       └── auto_explorer.py     # 자동 탐색 노드
+├── drobot_navigation/           # VER1 목표 이동
+│   ├── launch/navigation.launch.py
+│   ├── config/nav2_params.yaml  # Nav2 설정 (이동용)
+│   └── drobot_navigation/
+│       └── goal_navigator.py    # 목표 네비게이션 노드
+└── drobot_advanced/             # VER4 Isaac Sim + PX4 (예정)
 ```
 
 ## 알려진 이슈
-1. **STL 20MB**: 파일이 커서 Gazebo 로딩 느림
-   - 해결 예정: 폴리곤 수 줄이기 또는 부위별 분리
+1. **STL 20MB**: drobot_body.stl 파일이 커서 Gazebo 로딩 느림
+   - 해결 예정: 폴리곤 수 줄이기
 
 2. **바퀴 회전 시각화 안됨**: 통째 STL 사용으로 바퀴가 굴러가는 것처럼 보이지 않음
-   - 해결 예정: 부위별 STL 분리 후 각 링크에 적용
+   - 해결 예정: SolidWorks에서 부위별 STL 재추출 후 각 링크에 적용
 
 3. **긴 경로 탐색 실패**: 먼 목표로 이동 시 "No progress" 발생
    - 원인: 좁은 통로나 복잡한 경로에서 막힘
