@@ -283,7 +283,6 @@ drobot/
 │   ├── config/nav2_params.yaml  # Nav2 설정 (이동용)
 │   └── drobot_navigation/
 │       └── goal_navigator.py    # 목표 네비게이션 노드
-└── drobot_advanced/             # VER4 Isaac Sim + PX4 (예정)
 ```
 
 ## 알려진 이슈

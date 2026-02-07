@@ -107,7 +107,6 @@
 ```
 drobot_simulation/     # 시뮬레이션 + 자동탐색 + Nav2 (너무 많음!)
 drobot_navigation/     # 목표 네비 (simulation과 중복)
-drobot_advanced/       # 빈 껍데기
 ```
 
 ### 목표 구조
@@ -116,7 +115,6 @@ drobot_description/    # 로봇 모델만
 drobot_simulation/     # 시뮬레이션만
 drobot_navigation/     # 네비게이션 전체
 drobot_bringup/        # 통합 런치
-drobot_advanced/       # PX4, Isaac
 ```
 
 ---
@@ -149,7 +147,6 @@ drobot_advanced/       # PX4, Isaac
 
 ### 2026-02-01
 - [x] VER1 패키지 생성 (drobot_navigation)
-- [x] VER4 placeholder 생성 (drobot_advanced)
 - [x] 규칙 엔진 구현
 - [x] CLAUDE.md, TODO.md 업데이트
 - [x] 프론티어 탐색 한계 분석 → VER1 전환 결정
