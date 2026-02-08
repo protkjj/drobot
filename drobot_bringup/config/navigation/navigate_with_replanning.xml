@@ -1,0 +1,44 @@
+<!--
+  Drobot Navigation Behavior Tree v2
+  목표 방향 회전 → 경로 추종 → 막히면 복구
+-->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <!-- 메인 네비게이션 -->
+      <PipelineSequence name="NavigateWithReplanning">
+        <ControllerSelector selected_controller="{selected_controller}" default_controller="FollowPath"/>
+        <PlannerSelector selected_planner="{selected_planner}" default_planner="GridBased"/>
+
+        <!-- 경로 계획 -->
+        <RateController hz="1.0">
+          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="{selected_planner}"/>
+            <Sequence name="ClearAndReplan">
+              <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
+              <ComputePathToPose goal="{goal}" path="{path}" planner_id="{selected_planner}"/>
+            </Sequence>
+          </RecoveryNode>
+        </RateController>
+
+        <!-- 경로 추종 (실패 시 후진 → 회전 후 재시도) -->
+        <RecoveryNode number_of_retries="3" name="FollowPathWithRecovery">
+          <FollowPath path="{path}" controller_id="{selected_controller}"/>
+          <Sequence name="BackupAndRetry">
+            <ClearEntireCostmap name="ClearLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <BackUp backup_dist="0.3" backup_speed="0.15" name="BackUpSmall"/>
+            <Spin spin_dist="1.57" name="SpinToReorient"/>
+          </Sequence>
+        </RecoveryNode>
+      </PipelineSequence>
+
+      <!-- 복구 시퀀스: costmap 클리어 → 후진 → 회전 -->
+      <Sequence name="RecoveryActions">
+        <ClearEntireCostmap name="ClearLocalCostmap" service_name="local_costmap/clear_entirely_local_costmap"/>
+        <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
+        <BackUp backup_dist="0.5" backup_speed="0.15" name="BackUp"/>
+        <Spin spin_dist="1.57" name="Spin90"/>
+      </Sequence>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>
