@@ -3,6 +3,8 @@
 Drobot Navigation VER1 Launch File
 
 Goal-based autonomous navigation with rule engine.
+Standalone launch - drobot_simulation 패키지 없이 독립 실행 가능.
+
 Usage:
   ros2 launch drobot_navigation navigation.launch.py
   ros2 launch drobot_navigation navigation.launch.py world:=f1_circuit
@@ -11,8 +13,11 @@ import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
+from ros_gz_bridge.actions import RosGzBridge
 
 
 # World-specific spawn positions
@@ -37,9 +42,11 @@ def launch_setup(context):
     """Setup launch with context for spawn positions."""
     # Package directories
     nav_pkg = get_package_share_directory('drobot_navigation')
-    sim_pkg = get_package_share_directory('drobot_simulation')
+    desc_pkg = get_package_share_directory('drobot_description')
+    gz_sim_pkg = get_package_share_directory('ros_gz_sim')
 
-    # Get world name
+    # Get launch arguments
+    use_sim_time = LaunchConfiguration('use_sim_time')
     world = context.launch_configurations.get('world', 'empty')
 
     # Get spawn position for this world
@@ -47,25 +54,88 @@ def launch_setup(context):
     spawn_x = str(default_x)
     spawn_y = str(default_y)
 
-    # Config files
+    # URDF (from drobot_description)
+    urdf_file = os.path.join(desc_pkg, 'urdf', 'drobot.urdf.xacro')
+    robot_description = ParameterValue(
+        Command(['xacro ', urdf_file]),
+        value_type=str
+    )
+
+    # World file (from drobot_description)
+    world_file = os.path.join(desc_pkg, 'worlds', f'{world}.sdf')
+    if not os.path.exists(world_file):
+        world_file = os.path.join(desc_pkg, 'worlds', 'generated', f'{world}.sdf')
+    if not os.path.exists(world_file):
+        print(f"[WARNING] World file not found: {world}.sdf")
+        print(f"  Searched: worlds/ and worlds/generated/")
+        world_file = os.path.join(desc_pkg, 'worlds', 'empty.sdf')
+
+    # Config files (all from nav_pkg)
     nav2_params = os.path.join(nav_pkg, 'config', 'nav2_params.yaml')
     bt_xml = os.path.join(nav_pkg, 'config', 'navigate_with_replanning.xml')
-    slam_params = os.path.join(sim_pkg, 'config', 'slam_params.yaml')
-    ekf_params = os.path.join(sim_pkg, 'config', 'ekf.yaml')
+    slam_params = os.path.join(nav_pkg, 'config', 'slam_params.yaml')
+    ekf_params = os.path.join(nav_pkg, 'config', 'ekf.yaml')
+    bridge_config = os.path.join(nav_pkg, 'config', 'ros_gz_bridge.yaml')
+    rviz_config = os.path.join(nav_pkg, 'config', 'display.rviz')
 
-    # Include simulation launch with spawn position
-    simulation_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(sim_pkg, 'launch', 'simulation.launch.py')
-        ),
+    # ========== Simulation Nodes ==========
+
+    # Robot State Publisher
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{
+            'robot_description': robot_description,
+            'use_sim_time': use_sim_time
+        }]
+    )
+
+    # Gazebo Sim (Harmonic)
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
+        ]),
         launch_arguments={
-            'world': world,
-            'spawn_x': spawn_x,
-            'spawn_y': spawn_y,
+            'gz_args': f'-r {world_file}',
+            'on_exit_shutdown': 'true'
         }.items()
     )
 
-    # EKF for localization
+    # Robot Spawn
+    spawn_robot = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-topic', 'robot_description',
+            '-name', 'drobot',
+            '-x', spawn_x,
+            '-y', spawn_y,
+            '-z', '0.1'
+        ],
+        output='screen'
+    )
+
+    # ROS-Gazebo Bridge
+    ros_gz_bridge = RosGzBridge(
+        bridge_name='ros_gz_bridge',
+        config_file=bridge_config,
+    )
+
+    # RViz2
+    rviz2 = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen'
+    )
+
+    # ========== Localization Nodes ==========
+
+    # EKF
     ekf_node = Node(
         package='robot_localization',
         executable='ekf_node',
@@ -74,7 +144,7 @@ def launch_setup(context):
         parameters=[ekf_params, {'use_sim_time': True}],
     )
 
-    # SLAM Toolbox (async mode for real-time mapping)
+    # SLAM Toolbox
     slam_node = Node(
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
@@ -83,8 +153,6 @@ def launch_setup(context):
         parameters=[slam_params, {'use_sim_time': True}],
     )
 
-    # Nav2 Lifecycle Manager for SLAM
-    # bond_timeout: 0.0 disables heartbeat monitoring (recommended for simulation)
     slam_lifecycle = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -98,7 +166,8 @@ def launch_setup(context):
         }],
     )
 
-    # Nav2 Controller Server
+    # ========== Navigation Nodes ==========
+
     controller_server = Node(
         package='nav2_controller',
         executable='controller_server',
@@ -107,7 +176,6 @@ def launch_setup(context):
         parameters=[nav2_params],
     )
 
-    # Nav2 Planner Server
     planner_server = Node(
         package='nav2_planner',
         executable='planner_server',
@@ -116,7 +184,6 @@ def launch_setup(context):
         parameters=[nav2_params],
     )
 
-    # Nav2 Behavior Server
     behavior_server = Node(
         package='nav2_behaviors',
         executable='behavior_server',
@@ -125,7 +192,6 @@ def launch_setup(context):
         parameters=[nav2_params],
     )
 
-    # Nav2 BT Navigator
     bt_navigator = Node(
         package='nav2_bt_navigator',
         executable='bt_navigator',
@@ -136,7 +202,6 @@ def launch_setup(context):
         }],
     )
 
-    # Velocity Smoother
     velocity_smoother = Node(
         package='nav2_velocity_smoother',
         executable='velocity_smoother',
@@ -145,8 +210,6 @@ def launch_setup(context):
         parameters=[nav2_params],
     )
 
-    # Nav2 Lifecycle Manager for Navigation
-    # bond_timeout: 0.0 disables heartbeat monitoring (recommended for simulation)
     nav_lifecycle = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -176,10 +239,17 @@ def launch_setup(context):
     )
 
     return [
-        simulation_launch,
+        # Simulation
+        robot_state_publisher,
+        gazebo,
+        spawn_robot,
+        ros_gz_bridge,
+        rviz2,
+        # Localization
         ekf_node,
         slam_node,
         slam_lifecycle,
+        # Navigation
         controller_server,
         planner_server,
         behavior_server,
@@ -192,6 +262,11 @@ def launch_setup(context):
 
 def generate_launch_description():
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation time'
+        ),
         DeclareLaunchArgument(
             'world',
             default_value='empty',
