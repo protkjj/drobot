@@ -51,3 +51,9 @@ frames_*.pdf
 
 # External packages (clone separately)
 px4_msgs/
+
+
+#md
+CLAUDE.md
+TODO.md
+
