@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 """
-Drobot Navigation VER1 Launch File
-
-Goal-based autonomous navigation with rule engine.
-Standalone launch - drobot_simulation 패키지 없이 독립 실행 가능.
-
 Usage:
   ros2 launch drobot_navigation navigation.launch.py
   ros2 launch drobot_navigation navigation.launch.py world:=f1_circuit
 """
+
 import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction

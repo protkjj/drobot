@@ -325,5 +325,6 @@ def main(args=None):
         rclpy.shutdown()
 
 
+## 엔트리 포인트 ; 메인함수 호출
 if __name__ == '__main__':
     main()
