@@ -1,0 +1,15 @@
+world:
+  name: empty
+  ground_color: gray
+
+  walls:
+    enabled: true
+    size: {w: 10, h: 10}
+    height: 1.0
+    thickness: 0.1
+    color: gray
+    doors: []
+
+  spawn:
+    pos: {x: 0, y: 0}
+    safe_radius: 1.5

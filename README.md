@@ -35,41 +35,19 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-### 2. 실행
+### 2. 월드 생성 후 실행
 
 ```bash
-# 터미널 열 때마다
+# 월드 생성 (Interactive)
+cd drobot_description/scripts
+python3 generate_world.py -i
+
+# 빌드 & 실행
+cd ~/drobot/"version a"
+colcon build --symlink-install
 source install/setup.bash
-
-# 기본 실행 (empty 월드)
-ros2 launch drobot_bringup navigation.launch.py
-
-# 월드 변경
-ros2 launch drobot_bringup navigation.launch.py world:=warehouse
-ros2 launch drobot_bringup navigation.launch.py world:=f1_circuit
-ros2 launch drobot_bringup navigation.launch.py world:=office_maze
+ros2 launch drobot_bringup navigation.launch.py world:=<생성한 월드 이름>
 ```
-
-## 사용 가능한 월드
-
-### 기본 월드
-
-| 월드 | 설명 | 명령어 |
-|------|------|--------|
-| `empty` | 장애물 있는 방 (기본) | `world:=empty` |
-| `full_world` | 복합 환경 | `world:=full_world` |
-| `simple_room` | 거실 | `world:=simple_room` |
-| `warehouse` | 창고 | `world:=warehouse` |
-| `office_maze` | 사무실 미로 | `world:=office_maze` |
-| `f1_circuit` | F1 서킷 | `world:=f1_circuit` |
-
-### 생성된 월드 (랜덤 장애물)
-
-| 월드 | 설명 | 명령어 |
-|------|------|--------|
-| `room_generated` | 15x15 랜덤 장애물 방 | `world:=room_generated` |
-| `maze_generated` | 20x20 랜덤 미로 | `world:=maze_generated` |
-| `road_test` | 도로 + 움직이는 차량 | `world:=road_test` |
 
 ## 목표 설정
 
@@ -159,7 +137,7 @@ drobot_description/
 │   ├── obstacles/*.sdf.j2        #   박스, 실린더, 벽
 │   └── environment/*.sdf.j2      #   도로, 차선 마킹
 ├── worlds/                       # Gazebo 월드 파일
-│   ├── *.sdf                     #   수동 생성 월드
+│   ├── empty.sdf                 #   기본 월드
 │   ├── generated/*.sdf           #   자동 생성 월드
 │   └── configs/*.yaml            #   YAML 월드 정의
 └── scripts/generate_world.py     # 월드 생성기
@@ -185,6 +163,7 @@ drobot_bringup/
 | 터미널 열었을 때 | `source install/setup.bash` |
 | 코드 수정 후 | `colcon build && source install/setup.bash` |
 | 실행 | `ros2 launch drobot_bringup navigation.launch.py` |
-| 월드 변경 | `... world:=warehouse` |
+| 월드 변경 | `... world:=<월드이름>` |
+| 월드 생성 | `cd drobot_description/scripts && python3 generate_world.py -i` |
 | 키보드 조종 | `ros2 run teleop_twist_keyboard teleop_twist_keyboard` |
 | 프로세스 종료 | `pkill -9 -f "gz\|rviz"` |
