@@ -15,7 +15,7 @@ version a/
 
 | 패키지 | 역할 |
 |--------|------|
-| `drobot_description` | URDF, STL 메시, Gazebo 월드, 월드 생성기 |
+| `drobot_description` | URDF, STL 메시, Gazebo 월드, Jinja2 월드 생성기 |
 | `drobot_navigation` | 목표 기반 자율주행 노드 + 규칙 엔진 |
 | `drobot_bringup` | 런치 파일, Nav2/SLAM/EKF 설정, RViz 설정 |
 
@@ -83,38 +83,99 @@ ros2 topic pub /goal_pose geometry_msgs/PoseStamped "{
 }"
 ```
 
-## 월드 생성기
+## 월드 생성기 (Jinja2 + YAML)
+
+SDF 템플릿 + YAML config 조합으로 월드를 생성합니다.
+
+### Interactive 모드 (대화형)
+
+```bash
+cd drobot_description/scripts
+python3 generate_world.py -i
+```
+
+단계별 프롬프트로 월드 이름 → 벽 → 스폰 → 장애물 → 도로 → 저장 순서로 진행됩니다.
+YAML config + SDF 파일이 쌍으로 저장됩니다.
+
+### YAML config 모드
 
 ```bash
 cd drobot_description/scripts
 
-# 방 생성
-python3 world_generator.py --type room --size 15 15 --obstacles 8 --output my_room
-
-# 미로 생성
-python3 world_generator.py --type maze --size 20 20 --obstacles 6 --output my_maze
+# YAML config로 생성
+python3 generate_world.py ../worlds/configs/example.yaml -o my_world
 
 # 생성 후 빌드 & 실행
 cd ~/drobot/"version a" && colcon build --symlink-install
 source install/setup.bash
-ros2 launch drobot_bringup navigation.launch.py world:=my_room
+ros2 launch drobot_bringup navigation.launch.py world:=my_world
 ```
 
-## Config 구조
+### YAML config 예시
+
+```yaml
+world:
+  name: my_room
+  ground_color: gray
+  walls:
+    enabled: true
+    size: {w: 10, h: 10}
+    height: 1.0
+    doors: [south]
+  spawn:
+    pos: {x: 0, y: 0}
+    safe_radius: 1.5
+  obstacles:
+    static:
+      - model: box
+        pos: {x: 3, y: 3}
+        size: {x: 0.5, y: 0.5, z: 0.8}
+        color: red
+      - model: cylinder
+        pos: {x: -2, y: 1}
+        radius: 0.3
+        height: 0.6
+        color: green
+    moving:
+      - model: box
+        pos: {x: 2, y: -2}
+        size: {x: 0.4, y: 0.4, z: 0.6}
+        color: yellow
+    random:
+      count: 5
+      models: [box, cylinder]
+      size_range: [0.3, 0.8]
+      seed: 42
+```
+
+## 프로젝트 구조
 
 ```
-drobot_bringup/config/
-├── common/              # 모든 모드 공통
-│   ├── ekf.yaml         # EKF 센서 융합 (odom + IMU)
-│   ├── slam_params.yaml # SLAM Toolbox 설정
-│   └── ros_gz_bridge.yaml # Gazebo-ROS 토픽 브릿지
-├── navigation/          # 목표 이동 모드
-│   ├── nav2_params.yaml # Nav2 파라미터
-│   ├── rules.yaml       # 규칙 엔진 설정
-│   ├── navigate_with_replanning.xml # BT
-│   └── display.rviz     # RViz 설정
-├── spawn_positions.yaml # 월드별 스폰 위치
-└── # 향후: drone/, fsd/ 등 추가 가능
+drobot_description/
+├── urdf/drobot.urdf.xacro       # 로봇 모델 (URDF)
+├── meshes/drobot_body.stl        # 3D 메시 (20MB)
+├── models/                       # Jinja2 SDF 템플릿
+│   ├── base/world.sdf.j2        #   월드 뼈대
+│   ├── obstacles/*.sdf.j2        #   박스, 실린더, 벽
+│   └── environment/*.sdf.j2      #   도로, 차선 마킹
+├── worlds/                       # Gazebo 월드 파일
+│   ├── *.sdf                     #   수동 생성 월드
+│   ├── generated/*.sdf           #   자동 생성 월드
+│   └── configs/*.yaml            #   YAML 월드 정의
+└── scripts/generate_world.py     # 월드 생성기
+
+drobot_navigation/
+└── drobot_navigation/
+    ├── goal_navigator.py         # 목표 기반 자율주행 노드
+    ├── config.py                 # 상수 설정
+    └── rules/engine.py           # YAML 규칙 엔진
+
+drobot_bringup/
+├── launch/navigation.launch.py  # 올인원 런치
+└── config/
+    ├── common/                   # EKF, SLAM, Gazebo 브릿지
+    ├── navigation/               # Nav2, BT, rules, RViz
+    └── spawn_positions.yaml      # 월드별 스폰 위치
 ```
 
 ## 명령어 요약
