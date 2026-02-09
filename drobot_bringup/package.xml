@@ -4,7 +4,7 @@
   <name>drobot_bringup</name>
   <version>1.0.0</version>
   <description>Drobot launch files and configurations for all modes</description>
-  <maintainer email="user@example.com">kjkj</maintainer>
+  <maintainer email="dlrkdwns1589@snu.ac.kr">kjkj</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

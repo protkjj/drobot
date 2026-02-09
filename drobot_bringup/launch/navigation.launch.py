@@ -220,12 +220,16 @@ def launch_setup(context):
     )
 
     # Goal Navigator (main node)
+    rules_file = os.path.join(bringup_pkg, 'config', 'navigation', 'rules.yaml')
     goal_navigator = Node(
         package='drobot_navigation',
         executable='goal_navigator.py',
         name='goal_navigator',
         output='screen',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{
+            'use_sim_time': True,
+            'rules_file': rules_file,
+        }],
     )
 
     return [

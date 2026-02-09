@@ -7,7 +7,6 @@ Receives goal from user (RViz/topic) and navigates safely.
 """
 import math
 import time
-import os
 from typing import Optional, Tuple
 
 import rclpy
@@ -19,8 +18,6 @@ from sensor_msgs.msg import LaserScan
 from visualization_msgs.msg import Marker
 from nav2_msgs.action import NavigateToPose
 from action_msgs.msg import GoalStatus
-from ament_index_python.packages import get_package_share_directory
-
 from drobot_navigation.config import Config
 from drobot_navigation.rules import RuleEngine
 
@@ -43,16 +40,14 @@ class GoalNavigator(Node):
         self.get_logger().info(f'Rules loaded: {len(self.rule_engine.stop_rules)} stop rules')
 
     def _init_rule_engine(self):
-        """Initialize rule engine with rules.yaml."""
-        try:
-            pkg_dir = get_package_share_directory('drobot_bringup')
-            rules_file = os.path.join(pkg_dir, 'config', 'navigation', 'rules.yaml')
-        except Exception:
-            rules_file = os.path.join(
-                os.path.dirname(__file__), '..', '..', 'config', 'navigation', 'rules.yaml'
-            )
+        """Initialize rule engine with rules.yaml (path from ROS parameter)."""
+        self.declare_parameter('rules_file', '')
+        rules_file = self.get_parameter('rules_file').get_parameter_value().string_value
 
-        self.rule_engine = RuleEngine(rules_file)
+        if not rules_file:
+            self.get_logger().warn('No rules_file parameter set, running without rules')
+
+        self.rule_engine = RuleEngine(rules_file if rules_file else None)
 
     def _init_publishers_subscribers(self):
         """Set up ROS publishers and subscribers."""

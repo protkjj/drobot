@@ -4,7 +4,7 @@
   <name>drobot_description</name>
   <version>1.0.0</version>
   <description>Drobot robot description - URDF, meshes, and world files</description>
-  <maintainer email="kjkj@todo.com">kjkj</maintainer>
+  <maintainer email="dlrkdwns1589@snu.ac.kr">kjkj</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

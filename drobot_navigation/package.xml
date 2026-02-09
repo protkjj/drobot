@@ -4,7 +4,7 @@
   <name>drobot_navigation</name>
   <version>2.0.0</version>
   <description>Drobot navigation nodes - goal-based autonomous navigation with rule engine</description>
-  <maintainer email="user@example.com">kjkj</maintainer>
+  <maintainer email="dlrkdwns1589@snu.ac.kr">kjkj</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
