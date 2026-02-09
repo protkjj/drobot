@@ -8,13 +8,14 @@ install(DIRECTORY
   urdf
   meshes
   worlds
+  models
   scripts
   DESTINATION share/${PROJECT_NAME}
 )
 
 # Install Python scripts as executables
 install(PROGRAMS
-  scripts/world_generator.py
+  scripts/generate_world.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,0 +1,329 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="warehouse">
+
+    <!-- Physics -->
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Plugins -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+    <!-- Lighting -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Ground (콘크리트 바닥) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== -->
+    <!-- 창고 외벽 (12m x 8m) -->
+    <!-- ==================== -->
+
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 4 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.2 3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.2 3</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -4 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.2 3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.2 3</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>6 0 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 8 3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 8 3</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-6 0 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 8 3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 8 3</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== -->
+    <!-- 선반 (Shelves) -->
+    <!-- ==================== -->
+
+    <!-- 선반 열 1 -->
+    <model name="shelf_1a">
+      <static>true</static>
+      <pose>-4 2 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_1b">
+      <static>true</static>
+      <pose>-4 -1.5 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 선반 열 2 -->
+    <model name="shelf_2a">
+      <static>true</static>
+      <pose>-1.5 2 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_2b">
+      <static>true</static>
+      <pose>-1.5 -1.5 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 선반 열 3 -->
+    <model name="shelf_3a">
+      <static>true</static>
+      <pose>1.5 2 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_3b">
+      <static>true</static>
+      <pose>1.5 -1.5 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 선반 열 4 -->
+    <model name="shelf_4a">
+      <static>true</static>
+      <pose>4 2 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 3 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_4b">
+      <static>true</static>
+      <pose>4 -1.5 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 2.5 1.5</size></box></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.3 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== -->
+    <!-- 박스/팔레트 -->
+    <!-- ==================== -->
+
+    <model name="pallet_1">
+      <static>true</static>
+      <pose>-2.7 -3 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.8 0.8 0.6</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.8 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.6 0.4 0.2 1</ambient>
+            <diffuse>0.6 0.4 0.2 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pallet_2">
+      <static>true</static>
+      <pose>3 -3 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.8 0.8 0.6</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.8 0.8 0.6</size></box></geometry>
+          <material>
+            <ambient>0.6 0.4 0.2 1</ambient>
+            <diffuse>0.6 0.4 0.2 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_stack">
+      <static>true</static>
+      <pose>0 -3.2 0.4 0 0 0.2</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+          <material>
+            <ambient>0.7 0.5 0.3 1</ambient>
+            <diffuse>0.7 0.5 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
