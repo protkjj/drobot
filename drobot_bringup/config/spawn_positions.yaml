@@ -1,16 +1,5 @@
 # World spawn positions (shared by all launch modes)
+# 생성된 월드는 항상 (0,0) 스폰 → default로 처리
 worlds:
-  # 기본 월드
   empty: {x: 0.0, y: 0.0}
-  full_world: {x: 1.0, y: 1.0}
-  simple_room: {x: 0.0, y: 0.0}
-  warehouse: {x: 0.0, y: -3.0}
-  f1_circuit: {x: 0.0, y: 3.5}
-  office_maze: {x: -4.0, y: -3.0}
-  # 생성된 월드 (worlds/generated/)
-  room_generated: {x: 0.0, y: 0.0}
-  maze_generated: {x: -8.0, y: -8.0}
-  road_test: {x: 0.0, y: -3.0}
-  road_simple: {x: 0.0, y: -1.0}
-  param_test: {x: 0.0, y: 0.0}
 default: {x: 0.0, y: 0.0}
