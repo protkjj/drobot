@@ -1,340 +1,370 @@
 <?xml version="1.0"?>
-<robot name="drobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="drobot">
 
-  <!-- ==================== -->
-  <!-- PARAMETERS           -->
-  <!-- ==================== -->
+  <!-- ============================================================
+       DROBOT - SW2URDF Export → ROS2 변환
+       좌표/mesh는 SW2URDF 자동생성값 그대로 사용
+       Joint type, mimic, gazebo 플러그인 수동 추가
+       ============================================================ -->
 
-  <!-- 로봇 크기 (미터 단위) - Onshape에서 측정 후 수정하세요 -->
-  <xacro:property name="body_length" value="0.30"/>
-  <xacro:property name="body_width" value="0.20"/>
-  <xacro:property name="body_height" value="0.10"/>
-  <xacro:property name="body_mass" value="1.5"/>
+  <xacro:include filename="$(find drobot_description)/urdf/gazebo.xacro"/>
 
-  <!-- 바퀴 파라미터 -->
-  <xacro:property name="wheel_radius" value="0.05"/>
-  <xacro:property name="wheel_width" value="0.04"/>
-  <xacro:property name="wheel_mass" value="0.2"/>
-  <xacro:property name="wheel_base" value="0.24"/>  <!-- 좌우 바퀴 간 거리 -->
-  <xacro:property name="wheel_separation_length" value="0.20"/>  <!-- 앞뒤 바퀴 간 거리 -->
+  <xacro:arg name="use_sim" default="true"/>
+  <xacro:arg name="use_ros2_control" default="true"/>
 
-  <!-- 프로펠러 파라미터 -->
-  <xacro:property name="prop_radius" value="0.08"/>
-  <xacro:property name="prop_height" value="0.01"/>
-  <xacro:property name="prop_mass" value="0.05"/>
-  <xacro:property name="arm_length" value="0.15"/>  <!-- 중심에서 프로펠러까지 -->
+  <!-- ==================== MATERIALS ==================== -->
+  <material name="base_color"><color rgba="0.81 0.86 0.90 1"/></material>
+  <material name="arm_color"><color rgba="0.87 0.32 0.16 1"/></material>
+  <material name="frame_color"><color rgba="0.30 0.30 0.30 1"/></material>
+  <material name="wheel_color"><color rgba="0.65 0.65 0.65 1"/></material>
 
-  <!-- ==================== -->
-  <!-- MATERIALS            -->
-  <!-- ==================== -->
-
-  <material name="blue">
-    <color rgba="0.2 0.4 0.8 1.0"/>
-  </material>
-  <material name="black">
-    <color rgba="0.1 0.1 0.1 1.0"/>
-  </material>
-  <material name="orange">
-    <color rgba="1.0 0.5 0.0 1.0"/>
-  </material>
-  <material name="gray">
-    <color rgba="0.5 0.5 0.5 1.0"/>
-  </material>
-
-  <!-- ==================== -->
-  <!-- MACROS               -->
-  <!-- ==================== -->
-
-  <!-- Inertia 계산 매크로 -->
-  <xacro:macro name="box_inertia" params="m x y z">
-    <inertia ixx="${m*(y*y+z*z)/12}" ixy="0" ixz="0"
-             iyy="${m*(x*x+z*z)/12}" iyz="0"
-             izz="${m*(x*x+y*y)/12}"/>
-  </xacro:macro>
-
-  <xacro:macro name="cylinder_inertia" params="m r h">
-    <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0"
-             iyy="${m*(3*r*r+h*h)/12}" iyz="0"
-             izz="${m*r*r/2}"/>
-  </xacro:macro>
-
-  <!-- 바퀴 매크로 (visual 제거 - 통째 STL에 포함) -->
-  <xacro:macro name="wheel" params="prefix x_offset y_offset">
-    <link name="${prefix}_wheel">
-      <collision>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-      </collision>
-      <inertial>
-        <mass value="${wheel_mass}"/>
-        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-        <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_width}"/>
-      </inertial>
-    </link>
-
-    <joint name="${prefix}_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="${prefix}_wheel"/>
-      <origin xyz="${x_offset} ${y_offset} 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <dynamics damping="0.1" friction="0.1"/>
-    </joint>
-
-    <!-- Gazebo 바퀴 마찰 설정 -->
-    <gazebo reference="${prefix}_wheel">
-      <mu1>1.0</mu1>
-      <mu2>1.0</mu2>
-      <kp>1000000.0</kp>
-      <kd>100.0</kd>
-      <material>Gazebo/DarkGrey</material>
-    </gazebo>
-  </xacro:macro>
-
-  <!-- 프로펠러 매크로 -->
-  <xacro:macro name="propeller" params="prefix x_offset y_offset rotation_dir">
-    <link name="${prefix}_propeller">
-      <visual>
-        <geometry>
-          <!-- STL 파일로 교체하려면 아래 주석 해제 -->
-          <!-- <mesh filename="package://drobot_description/meshes/propeller.stl" scale="0.001 0.001 0.001"/> -->
-          <cylinder radius="${prop_radius}" length="${prop_height}"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <material name="gray"/>
-      </visual>
-      <collision>
-        <geometry>
-          <cylinder radius="${prop_radius}" length="${prop_height}"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </collision>
-      <inertial>
-        <mass value="${prop_mass}"/>
-        <xacro:cylinder_inertia m="${prop_mass}" r="${prop_radius}" h="${prop_height}"/>
-      </inertial>
-    </link>
-
-    <joint name="${prefix}_propeller_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="${prefix}_propeller"/>
-      <origin xyz="${x_offset} ${y_offset} ${body_height/2 + 0.02}" rpy="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <dynamics damping="0.001"/>
-    </joint>
-
-    <gazebo reference="${prefix}_propeller">
-      <material>Gazebo/Grey</material>
-    </gazebo>
-  </xacro:macro>
-
-  <!-- ==================== -->
-  <!-- BASE LINK (본체)     -->
-  <!-- ==================== -->
-
+  <!-- ==================== BASE ==================== -->
   <link name="base_footprint"/>
-
-  <link name="base_link">
-    <!-- 통째 STL -->
-    <visual name="body_mesh">
-      <geometry>
-        <mesh filename="package://drobot_description/meshes/drobot_body.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-      <!-- STL 원점 보정: 로봇 중심으로 이동 -->
-      <origin xyz="-0.18 0.2 -0.05" rpy="1.5708 0 0"/>
-      <material name="orange"/>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="${body_length} ${body_width} ${body_height}"/>
-      </geometry>
-      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
-    </collision>
-    <inertial>
-      <mass value="${body_mass}"/>
-      <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
-      <xacro:box_inertia m="${body_mass}" x="${body_length}" y="${body_width}" z="${body_height}"/>
-    </inertial>
-  </link>
 
   <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
-  <gazebo reference="base_link">
-    <material>Gazebo/Blue</material>
-  </gazebo>
-
-  <!-- ==================== -->
-  <!-- WHEELS (4바퀴 스키드 스티어) -->
-  <!-- ==================== -->
-
-  <!-- 앞바퀴 -->
-  <xacro:wheel prefix="front_left"  x_offset="${wheel_separation_length/2}"  y_offset="${wheel_base/2}"/>
-  <xacro:wheel prefix="front_right" x_offset="${wheel_separation_length/2}"  y_offset="${-wheel_base/2}"/>
-
-  <!-- 뒷바퀴 -->
-  <xacro:wheel prefix="rear_left"   x_offset="${-wheel_separation_length/2}" y_offset="${wheel_base/2}"/>
-  <xacro:wheel prefix="rear_right"  x_offset="${-wheel_separation_length/2}" y_offset="${-wheel_base/2}"/>
-
-  <!-- ==================== -->
-  <!-- SENSORS              -->
-  <!-- ==================== -->
-
-  <!-- IMU (visual 제거 - STL에 포함) -->
-  <link name="imu_link">
-  </link>
-
-  <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="imu_link"/>
-    <origin xyz="0 0 ${body_height + 0.01}" rpy="0 0 0"/>
-  </joint>
-
-  <!-- Camera (visual 제거 - STL에 포함) -->
-  <link name="camera_link">
-    <collision>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.00239 -0.00675 0.19657" rpy="0 0 0"/>
+      <mass value="0.89777"/>
+      <inertia ixx="0.000894" ixy="-3.15e-05" ixz="7.38e-08"
+               iyy="0.001444" iyz="-7.35e-07" izz="0.001732"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.02 0.04 0.02"/>
+        <mesh filename="package://drobot_description/meshes/base_link.STL"/>
+      </geometry>
+      <material name="base_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/base_link.STL"/>
       </geometry>
     </collision>
+  </link>
+
+  <!-- ==================== LEFT FRONT ARM ==================== -->
+  <link name="left_front_arm">
     <inertial>
+      <origin xyz="-0.001 -0.21577 0.24030" rpy="0 0 0"/>
       <mass value="0.05"/>
-      <xacro:box_inertia m="0.05" x="0.02" y="0.04" z="0.02"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0"
+               iyy="0.0001" iyz="0" izz="0.0001"/>
     </inertial>
-  </link>
-
-  <joint name="camera_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="camera_link"/>
-    <origin xyz="${body_length/2} 0 ${body_height/2 + 0.02}" rpy="0 0 0"/>
-  </joint>
-
-  <!-- Camera optical frame (ROS convention: Z forward, X right, Y down) -->
-  <link name="camera_optical_frame"/>
-
-  <joint name="camera_optical_joint" type="fixed">
-    <parent link="camera_link"/>
-    <child link="camera_optical_frame"/>
-    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-  </joint>
-
-  <!-- LiDAR (visual 제거 - STL에 포함) -->
-  <link name="lidar_link">
-    <collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.03" length="0.04"/>
+        <mesh filename="package://drobot_description/meshes/left_front_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_arm.STL"/>
       </geometry>
     </collision>
-    <inertial>
-      <mass value="0.1"/>
-      <xacro:cylinder_inertia m="0.1" r="0.03" h="0.04"/>
-    </inertial>
   </link>
 
-  <joint name="lidar_joint" type="fixed">
+  <joint name="rev_lf_arm" type="revolute">
+    <origin xyz="0.001 -0.22031 0.23615" rpy="-3.1225 0 0"/>
     <parent link="base_link"/>
-    <child link="lidar_link"/>
-    <!-- LiDAR 위치 보정: 스캔이 앞+오른쪽으로 밀려서 앞+오른쪽으로 이동 -->
-    <origin xyz="0.05 -0.05 ${body_height + 0.05}" rpy="0 0 0"/>
+    <child link="left_front_arm"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="${pi/2}" effort="10" velocity="1.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
 
-  <!-- ==================== -->
-  <!-- GAZEBO PLUGINS       -->
-  <!-- ==================== -->
+  <!-- ==================== LEFT SIDE FRAME ==================== -->
+  <link name="left_side_frame">
+    <inertial>
+      <origin xyz="0.000145 0.10634 0.33395" rpy="0 0 0"/>
+      <mass value="0.27356"/>
+      <inertia ixx="0.000175" ixy="1.60e-06" ixz="-1.73e-06"
+               iyy="0.002249" iyz="-5.39e-05" izz="0.002211"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_side_frame.STL"/>
+      </geometry>
+      <material name="frame_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_side_frame.STL"/>
+      </geometry>
+    </collision>
+  </link>
 
-  <!-- Skid Steer Drive (4바퀴) -->
-  <gazebo>
-    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
-      <!-- 왼쪽 바퀴들 -->
-      <left_joint>front_left_wheel_joint</left_joint>
-      <left_joint>rear_left_wheel_joint</left_joint>
-      <!-- 오른쪽 바퀴들 -->
-      <right_joint>front_right_wheel_joint</right_joint>
-      <right_joint>rear_right_wheel_joint</right_joint>
-      <wheel_separation>${wheel_base}</wheel_separation>
-      <wheel_radius>${wheel_radius}</wheel_radius>
-      <max_linear_acceleration>1.0</max_linear_acceleration>
-      <max_angular_acceleration>2.0</max_angular_acceleration>
-      <topic>cmd_vel</topic>
-      <odom_topic>odom</odom_topic>
-      <frame_id>odom</frame_id>
-      <child_frame_id>base_footprint</child_frame_id>
-      <odom_publish_frequency>50</odom_publish_frequency>
-      <!-- TF는 EKF에서 발행하므로 여기서 비활성화 -->
-      <publish_odom_tf>false</publish_odom_tf>
-    </plugin>
-  </gazebo>
+  <joint name="fix_ls_frame" type="fixed">
+    <origin xyz="0.0005 -0.01671 0.0040219" rpy="-0.058822 0 0"/>
+    <parent link="left_front_arm"/>
+    <child link="left_side_frame"/>
+  </joint>
 
-  <!-- Joint State Publisher -->
-  <gazebo>
-    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
-      <topic>joint_states</topic>
-      <!-- 4바퀴 조인트 -->
-      <joint_name>front_left_wheel_joint</joint_name>
-      <joint_name>front_right_wheel_joint</joint_name>
-      <joint_name>rear_left_wheel_joint</joint_name>
-      <joint_name>rear_right_wheel_joint</joint_name>
-    </plugin>
-  </gazebo>
+  <!-- ==================== LEFT FRONT WHEEL ==================== -->
+  <link name="left_front_wheel">
+    <inertial>
+      <origin xyz="-0.11656 0 0.02494" rpy="0 0 0"/>
+      <mass value="0.17861"/>
+      <inertia ixx="0.000611" ixy="0" ixz="0"
+               iyy="0.000611" iyz="0" izz="0.001171"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
 
-  <!-- IMU Sensor -->
-  <gazebo reference="imu_link">
-    <sensor name="imu_sensor" type="imu">
-      <always_on>true</always_on>
-      <update_rate>100</update_rate>
-      <topic>imu</topic>
-      <gz_frame_id>imu_link</gz_frame_id>
-    </sensor>
-  </gazebo>
+  <joint name="con_lf_wheel" type="continuous">
+    <origin xyz="-0.1485 0.166 0.4581" rpy="-1.5708 -1.2933 3.1416"/>
+    <parent link="left_side_frame"/>
+    <child link="left_front_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
 
-  <!-- LiDAR Sensor -->
-  <gazebo reference="lidar_link">
-    <sensor name="lidar" type="gpu_lidar">
-      <topic>/scan</topic>
-      <update_rate>10</update_rate>
-      <gz_frame_id>lidar_link</gz_frame_id>
-      <lidar>
-        <scan>
-          <horizontal>
-            <samples>360</samples>
-            <resolution>1</resolution>
-            <min_angle>-3.14159</min_angle>
-            <max_angle>3.14159</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.35</min>
-          <max>12.0</max>
-          <resolution>0.01</resolution>
-        </range>
-      </lidar>
-      <visualize>true</visualize>
-    </sensor>
-  </gazebo>
+  <!-- ==================== LEFT REAR WHEEL ==================== -->
+  <link name="left_rear_wheel">
+    <inertial>
+      <origin xyz="0.11656 0 0.02435" rpy="0 0 0"/>
+      <mass value="0.17645"/>
+      <inertia ixx="0.000608" ixy="0" ixz="0"
+               iyy="0.000608" iyz="0" izz="0.001169"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
 
-  <!-- Camera Sensor -->
-  <gazebo reference="camera_link">
-    <sensor name="camera" type="camera">
-      <topic>camera/image_raw</topic>
-      <update_rate>30</update_rate>
-      <gz_frame_id>camera_optical_frame</gz_frame_id>
-      <camera>
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>640</width>
-          <height>480</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>100</far>
-        </clip>
-      </camera>
-    </sensor>
-  </gazebo>
+  <joint name="con_lr_wheel" type="continuous">
+    <origin xyz="0.14702 0.164 0.23349" rpy="-1.5708 -1.3064 3.1416"/>
+    <parent link="left_side_frame"/>
+    <child link="left_rear_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== LEFT REAR ARM ==================== -->
+  <link name="left_rear_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0"
+               iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rev_lr_arm" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5898 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_rear_arm"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="${pi/2}" effort="10" velocity="1.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <mimic joint="rev_lf_arm" multiplier="1" offset="0"/>
+  </joint>
+
+  <!-- ==================== RIGHT FRONT ARM ==================== -->
+  <link name="right_front_arm">
+    <inertial>
+      <origin xyz="-0.09053 0.04100 0.15322" rpy="0 0 0"/>
+      <mass value="0.09050"/>
+      <inertia ixx="7.55e-05" ixy="6.14e-06" ixz="-3.92e-06"
+               iyy="5.55e-05" iyz="2.21e-05" izz="5.80e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rev_rf_arm" type="revolute">
+    <origin xyz="0.001 -0.18333 -0.1565" rpy="-0.037984 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_front_arm"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="${pi/2}" effort="10" velocity="1.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <mimic joint="rev_lf_arm" multiplier="1" offset="0"/>
+  </joint>
+
+  <!-- ==================== RIGHT SIDE FRAME ==================== -->
+  <link name="right_side_frame">
+    <inertial>
+      <origin xyz="-0.00194 0.00878 0.06088" rpy="0 0 0"/>
+      <mass value="0.33700"/>
+      <inertia ixx="0.000207" ixy="-1.11e-05" ixz="6.23e-06"
+               iyy="0.002364" iyz="-5.34e-05" izz="0.002426"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_side_frame.STL"/>
+      </geometry>
+      <material name="frame_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_side_frame.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="fix_rs_frame" type="fixed">
+    <origin xyz="0.0005 0.16431 0.042431" rpy="1.5276 0 0"/>
+    <parent link="right_front_arm"/>
+    <child link="right_side_frame"/>
+  </joint>
+
+  <!-- ==================== RIGHT FRONT WHEEL ==================== -->
+  <link name="right_front_wheel">
+    <inertial>
+      <origin xyz="-0.11656 0 0.02329" rpy="0 0 0"/>
+      <mass value="0.15447"/>
+      <inertia ixx="0.000601" ixy="0" ixz="0"
+               iyy="0.000601" iyz="0" izz="0.001154"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="con_rf_wheel" type="continuous">
+    <origin xyz="-0.23311 -0.0017242 0.001" rpy="0 0 -3.1268"/>
+    <parent link="right_side_frame"/>
+    <child link="right_front_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== RIGHT REAR WHEEL ==================== -->
+  <link name="right_rear_wheel">
+    <inertial>
+      <origin xyz="-0.11655 0.00172 0.02429" rpy="0 0 0"/>
+      <mass value="0.15447"/>
+      <inertia ixx="0.000601" ixy="0" ixz="0"
+               iyy="0.000601" iyz="0" izz="0.001154"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="con_rr_wheel" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 -3.1268"/>
+    <parent link="right_side_frame"/>
+    <child link="right_rear_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== RIGHT REAR ARM ==================== -->
+  <link name="right_rear_arm">
+    <inertial>
+      <origin xyz="0.09542 -0.01003 0.13652" rpy="0 0 0"/>
+      <mass value="0.08785"/>
+      <inertia ixx="7.23e-05" ixy="-3.98e-06" ixz="-6.02e-06"
+               iyy="5.59e-05" iyz="-2.11e-05" izz="5.36e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rev_rr_arm" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5328 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_rear_arm"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="${pi/2}" effort="10" velocity="1.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <mimic joint="rev_lf_arm" multiplier="1" offset="0"/>
+  </joint>
+
+  <!-- ==================== ROS2 CONTROL ==================== -->
+  <xacro:if value="$(arg use_ros2_control)">
+    <xacro:include filename="$(find drobot_description)/urdf/ros2_control.xacro"/>
+  </xacro:if>
 
 </robot>

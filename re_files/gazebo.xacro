@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       DROBOT Gazebo Configuration (Gz Sim Harmonic)
+       
+       1. Closed-loop constraint (rear_arm ↔ side_frame)
+       2. Joint controllers
+       3. Sensor plugins (LiDAR, Camera, IMU)
+       4. 물리 속성 (마찰, 접촉 등)
+       ============================================================ -->
+
+  <!-- ==================== CLOSED-LOOP CONSTRAINTS ==================== -->
+  <!-- 
+       URDF 트리에서 끊어진 rear_arm ↔ side_frame 연결을
+       Gazebo joint constraint로 복원
+  -->
+
+  <xacro:macro name="gazebo_loop_constraint" params="prefix">
+    <gazebo>
+      <!-- rear_arm 끝단과 side_frame을 연결하는 constraint -->
+      <joint name="${prefix}_rear_arm_loop" type="revolute">
+        <parent>${prefix}_rear_arm_link</parent>
+        <child>${prefix}_side_frame_link</child>
+        <pose>0 0 0 0 0 0</pose>  <!-- TODO: 실측 위치로 조정 -->
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-0.1</lower>
+            <upper>0.1</upper>
+          </limit>
+        </axis>
+      </joint>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:gazebo_loop_constraint prefix="left"/>
+  <xacro:gazebo_loop_constraint prefix="right"/>
+
+  <!-- ==================== JOINT STATE PUBLISHER ==================== -->
+
+  <gazebo>
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher"/>
+  </gazebo>
+
+  <!-- ==================== ARM CONTROLLERS ==================== -->
+
+  <!-- 서보1: Front Arms (left master + right mimic) -->
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>left_front_arm_joint</joint_name>
+      <joint_name>right_front_arm_joint</joint_name>
+      <topic>/drobot/arm_front_cmd</topic>
+      <p_gain>50</p_gain>
+      <d_gain>5</d_gain>
+    </plugin>
+  </gazebo>
+
+  <!-- 서보2: Rear Arms (left master + right mimic) -->
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>left_rear_arm_joint</joint_name>
+      <joint_name>right_rear_arm_joint</joint_name>
+      <topic>/drobot/arm_rear_cmd</topic>
+      <p_gain>50</p_gain>
+      <d_gain>5</d_gain>
+    </plugin>
+  </gazebo>
+
+  <!-- 선형 액추에이터: Tilt Joints -->
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>left_tilt_joint</joint_name>
+      <joint_name>right_tilt_joint</joint_name>
+      <topic>/drobot/tilt_cmd</topic>
+      <p_gain>30</p_gain>
+      <d_gain>3</d_gain>
+    </plugin>
+  </gazebo>
+
+  <!-- ==================== DIFF DRIVE (Ground Mode) ==================== -->
+
+  <gazebo>
+    <plugin filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
+      <!-- 
+           Ground 모드: 좌/우 각각 기어로 앞뒤 동시 구동
+           → DiffDrive로 좌우 속도 차이로 조향
+      -->
+      <left_joint>left_front_wheel_joint</left_joint>
+      <right_joint>right_front_wheel_joint</right_joint>
+      <wheel_separation>${(arm_y_offset + frame_width) * 2}</wheel_separation>
+      <wheel_radius>${wheel_radius}</wheel_radius>
+      <topic>/cmd_vel</topic>
+      <odom_topic>/odom</odom_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_footprint</child_frame_id>
+    </plugin>
+  </gazebo>
+
+  <!-- ==================== SENSOR PLUGINS ==================== -->
+
+  <!-- LiDAR (맵핑용) -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>
+      <topic>/scan</topic>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>12.0</max>    <!-- TODO: 실제 LiDAR 스펙 -->
+          <resolution>0.01</resolution>
+        </range>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <!-- Camera (YOLO용) -->
+  <gazebo reference="camera_link">
+    <sensor name="camera" type="camera">
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <topic>/camera/image_raw</topic>
+      <camera>
+        <horizontal_fov>1.396</horizontal_fov>    <!-- ~80 degrees -->
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>50</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- IMU (오도메트리용) -->
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <topic>/imu/data</topic>
+    </sensor>
+  </gazebo>
+
+  <!-- ==================== WHEEL FRICTION ==================== -->
+
+  <xacro:macro name="wheel_friction" params="prefix">
+    <gazebo reference="${prefix}_wheel_link">
+      <collision>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>       <!-- TODO: 지면 마찰 조정 -->
+              <mu2>0.5</mu2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <kp>1e6</kp>
+              <kd>100</kd>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:wheel_friction prefix="left_front"/>
+  <xacro:wheel_friction prefix="left_rear"/>
+  <xacro:wheel_friction prefix="right_front"/>
+  <xacro:wheel_friction prefix="right_rear"/>
+
+</robot>

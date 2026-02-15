@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       DROBOT ros2_control Configuration
+       
+       Actuator 목록 (10개):
+       - 서보1: left/right front arm (동기화, right=mimic)
+       - 서보2: left/right rear arm (동기화, right=mimic)
+       - 선형 액추에이터 x2: left/right tilt
+       - 바퀴 모터 x2: left/right (기어로 앞뒤 동시)
+       - 프로펠러 모터 x4: 각 바퀴에 1개 (추후)
+       ============================================================ -->
+
+  <ros2_control name="DrobotSystem" type="system">
+
+    <xacro:if value="$(arg use_sim)">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </hardware>
+    </xacro:if>
+    <xacro:unless value="$(arg use_sim)">
+      <hardware>
+        <!-- TODO: 실제 하드웨어 인터페이스 플러그인 -->
+        <plugin>drobot_hardware/DrobotHardwareInterface</plugin>
+      </hardware>
+    </xacro:unless>
+
+    <!-- ===== 서보1: Front Arms (position control) ===== -->
+    <!-- left = master, right = mimic이므로 left만 등록 -->
+    <joint name="left_front_arm_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">1.5708</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ===== 서보2: Rear Arms (position control) ===== -->
+    <!-- left = master, right = mimic이므로 left만 등록 -->
+    <joint name="left_rear_arm_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">1.5708</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ===== Tilt Joints (position control, 선형 액추에이터) ===== -->
+    <joint name="left_tilt_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">1.5708</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="right_tilt_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">1.5708</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ===== Wheel Joints (velocity control, 기어 구동) ===== -->
+    <joint name="left_front_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="right_front_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- rear wheel은 front를 기어로 따라감 → mimic으로 처리 -->
+    <!-- 필요시 별도 joint로 추가 가능 -->
+
+    <!-- ===== Propeller Joints (velocity control, 추후 활성화) ===== -->
+    <!--
+    <joint name="left_front_propeller_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="left_rear_propeller_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="right_front_propeller_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="right_rear_propeller_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+    </joint>
+    -->
+
+  </ros2_control>
+
+</robot>

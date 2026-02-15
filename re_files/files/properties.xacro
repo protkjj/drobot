@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       DROBOT Properties
+       모든 mesh는 원점 중심으로 전처리됨 → visual offset 불필요
+       🔧 = RViz에서 조정 필요한 값
+       ============================================================ -->
+
+  <xacro:property name="pi" value="3.14159265359"/>
+
+  <!-- ===== Base Body (318 x 183 x 210 mm) ===== -->
+  <xacro:property name="base_length" value="0.318"/>
+  <xacro:property name="base_width"  value="0.183"/>
+  <xacro:property name="base_height" value="0.210"/>
+  <xacro:property name="base_mass"   value="5.0"/>
+
+  <!-- ===== Arm (50 x 79 x 89 mm, L자 변환 기어) ===== -->
+  <xacro:property name="arm_size_x"  value="0.050"/>
+  <xacro:property name="arm_size_y"  value="0.079"/>
+  <xacro:property name="arm_size_z"  value="0.089"/>
+  <xacro:property name="arm_mass"    value="0.3"/>
+
+  <!-- 🔧 arm joint 위치 (base_link 중심 기준) -->
+  <xacro:property name="front_arm_x"  value="0.130"/>
+  <xacro:property name="rear_arm_x"   value="-0.130"/>
+  <xacro:property name="arm_y_offset" value="0.092"/>
+  <xacro:property name="arm_z_offset" value="-0.050"/>
+
+  <xacro:property name="arm_joint_lower" value="0.0"/>
+  <xacro:property name="arm_joint_upper" value="${pi/2}"/>
+  <xacro:property name="arm_joint_effort" value="10.0"/>
+  <xacro:property name="arm_joint_velocity" value="1.0"/>
+
+  <!-- ===== Side Frame (282 x 90 x 91 mm) ===== -->
+  <xacro:property name="frame_length" value="0.282"/>
+  <xacro:property name="frame_width"  value="0.090"/>
+  <xacro:property name="frame_height" value="0.091"/>
+  <xacro:property name="frame_mass"   value="0.5"/>
+
+  <!-- 🔧 arm 끝 → side_frame 연결 -->
+  <xacro:property name="arm_to_frame_x" value="0.0"/>
+  <xacro:property name="arm_to_frame_y" value="0.05"/>
+  <xacro:property name="arm_to_frame_z" value="-0.08"/>
+
+  <!-- ===== Wheel (r=111.7mm, t=52mm) ===== -->
+  <xacro:property name="wheel_radius"    value="0.1117"/>
+  <xacro:property name="wheel_thickness" value="0.052"/>
+  <xacro:property name="wheel_mass"      value="0.8"/>
+  <xacro:property name="wheel_separation" value="${frame_length}"/>
+
+  <!-- ===== Linear Actuator ===== -->
+  <xacro:property name="actuator_base_length" value="0.153"/>
+  <xacro:property name="actuator_rod_length"  value="0.125"/>
+  <xacro:property name="actuator_mass"        value="0.2"/>
+  <xacro:property name="actuator_stroke"      value="0.10"/>
+
+  <!-- ===== Propeller Motor ===== -->
+  <xacro:property name="prop_motor_radius" value="0.02"/>
+  <xacro:property name="prop_motor_length" value="0.03"/>
+  <xacro:property name="prop_motor_mass"   value="0.1"/>
+
+  <!-- ===== Tilt Joint ===== -->
+  <xacro:property name="tilt_joint_lower" value="0.0"/>
+  <xacro:property name="tilt_joint_upper" value="${pi/2}"/>
+  <xacro:property name="tilt_joint_effort" value="15.0"/>
+  <xacro:property name="tilt_joint_velocity" value="0.5"/>
+
+</robot>

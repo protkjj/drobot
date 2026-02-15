@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="drobot">
+
+  <!-- ============================================================
+       DROBOT - SW2URDF FINAL Export → ROS2 변환
+       좌표/mesh: SW2URDF 자동생성값 그대로
+       수동 수정: mass=0 fix, axis fix, limit/dynamics, mimic, gazebo
+       ============================================================ -->
+
+  <xacro:include filename="$(find drobot_description)/urdf/gazebo.xacro"/>
+
+  <xacro:arg name="use_sim" default="true"/>
+  <xacro:arg name="use_ros2_control" default="true"/>
+
+  <!-- ==================== MATERIALS ==================== -->
+  <material name="base_color"><color rgba="0.81 0.86 0.90 1"/></material>
+  <material name="arm_color"><color rgba="0.87 0.32 0.16 1"/></material>
+  <material name="frame_color"><color rgba="0.30 0.30 0.30 1"/></material>
+  <material name="wheel_color"><color rgba="0.65 0.65 0.65 1"/></material>
+
+  <!-- ==================== BASE ==================== -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.0023939 -0.19657 -0.0067497" rpy="0 0 0"/>
+      <mass value="0.89777"/>
+      <inertia ixx="0.00089357" ixy="-7.3792e-08" ixz="-3.1542e-05"
+               iyy="0.0017315" iyz="7.3533e-07" izz="0.0014439"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/base_link.STL"/>
+      </geometry>
+      <material name="base_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/base_link.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ==================== LEFT FRONT ARM ==================== -->
+  <!-- FIX: mass was 0, set to 0.05 with minimal inertia -->
+  <link name="left_front_arm">
+    <inertial>
+      <origin xyz="-0.001 -0.21577 0.2403" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="1e-04" ixy="0" ixz="0"
+               iyy="1e-04" iyz="0" izz="1e-04"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- TEMP: fixed for drive testing (was revolute rev_lf_arm) -->
+  <joint name="rev_lf_arm" type="fixed">
+    <origin xyz="0.001 -0.22031 0.23615" rpy="-3.1225 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_front_arm"/>
+  </joint>
+
+  <!-- ==================== LEFT SIDE FRAME ==================== -->
+  <link name="left_side_frame">
+    <inertial>
+      <origin xyz="0.00014502 0.10634 0.33395" rpy="0 0 0"/>
+      <mass value="0.27356"/>
+      <inertia ixx="0.00017455" ixy="1.6016e-06" ixz="-1.7253e-06"
+               iyy="0.0022493" iyz="-5.3889e-05" izz="0.0022114"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_side_frame.STL"/>
+      </geometry>
+      <material name="frame_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_side_frame.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="fix_ls_frame" type="fixed">
+    <origin xyz="0.0005 -0.01671 0.0040219" rpy="-0.058822 0 0"/>
+    <parent link="left_front_arm"/>
+    <child link="left_side_frame"/>
+  </joint>
+
+  <!-- ==================== LEFT FRONT WHEEL ==================== -->
+  <link name="left_front_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.17861"/>
+      <inertia ixx="0.00061079" ixy="0" ixz="0"
+               iyy="0.00061079" iyz="0" izz="0.0011712"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.11656 0 -0.024937" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0.11656 0 -0.024937" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_front_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- FIX: axis flipped to 0,0,-1 so left wheels match right wheels in base_link frame -->
+  <joint name="con_lf_wheel" type="continuous">
+    <origin xyz="-0.11657 0.14106 0.34600" rpy="-1.5708 -1.2933 3.1416"/>
+    <parent link="left_side_frame"/>
+    <child link="left_front_wheel"/>
+    <axis xyz="0 0 -1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== LEFT REAR WHEEL ==================== -->
+  <link name="left_rear_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.17645"/>
+      <inertia ixx="0.00060815" ixy="0" ixz="0"
+               iyy="0.00060815" iyz="0" izz="0.0011693"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.11656 0 -0.024345" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.11656 0 -0.024345" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- FIX: axis flipped to 0,0,-1 so left wheels match right wheels in base_link frame -->
+  <joint name="con_lr_wheel" type="continuous">
+    <origin xyz="0.11656 0.13965 0.34600" rpy="-1.5708 -1.3064 3.1416"/>
+    <parent link="left_side_frame"/>
+    <child link="left_rear_wheel"/>
+    <axis xyz="0 0 -1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== LEFT REAR ARM ==================== -->
+  <!-- FIX: mass was 0 -->
+  <link name="left_rear_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="1e-04" ixy="0" ixz="0"
+               iyy="1e-04" iyz="0" izz="1e-04"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/left_rear_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- TEMP: fixed for drive testing (was revolute rev_lr_arm, mimic rev_lf_arm) -->
+  <joint name="rev_lr_arm" type="fixed">
+    <origin xyz="0 0 0" rpy="1.5898 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_rear_arm"/>
+  </joint>
+
+  <!-- ==================== RIGHT FRONT ARM ==================== -->
+  <link name="right_front_arm">
+    <inertial>
+      <origin xyz="-0.09053 0.041004 0.15322" rpy="0 0 0"/>
+      <mass value="0.090502"/>
+      <inertia ixx="7.5491e-05" ixy="6.1386e-06" ixz="-3.9205e-06"
+               iyy="5.5454e-05" iyz="2.2145e-05" izz="5.7986e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- TEMP: fixed for drive testing (was revolute rev_rf_arm, mimic rev_lf_arm) -->
+  <joint name="rev_rf_arm" type="fixed">
+    <origin xyz="0.001 -0.18333 -0.1565" rpy="-0.037984 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_front_arm"/>
+  </joint>
+
+  <!-- ==================== RIGHT SIDE FRAME ==================== -->
+  <link name="right_side_frame">
+    <inertial>
+      <origin xyz="-0.0019373 0.0087805 0.060878" rpy="0 0 0"/>
+      <mass value="0.337"/>
+      <inertia ixx="0.00020711" ixy="-1.114e-05" ixz="6.2261e-06"
+               iyy="0.0023637" iyz="-5.3391e-05" izz="0.0024255"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_side_frame.STL"/>
+      </geometry>
+      <material name="frame_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_side_frame.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="fix_rs_frame" type="fixed">
+    <origin xyz="0.0005 0.16431 0.042431" rpy="1.5276 0 0"/>
+    <parent link="right_front_arm"/>
+    <child link="right_side_frame"/>
+  </joint>
+
+  <!-- ==================== RIGHT FRONT WHEEL ==================== -->
+  <link name="right_front_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.15447"/>
+      <inertia ixx="0.00060097" ixy="0" ixz="0"
+               iyy="0.00060097" iyz="0" izz="0.0011545"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.11656 0 -0.023287" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0.11656 0 -0.023287" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_front_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="con_rf_wheel" type="continuous">
+    <origin xyz="-0.11656 0.0 0.02429" rpy="0 0 -3.1268"/>
+    <parent link="right_side_frame"/>
+    <child link="right_front_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== RIGHT REAR WHEEL ==================== -->
+  <link name="right_rear_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.15447"/>
+      <inertia ixx="0.00060097" ixy="0" ixz="0"
+               iyy="0.00060097" iyz="0" izz="0.0011545"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.11655 -0.0017243 -0.024287" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_wheel.STL"/>
+      </geometry>
+      <material name="wheel_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0.11655 -0.0017243 -0.024287" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_wheel.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- NOTE: con_rr_wheel origin 0,0,0 from SW2URDF - may need adjustment -->
+  <joint name="con_rr_wheel" type="continuous">
+    <origin xyz="0.11656 0.0 0.02429" rpy="0 0 -3.1268"/>
+    <parent link="right_side_frame"/>
+    <child link="right_rear_wheel"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- ==================== RIGHT REAR ARM ==================== -->
+  <!-- FIX: mass was 0 -->
+  <link name="right_rear_arm">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="1e-04" ixy="0" ixz="0"
+               iyy="1e-04" iyz="0" izz="1e-04"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_arm.STL"/>
+      </geometry>
+      <material name="arm_color"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drobot_description/meshes/right_rear_arm.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- TEMP: fixed for drive testing (was revolute rev_rr_arm, mimic rev_rf_arm) -->
+  <joint name="rev_rr_arm" type="fixed">
+    <origin xyz="0 0 0" rpy="1.5328 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_rear_arm"/>
+  </joint>
+
+  <!-- ==================== ROS2 CONTROL ==================== -->
+  <xacro:if value="$(arg use_ros2_control)">
+    <xacro:include filename="$(find drobot_description)/urdf/ros2_control.xacro"/>
+  </xacro:if>
+
+</robot>

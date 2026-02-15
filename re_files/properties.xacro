@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       DROBOT Properties
+       ✅ = STL 실측값  |  🔧 = 이미지 기반 추정값 (RViz에서 조정 필요)
+       ============================================================ -->
+
+  <xacro:property name="pi" value="3.14159265359"/>
+
+  <!-- ===== Base Body ✅ ===== -->
+  <xacro:property name="base_length" value="0.318"/>   <!-- X, 전후 -->
+  <xacro:property name="base_width"  value="0.183"/>   <!-- Y, 좌우 -->
+  <xacro:property name="base_height" value="0.210"/>   <!-- Z, 높이 -->
+  <xacro:property name="base_mass"   value="5.0"/>     <!-- TODO: 실측 -->
+
+  <!-- ===== Arm (L자 변환 기어) ✅ ===== -->
+  <xacro:property name="arm_size_x"  value="0.050"/>
+  <xacro:property name="arm_size_y"  value="0.079"/>
+  <xacro:property name="arm_size_z"  value="0.089"/>
+  <xacro:property name="arm_mass"    value="0.3"/>     <!-- TODO: 실측 -->
+
+  <!-- 🔧 arm joint 위치 (base_link 중심 기준) -->
+  <xacro:property name="front_arm_x"  value="0.130"/>
+  <xacro:property name="rear_arm_x"   value="-0.130"/>
+  <xacro:property name="arm_y_offset" value="0.092"/>   <!-- base_width/2 -->
+  <xacro:property name="arm_z_offset" value="-0.060"/>   <!-- base 하단 근처 -->
+
+  <!-- 서보 한계 -->
+  <xacro:property name="arm_joint_lower" value="0.0"/>
+  <xacro:property name="arm_joint_upper" value="${pi/2}"/>
+  <xacro:property name="arm_joint_effort" value="10.0"/>
+  <xacro:property name="arm_joint_velocity" value="1.0"/>
+
+  <!-- ===== Side Frame ✅ ===== -->
+  <xacro:property name="frame_length" value="0.282"/>   <!-- X, 앞뒤 바퀴 간격 -->
+  <xacro:property name="frame_width"  value="0.090"/>
+  <xacro:property name="frame_height" value="0.091"/>
+  <xacro:property name="frame_mass"   value="0.5"/>     <!-- TODO: 실측 -->
+
+  <!-- 🔧 arm 끝 → side_frame 연결 오프셋 -->
+  <xacro:property name="arm_to_frame_x" value="0.0"/>
+  <xacro:property name="arm_to_frame_y" value="0.06"/>
+  <xacro:property name="arm_to_frame_z" value="-0.10"/>
+
+  <!-- ===== Wheel ✅ ===== -->
+  <xacro:property name="wheel_radius"    value="0.1117"/>
+  <xacro:property name="wheel_thickness" value="0.052"/>
+  <xacro:property name="wheel_mass"      value="0.8"/>  <!-- TODO: 실측 -->
+  <xacro:property name="wheel_separation" value="${frame_length}"/>
+
+  <!-- ===== Linear Actuator ✅ ===== -->
+  <xacro:property name="actuator_base_length" value="0.153"/>
+  <xacro:property name="actuator_rod_length"  value="0.125"/>
+  <xacro:property name="actuator_mass"        value="0.2"/>  <!-- TODO: 실측 -->
+  <xacro:property name="actuator_stroke"      value="0.10"/>
+
+  <!-- ===== Propeller Motor ===== -->
+  <xacro:property name="prop_motor_radius" value="0.02"/>
+  <xacro:property name="prop_motor_length" value="0.03"/>
+  <xacro:property name="prop_motor_mass"   value="0.1"/>
+
+  <!-- ===== Tilt Joint ===== -->
+  <xacro:property name="tilt_joint_lower" value="0.0"/>
+  <xacro:property name="tilt_joint_upper" value="${pi/2}"/>
+  <xacro:property name="tilt_joint_effort" value="15.0"/>
+  <xacro:property name="tilt_joint_velocity" value="0.5"/>
+
+  <!-- ===== Mesh Visual Offsets (STL geometric center → link origin) ===== -->
+  <!-- 각 mesh의 geometric center를 link origin으로 맞추는 오프셋 -->
+  <xacro:property name="base_mesh_ox"  value="-0.16174"/>
+  <xacro:property name="base_mesh_oy"  value="-0.09650"/>
+  <xacro:property name="base_mesh_oz"  value="-0.19650"/>
+
+  <xacro:property name="wheel_mesh_ox" value="-0.11173"/>
+  <xacro:property name="wheel_mesh_oy" value="-0.11173"/>
+  <xacro:property name="wheel_mesh_oz" value="-0.02600"/>
+
+  <xacro:property name="arm_mesh_ox"   value="-0.02500"/>
+  <xacro:property name="arm_mesh_oy"   value="-0.03934"/>
+  <xacro:property name="arm_mesh_oz"   value="-0.24760"/>
+
+  <xacro:property name="frame_l_mesh_ox" value="-0.14106"/>
+  <xacro:property name="frame_l_mesh_oy" value="-0.09901"/>
+  <xacro:property name="frame_l_mesh_oz" value="-0.32545"/>
+
+  <xacro:property name="frame_r_mesh_ox" value="-0.14106"/>
+  <xacro:property name="frame_r_mesh_oy" value="-0.04545"/>
+  <xacro:property name="frame_r_mesh_oz" value="-0.06799"/>
+
+  <xacro:property name="act_base_mesh_ox" value="-0.00750"/>
+  <xacro:property name="act_base_mesh_oy" value="-0.01000"/>
+  <xacro:property name="act_base_mesh_oz" value="-0.07650"/>
+
+  <xacro:property name="act_rod_mesh_ox"  value="-0.00300"/>
+  <xacro:property name="act_rod_mesh_oy"  value="-0.06250"/>
+  <xacro:property name="act_rod_mesh_oz"  value="-0.00450"/>
+
+</robot>

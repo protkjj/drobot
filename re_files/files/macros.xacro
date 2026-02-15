@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       DROBOT Macros — mesh centered 방식
+       
+       모든 mesh는 geometric center가 link origin에 오도록 오프셋.
+       부품 위치는 joint origin으로 제어.
+       🔧 표시는 RViz에서 미세조정 필요.
+       ============================================================ -->
+
+  <!-- ==================== INERTIA HELPERS ==================== -->
+
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertia ixx="${m*(y*y+z*z)/12}" ixy="0" ixz="0"
+             iyy="${m*(x*x+z*z)/12}" iyz="0"
+             izz="${m*(x*x+y*y)/12}"/>
+  </xacro:macro>
+
+  <xacro:macro name="cylinder_inertia" params="m r l">
+    <inertia ixx="${m*(3*r*r+l*l)/12}" ixy="0" ixz="0"
+             iyy="${m*(3*r*r+l*l)/12}" iyz="0"
+             izz="${m*r*r/2}"/>
+  </xacro:macro>
+
+  <!-- ==================== SENSOR MOUNT ==================== -->
+
+  <xacro:macro name="sensor_mount" params="name parent xyz rpy *geometry">
+    <link name="${name}_link">
+      <visual>
+        <xacro:insert_block name="geometry"/>
+        <material name="sensor_blue"/>
+      </visual>
+      <collision>
+        <xacro:insert_block name="geometry"/>
+      </collision>
+      <inertial>
+        <mass value="0.05"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0"
+                 iyy="0.0001" iyz="0" izz="0.0001"/>
+      </inertial>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ==================== WHEEL ==================== -->
+
+  <xacro:macro name="wheel" params="prefix parent xyz">
+    <link name="${prefix}_wheel_link">
+      <visual>
+        <origin xyz="${wheel_mesh_ox} ${wheel_mesh_oy} ${wheel_mesh_oz}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://drobot_description/meshes/wheel.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="dark_gray"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wheel_mass}"/>
+        <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" l="${wheel_thickness}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="${parent}"/>
+      <child link="${prefix}_wheel_link"/>
+      <origin xyz="${xyz}" rpy="${-pi/2} 0 0"/>
+      <axis xyz="0 0 1"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+    <!-- Propeller Motor (실린더) -->
+    <link name="${prefix}_prop_motor_link">
+      <visual>
+        <geometry>
+          <cylinder radius="${prop_motor_radius}" length="${prop_motor_length}"/>
+        </geometry>
+        <material name="orange"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${prop_motor_radius}" length="${prop_motor_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${prop_motor_mass}"/>
+        <xacro:cylinder_inertia m="${prop_motor_mass}" r="${prop_motor_radius}" l="${prop_motor_length}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_prop_motor_joint" type="fixed">
+      <parent link="${prefix}_wheel_link"/>
+      <child link="${prefix}_prop_motor_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ==================== ARM ==================== -->
+
+  <xacro:macro name="arm" params="prefix parent xyz mimic_joint:='' y_sign:=1">
+    <link name="${prefix}_arm_link">
+      <visual>
+        <!-- mesh centered + Y축 미러링 (right side: y_sign=-1) -->
+        <origin xyz="${arm_mesh_ox} ${arm_mesh_oy * y_sign} ${arm_mesh_oz}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://drobot_description/meshes/arm_left.stl" 
+                scale="0.001 ${0.001 * y_sign} 0.001"/>
+        </geometry>
+        <material name="red"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${arm_size_x} ${arm_size_y} ${arm_size_z}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${arm_mass}"/>
+        <xacro:box_inertia m="${arm_mass}" x="${arm_size_x}" y="${arm_size_y}" z="${arm_size_z}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_arm_joint" type="revolute">
+      <parent link="${parent}"/>
+      <child link="${prefix}_arm_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="${arm_joint_lower}" upper="${arm_joint_upper}"
+             effort="${arm_joint_effort}" velocity="${arm_joint_velocity}"/>
+      <dynamics damping="0.5" friction="0.1"/>
+      <xacro:if value="${mimic_joint != ''}">
+        <mimic joint="${mimic_joint}" multiplier="1.0" offset="0.0"/>
+      </xacro:if>
+    </joint>
+  </xacro:macro>
+
+  <!-- ==================== SIDE (좌/우 한쪽 전체) ==================== -->
+
+  <xacro:macro name="side" params="prefix y_reflect">
+
+    <!-- ===== Front Arm (서보1) ===== -->
+    <xacro:if value="${prefix == 'left'}">
+      <xacro:arm prefix="${prefix}_front" parent="base_link"
+                 xyz="${front_arm_x} ${y_reflect * arm_y_offset} ${arm_z_offset}"
+                 y_sign="1"/>
+    </xacro:if>
+    <xacro:if value="${prefix == 'right'}">
+      <xacro:arm prefix="${prefix}_front" parent="base_link"
+                 xyz="${front_arm_x} ${y_reflect * arm_y_offset} ${arm_z_offset}"
+                 mimic_joint="left_front_arm_joint"
+                 y_sign="-1"/>
+    </xacro:if>
+
+    <!-- ===== Rear Arm (서보2) ===== -->
+    <xacro:if value="${prefix == 'left'}">
+      <xacro:arm prefix="${prefix}_rear" parent="base_link"
+                 xyz="${rear_arm_x} ${y_reflect * arm_y_offset} ${arm_z_offset}"
+                 y_sign="1"/>
+    </xacro:if>
+    <xacro:if value="${prefix == 'right'}">
+      <xacro:arm prefix="${prefix}_rear" parent="base_link"
+                 xyz="${rear_arm_x} ${y_reflect * arm_y_offset} ${arm_z_offset}"
+                 mimic_joint="left_rear_arm_joint"
+                 y_sign="-1"/>
+    </xacro:if>
+
+    <!-- ===== Side Frame ===== -->
+    <link name="${prefix}_side_frame_link">
+      <visual>
+        <xacro:if value="${prefix == 'left'}">
+          <origin xyz="${frame_l_mesh_ox} ${frame_l_mesh_oy} ${frame_l_mesh_oz}" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="package://drobot_description/meshes/side_frame_left.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </xacro:if>
+        <xacro:if value="${prefix == 'right'}">
+          <origin xyz="${frame_r_mesh_ox} ${frame_r_mesh_oy} ${frame_r_mesh_oz}" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="package://drobot_description/meshes/side_frame_right.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </xacro:if>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${frame_length} ${frame_width} ${frame_height}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${frame_mass}"/>
+        <xacro:box_inertia m="${frame_mass}" x="${frame_length}" y="${frame_width}" z="${frame_height}"/>
+      </inertial>
+    </link>
+
+    <!-- 🔧 front_arm 끝에서 side_frame으로 연결 -->
+    <joint name="${prefix}_side_frame_joint" type="fixed">
+      <parent link="${prefix}_front_arm_link"/>
+      <child link="${prefix}_side_frame_link"/>
+      <origin xyz="${arm_to_frame_x} ${y_reflect * arm_to_frame_y} ${arm_to_frame_z}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- ===== Tilt Frame (가상, 틸트 회전축) ===== -->
+    <link name="${prefix}_tilt_frame_link">
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0"
+                 iyy="0.0001" iyz="0" izz="0.0001"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_tilt_joint" type="revolute">
+      <parent link="${prefix}_side_frame_link"/>
+      <child link="${prefix}_tilt_frame_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="${tilt_joint_lower}" upper="${tilt_joint_upper}"
+             effort="${tilt_joint_effort}" velocity="${tilt_joint_velocity}"/>
+      <dynamics damping="0.5" friction="0.1"/>
+    </joint>
+
+    <!-- ===== Linear Actuator Base (base_link에 고정) ===== -->
+    <link name="${prefix}_actuator_base_link">
+      <visual>
+        <origin xyz="${act_base_mesh_ox} ${act_base_mesh_oy} ${act_base_mesh_oz}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://drobot_description/meshes/actuator_base.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.01" length="${actuator_base_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${actuator_mass * 0.7}"/>
+        <xacro:cylinder_inertia m="${actuator_mass * 0.7}" r="0.01" l="${actuator_base_length}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_actuator_base_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_actuator_base_link"/>
+      <!-- 🔧 base 하단 중앙에서 아래로 -->
+      <origin xyz="0 ${y_reflect * 0.04} ${-base_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- ===== Linear Actuator Rod (신축부) ===== -->
+    <link name="${prefix}_actuator_rod_link">
+      <visual>
+        <origin xyz="${act_rod_mesh_ox} ${act_rod_mesh_oy} ${act_rod_mesh_oz}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://drobot_description/meshes/actuator_rod.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="silver"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.003" length="${actuator_rod_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${actuator_mass * 0.3}"/>
+        <xacro:cylinder_inertia m="${actuator_mass * 0.3}" r="0.003" l="${actuator_rod_length}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_actuator_joint" type="prismatic">
+      <parent link="${prefix}_actuator_base_link"/>
+      <child link="${prefix}_actuator_rod_link"/>
+      <origin xyz="0 0 ${-actuator_base_length/2}" rpy="0 0 0"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="0" upper="${actuator_stroke}"
+             effort="50.0" velocity="0.1"/>
+      <dynamics damping="1.0" friction="0.5"/>
+      <mimic joint="${prefix}_tilt_joint" multiplier="${actuator_stroke/(pi/2)}" offset="0.0"/>
+    </joint>
+
+    <!-- ===== Front Wheel ===== -->
+    <xacro:wheel prefix="${prefix}_front" parent="${prefix}_tilt_frame_link"
+                 xyz="${wheel_separation/2} 0 0"/>
+
+    <!-- ===== Rear Wheel ===== -->
+    <xacro:wheel prefix="${prefix}_rear" parent="${prefix}_tilt_frame_link"
+                 xyz="${-wheel_separation/2} 0 0"/>
+
+  </xacro:macro>
+
+</robot>
