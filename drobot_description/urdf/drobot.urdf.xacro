@@ -123,12 +123,11 @@
     </collision>
   </link>
 
-  <!-- FIX: axis flipped to 0,0,-1 so left wheels match right wheels in base_link frame -->
   <joint name="con_lf_wheel" type="continuous">
     <origin xyz="-0.11657 0.14106 0.34600" rpy="-1.5708 -1.2933 3.1416"/>
     <parent link="left_side_frame"/>
     <child link="left_front_wheel"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
@@ -155,12 +154,11 @@
     </collision>
   </link>
 
-  <!-- FIX: axis flipped to 0,0,-1 so left wheels match right wheels in base_link frame -->
   <joint name="con_lr_wheel" type="continuous">
     <origin xyz="0.11656 0.13965 0.34600" rpy="-1.5708 -1.3064 3.1416"/>
     <parent link="left_side_frame"/>
     <child link="left_rear_wheel"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
@@ -267,7 +265,7 @@
     <origin xyz="-0.11656 0.0 0.02429" rpy="0 0 -3.1268"/>
     <parent link="right_side_frame"/>
     <child link="right_front_wheel"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
@@ -299,7 +297,7 @@
     <origin xyz="0.11656 0.0 0.02429" rpy="0 0 -3.1268"/>
     <parent link="right_side_frame"/>
     <child link="right_rear_wheel"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <dynamics damping="0.1" friction="0.05"/>
   </joint>
 

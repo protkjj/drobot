@@ -14,7 +14,7 @@
     </plugin>
   </gazebo>
 
-  <!-- Diff Drive -->
+  <!-- Diff Drive (cmd_vel only, odom disabled — wheel axes are mixed ±Z) -->
   <gazebo>
     <plugin filename="gz-sim-diff-drive-system"
             name="gz::sim::systems::DiffDrive">
@@ -25,9 +25,17 @@
       <wheel_separation>0.364</wheel_separation>
       <wheel_radius>0.112</wheel_radius>
       <topic>/cmd_vel</topic>
+    </plugin>
+  </gazebo>
+
+  <!-- Odometry from model pose (avoids wheel axis sign issue) -->
+  <gazebo>
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
       <odom_topic>/odom</odom_topic>
-      <frame_id>odom</frame_id>
-      <child_frame_id>base_footprint</child_frame_id>
     </plugin>
   </gazebo>
 

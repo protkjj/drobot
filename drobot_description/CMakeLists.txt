@@ -16,6 +16,7 @@ install(
     config
     object
     worlds
+    models
   DESTINATION share/${PROJECT_NAME}
 )
 

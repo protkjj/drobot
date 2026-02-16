@@ -86,6 +86,7 @@ def launch_setup(context):
         'GZ_SIM_RESOURCE_PATH',
         ':'.join([
             os.path.join(desc_pkg, '..'),  # parent of drobot_description share
+            os.path.join(desc_pkg, 'models'),  # hospital world models (aws_robomaker etc.)
             os.environ.get('GZ_SIM_RESOURCE_PATH', ''),
         ])
     )
