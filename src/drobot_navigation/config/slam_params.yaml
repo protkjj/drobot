@@ -1,0 +1,21 @@
+slam_toolbox:
+  ros__parameters:
+    # 핵심 프레임 설정
+    odom_frame: odom
+    base_frame: base_footprint
+    scan_topic: /scan
+    mode: mapping
+
+    # 시뮬레이션 설정
+    use_sim_time: True
+    map_update_interval: 2.0
+    
+    # 라이다 정보
+    max_laser_range: 20.0
+    minimum_time_interval: 0.1
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.0
+
+    # 지도 해상도 및 매칭
+    resolution: 0.05
+    max_get_map_retry_count: 2
