@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
-from sensor_msgs.msg import Image, CameraInfo, PointCloud2
+from sensor_msgs.msg import Image, CameraInfo
 from std_msgs.msg import String, Float32
 from cv_bridge import CvBridge
 import cv2
@@ -15,7 +15,7 @@ class PerceptionNode(Node):
         super().__init__('perception_node')
 
         # --- 1. Robust Model Loading ---
-        final_model_path = self.find_model_path('food_model.pt')
+        final_model_path = self.find_model_path('best.pt')
         
         self.declare_parameter('model_path', final_model_path)
         self.declare_parameter('debug_mode', False)
@@ -35,10 +35,8 @@ class PerceptionNode(Node):
         self.is_processing = False
 
         # "edible_classes" kept for reference, but logic now applies to ALL target_classes below
-        self.edible_classes = ['agood', 'bgood', 'pgood'] 
         self.target_classes = [
-            'agood', 'abad', 'bgood', 'bbad', 'pgood', 'pbad', 
-            'nurse', 'cone', 'sign', 'box'
+            'cylinder'
         ]
 
         # --- 2. QoS Profile ---
@@ -62,10 +60,8 @@ class PerceptionNode(Node):
         self.pub_speech = self.create_publisher(String, '/robot_dog/speech', 10)
 
         # --- 4. Subscribers ---
-        self.create_subscription(Image, '/camera_top/depth', self.depth_callback, qos_policy)
-        self.create_subscription(Image, '/camera_top/image', self.rgb_callback, qos_policy)
-        self.create_subscription(PointCloud2, '/camera_top/points', lambda msg: None, qos_policy)
-        self.create_subscription(CameraInfo, '/camera_top/camera_info', lambda msg: None, qos_policy)
+        self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
+        self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
         
         self.get_logger().info('Perception Node Started (Topics Verified)')
 
