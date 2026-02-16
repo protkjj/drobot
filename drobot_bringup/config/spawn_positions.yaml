@@ -1,0 +1,5 @@
+# World spawn positions (shared by all launch modes)
+# 생성된 월드는 항상 (0,0) 스폰 → default로 처리
+worlds:
+  empty: {x: 0.0, y: 0.0}
+default: {x: 0.0, y: 0.0}
