@@ -7,7 +7,7 @@ def generate_launch_description():
     pkg_share = get_package_share_directory('perception')
     
     # Ensure this path matches where you put your .pt file in the package
-    model_path = os.path.join(pkg_share, 'models', 'food_model.pt')
+    model_path = os.path.join(pkg_share, 'models', 'best.pt')
 
     return LaunchDescription([
         Node(

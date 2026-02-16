@@ -54,7 +54,7 @@ sudo apt update && sudo apt install -y \
   ros-jazzy-teleop-twist-keyboard
 
 # Python (perception용)
-pip install ultralytics
+pip install --break-system-packages ultralytics
 ```
 
 ### 3. 빌드
