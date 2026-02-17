@@ -15,18 +15,20 @@ ros2_ws/src/
 ├── drobot_controller/    # 로봇 컨트롤러 (예정)
 ├── drobot_simulation/    # 시뮬레이션 (예정)
 ├── drobot_strategy/      # 전략/의사결정 (예정)
+├── perception/           # YOLOv8 객체 인식 (카메라 기반)
 └── drobot_yolo/          # YOLO 객체 인식 (예정)
 ```
 
 | 패키지 | 빌드 | 역할 |
 |--------|------|------|
-| `drobot_description` | ament_cmake | URDF, 11개 STL 메시, Gazebo 플러그인, 월드 파일 (hospital, warehouse 등) |
+| `drobot_description` | ament_cmake | URDF, 13개 STL 메시, Gazebo 플러그인 (DiffDrive, LiDAR, IMU, Camera), 월드 파일 |
 | `drobot_scan_2d` | ament_cmake | 목표 기반 자율주행 노드 + YAML 규칙 엔진 |
 | `drobot_bringup` | ament_python | 런치 파일 (navigation, bringup), Nav2/SLAM/EKF 설정, World UI (Tkinter) |
 | `drobot_controller` | ament_python | (예정) |
 | `drobot_scan_3d` | ament_python | (예정) |
 | `drobot_simulation` | ament_cmake | (예정) |
 | `drobot_strategy` | ament_python | (예정) |
+| `perception` | ament_python | YOLOv8 객체 인식, 거리 추정, 음성 명령 퍼블리시 |
 | `drobot_yolo` | ament_python | (예정) |
 
 ## 빠른 시작
@@ -88,9 +90,9 @@ ros2 topic pub /goal_pose geometry_msgs/PoseStamped "{
 drobot_description/
 ├── urdf/
 │   ├── drobot.urdf.xacro       # 메인 URDF (SW2URDF 기반)
-│   ├── gazebo.xacro             # Gazebo 플러그인 (DiffDrive, JointPosition)
+│   ├── gazebo.xacro             # Gazebo 플러그인 (DiffDrive, Odometry, LiDAR, IMU, Camera)
 │   └── ros2_control.xacro       # ros2_control 인터페이스
-├── meshes/                      # 11개 STL 메시 (base, arms, wheels, frames)
+├── meshes/                      # 13개 STL 메시 (base, arms, wheels, frames, camera, lidar)
 ├── launch/
 │   ├── display.launch.py        # RViz 시각화
 │   └── gazebo.launch.py         # Gazebo 시뮬레이션
