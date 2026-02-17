@@ -14,21 +14,21 @@
     </plugin>
   </gazebo>
 
-  <!-- Diff Drive (cmd_vel only, odom disabled — wheel axes are mixed ±Z) -->
+  <!-- Diff Drive -->
   <gazebo>
     <plugin filename="gz-sim-diff-drive-system"
             name="gz::sim::systems::DiffDrive">
-      <left_joint>con_lf_wheel</left_joint>
-      <left_joint>con_lr_wheel</left_joint>
-      <right_joint>con_rf_wheel</right_joint>
-      <right_joint>con_rr_wheel</right_joint>
-      <wheel_separation>0.364</wheel_separation>
+      <left_joint>lf_wheel_con</left_joint>
+      <left_joint>lr_wheel_con</left_joint>
+      <right_joint>rf_wheel_con</right_joint>
+      <right_joint>rr_wheel_con</right_joint>
+      <wheel_separation>0.35</wheel_separation>  <!-- 0.298→0.35: 회전토크 소폭 증가 -->
       <wheel_radius>0.112</wheel_radius>
       <topic>/cmd_vel</topic>
     </plugin>
   </gazebo>
 
-  <!-- Odometry from model pose (avoids wheel axis sign issue) -->
+  <!-- Odometry from model pose -->
   <gazebo>
     <plugin filename="gz-sim-odometry-publisher-system"
             name="gz::sim::systems::OdometryPublisher">
@@ -39,58 +39,13 @@
     </plugin>
   </gazebo>
 
-  <!-- ========== ARM POSITION CONTROLLERS ========== -->
-  <!-- All arms use same topic /drobot/arm_cmd for synchronized movement -->
-
-  <gazebo>
-    <plugin filename="gz-sim-joint-position-controller-system"
-            name="gz::sim::systems::JointPositionController">
-      <joint_name>rev_lf_arm</joint_name>
-      <topic>/drobot/arm_cmd</topic>
-      <p_gain>1000</p_gain>
-      <i_gain>100</i_gain>
-      <d_gain>100</d_gain>
-    </plugin>
-  </gazebo>
-
-  <gazebo>
-    <plugin filename="gz-sim-joint-position-controller-system"
-            name="gz::sim::systems::JointPositionController">
-      <joint_name>rev_lr_arm</joint_name>
-      <topic>/drobot/arm_cmd</topic>
-      <p_gain>1000</p_gain>
-      <i_gain>100</i_gain>
-      <d_gain>100</d_gain>
-    </plugin>
-  </gazebo>
-
-  <gazebo>
-    <plugin filename="gz-sim-joint-position-controller-system"
-            name="gz::sim::systems::JointPositionController">
-      <joint_name>rev_rf_arm</joint_name>
-      <topic>/drobot/arm_cmd</topic>
-      <p_gain>1000</p_gain>
-      <i_gain>100</i_gain>
-      <d_gain>100</d_gain>
-    </plugin>
-  </gazebo>
-
-  <gazebo>
-    <plugin filename="gz-sim-joint-position-controller-system"
-            name="gz::sim::systems::JointPositionController">
-      <joint_name>rev_rr_arm</joint_name>
-      <topic>/drobot/arm_cmd</topic>
-      <p_gain>1000</p_gain>
-      <i_gain>100</i_gain>
-      <d_gain>100</d_gain>
-    </plugin>
-  </gazebo>
+  <!-- ARM: held by extreme damping+friction (revolute for future terrain mode) -->
 
   <!-- ========== 2D LIDAR ========== -->
-  <gazebo reference="lidar_link">
+  <gazebo reference="lidar">
     <sensor name="lidar" type="gpu_lidar">
       <topic>/scan</topic>
-      <gz_frame_id>lidar_link</gz_frame_id>
+      <gz_frame_id>lidar</gz_frame_id>
       <update_rate>10</update_rate>
       <always_on>true</always_on>
       <visualize>false</visualize>
@@ -135,10 +90,10 @@
   </gazebo>
 
   <!-- ========== CAMERA ========== -->
-  <gazebo reference="camera_link">
+  <gazebo reference="camera">
     <sensor name="camera" type="camera">
       <topic>/camera/image_raw</topic>
-      <gz_frame_id>camera_link</gz_frame_id>
+      <gz_frame_id>camera</gz_frame_id>
       <update_rate>15</update_rate>
       <always_on>true</always_on>
       <visualize>false</visualize>
@@ -160,22 +115,22 @@
   <!-- Wheel Friction -->
   <gazebo reference="left_front_wheel">
     <collision><surface>
-      <friction><ode><mu>1.0</mu><mu2>0.5</mu2></ode></friction>
+      <friction><ode><mu>1.0</mu><mu2>0.15</mu2></ode></friction>
     </surface></collision>
   </gazebo>
   <gazebo reference="right_front_wheel">
     <collision><surface>
-      <friction><ode><mu>1.0</mu><mu2>0.5</mu2></ode></friction>
+      <friction><ode><mu>1.0</mu><mu2>0.15</mu2></ode></friction>
     </surface></collision>
   </gazebo>
   <gazebo reference="left_rear_wheel">
     <collision><surface>
-      <friction><ode><mu>1.0</mu><mu2>0.5</mu2></ode></friction>
+      <friction><ode><mu>1.0</mu><mu2>0.15</mu2></ode></friction>
     </surface></collision>
   </gazebo>
   <gazebo reference="right_rear_wheel">
     <collision><surface>
-      <friction><ode><mu>1.0</mu><mu2>0.5</mu2></ode></friction>
+      <friction><ode><mu>1.0</mu><mu2>0.15</mu2></ode></friction>
     </surface></collision>
   </gazebo>
 

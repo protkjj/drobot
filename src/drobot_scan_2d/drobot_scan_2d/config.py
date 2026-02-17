@@ -9,9 +9,9 @@ class Config:
     """Navigation configuration constants."""
 
     # ==================== Safety ====================
-    COLLISION_STOP_DIST = 0.40      # m - emergency stop distance
-    COLLISION_WARN_DIST = 0.60      # m - slow down distance
-    SAFETY_MARGIN = 0.30            # m - minimum distance from obstacles
+    COLLISION_STOP_DIST = 0.25      # m - emergency stop distance
+    COLLISION_WARN_DIST = 0.45      # m - slow down distance
+    SAFETY_MARGIN = 0.20            # m - minimum distance from obstacles
 
     # ==================== Navigation ====================
     GOAL_TOLERANCE_XY = 0.25        # m - goal reached threshold

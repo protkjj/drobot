@@ -12,7 +12,7 @@ from typing import Optional, Tuple
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
-from geometry_msgs.msg import PoseStamped, Twist
+from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from visualization_msgs.msg import Marker
@@ -63,7 +63,6 @@ class GoalNavigator(Node):
         )
 
         # Publishers
-        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         self.goal_marker_pub = self.create_publisher(Marker, '/goal_marker', 10)
 
     def _init_action_clients(self):
@@ -277,9 +276,8 @@ class GoalNavigator(Node):
             # Nav2 handles stopping, we just log
 
     def _emergency_stop(self):
-        """Execute emergency stop."""
-        stop_cmd = Twist()
-        self.cmd_pub.publish(stop_cmd)
+        """Execute emergency stop by cancelling Nav2 goal."""
+        self._cancel_goal()
 
     def _cancel_goal(self):
         """Cancel current navigation goal."""

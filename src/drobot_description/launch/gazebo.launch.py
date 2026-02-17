@@ -41,7 +41,7 @@ def generate_launch_description():
         arguments=[
             '-topic', '/robot_description',
             '-name', 'drobot',
-            '-z', '0.3',
+            '-z', '0.15',
         ],
         output='screen',
     )
@@ -52,27 +52,13 @@ def generate_launch_description():
         arguments=[
             '/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
             '/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry',
-            '/drobot/arm_cmd@std_msgs/msg/Float64@gz.msgs.Double',
         ],
         output='screen',
     )
 
-    # After 3s: publish arm_cmd 0.0 to lock arms at position 0
-    arm_init = TimerAction(
-        period=3.0,
-        actions=[
-            ExecuteProcess(
-                cmd=['ros2', 'topic', 'pub', '--once',
-                     '/drobot/arm_cmd', 'std_msgs/msg/Float64',
-                     '{data: 0.0}'],
-                output='screen',
-            ),
-        ],
-    )
-
-    # After 4s: unpause Gazebo
+    # After 3s: unpause Gazebo
     unpause = TimerAction(
-        period=4.0,
+        period=3.0,
         actions=[
             ExecuteProcess(
                 cmd=['gz', 'service', '-s', '/world/empty/control',
@@ -95,6 +81,5 @@ def generate_launch_description():
         ),
         spawn,
         bridge,
-        arm_init,
         unpause,
     ])

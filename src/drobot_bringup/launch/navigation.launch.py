@@ -260,20 +260,7 @@ def launch_setup(context):
         }],
     )
 
-    # After 3s: lock arms at position 0 before physics starts
-    arm_init = TimerAction(
-        period=3.0,
-        actions=[
-            ExecuteProcess(
-                cmd=['ros2', 'topic', 'pub', '--once',
-                     '/drobot/arm_cmd', 'std_msgs/msg/Float64',
-                     '{data: 0.0}'],
-                output='screen',
-            ),
-        ],
-    )
-
-    # After 5s: unpause Gazebo (arms are now locked)
+    # After 5s: unpause Gazebo
     unpause = TimerAction(
         period=5.0,
         actions=[
@@ -296,7 +283,6 @@ def launch_setup(context):
         gazebo,
         spawn_robot,
         ros_gz_bridge,
-        arm_init,
         unpause,
         rviz2,
         # Localization

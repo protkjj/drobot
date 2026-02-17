@@ -39,40 +39,46 @@ controller_server:
 
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.25       # 25cm 도착 인식 범위
-      yaw_goal_tolerance: 0.5       # ~29°
+      xy_goal_tolerance: 0.75       # 75cm 도착 인식 범위
+      yaw_goal_tolerance: 3.14      # yaw 제한 없음 (방향 무관하게 도착 인식)
       stateful: true
 
-    # DWB Local Planner - 4륜 스키드스티어
+    # Rotation Shim: 경로 시작 방향과 로봇 heading 차이가 크면 제자리 회전 후 출발
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
+      plugin: "nav2_rotation_shim_controller::RotationShimController"
+      primary_controller: "dwb_core::DWBLocalPlanner"
+      angular_dist_threshold: 0.5    # rad (~29°) 이상 차이나면 제자리 회전
+      forward_sampling_distance: 0.5  # 경로 앞 0.5m 지점 방향 기준
+      rotate_to_heading_angular_vel: 1.5  # 제자리 회전 속도 (rad/s)
+      max_angular_accel: 1.5          # 회전 가속 제한
       # 속도 제한 (+30% 추가!)
-      min_vel_x: -0.38
-      max_vel_x: 0.75
+      min_vel_x: 0.0              # DWB 경로추종은 전진만 (후진은 BackUp 복구에서 처리)
+      max_vel_x: 0.4
       min_vel_y: 0.0
       max_vel_y: 0.0
-      max_vel_theta: 1.2           # 2.3→1.2 (회전 속도 감소, 약 69°/s)
+      max_vel_theta: 1.5            # 회전 속도 (~86°/s)
       min_speed_xy: 0.0
-      max_speed_xy: 0.75
-      min_speed_theta: 0.0
+      max_speed_xy: 0.4
+      min_speed_theta: 0.0          # 0→직진 시 미세보정 허용 (Spin은 behavior_server에서 별도 제어)
       # 가속 제한
-      acc_lim_x: 1.0
+      acc_lim_x: 0.5
       acc_lim_y: 0.0
-      acc_lim_theta: 1.5            # 2.0→1.5 (회전 가속도 감소)
-      decel_lim_x: -1.0
-      decel_lim_theta: -1.5         # -2.0→-1.5
+      acc_lim_theta: 1.5            # 부드러운 회전 가속
+      decel_lim_x: -0.5
+      decel_lim_theta: -1.5
       # 샘플링
       vx_samples: 20
       vy_samples: 1
-      vtheta_samples: 20            # 40→20 (회전 샘플 감소)
-      sim_time: 1.7
+      vtheta_samples: 40            # 회전 샘플 증가 (더 세밀한 회전 탐색)
+      sim_time: 2.5                 # 1.7→2.5 (더 멀리 보고 미리 회전 시작)
       transform_tolerance: 1.0        # 시뮬레이션용 TF 허용 오차
-      xy_goal_tolerance: 0.25
+      xy_goal_tolerance: 0.50
       # Critics - 장애물 회피 강화!
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.5         # 0.1→0.5 (DWB도 장애물 강하게 회피!)
+      Oscillation.scale: 1.0           # 진동 방지
+      BaseObstacle.scale: 0.5         # 장애물 회피
       PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.3
+      PathAlign.forward_point_distance: 0.5   # 0.3→0.5 (더 앞의 경로에 정렬 → 부드러운 커브)
       PathDist.scale: 32.0
       GoalDist.scale: 24.0
       RotateToGoal.scale: 12.0
@@ -94,8 +100,8 @@ local_costmap:
       height: 4
       resolution: 0.05
       # 직사각형 footprint (robot_radius 대신)
-      # 로봇 실제: 0.30 x 0.40m → 안전마진 포함 0.50 x 0.50m
-      footprint: "[[0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25]]"
+      # 로봇 실제: 0.30 x 0.40m → 안전마진 포함 0.40 x 0.40m
+      footprint: "[[0.20, 0.20], [0.20, -0.20], [-0.20, -0.20], [-0.20, 0.20]]"
       plugins: ["voxel_layer", "inflation_layer"]
 
       voxel_layer:
@@ -121,7 +127,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0      # 높을수록 lethal 근처만 고비용
-        inflation_radius: 0.30        # 최소 안전거리 (Global보다 작아서 유연함)
+        inflation_radius: 0.25        # 최소 안전거리 (Global보다 작아서 유연함)
 
       always_send_full_costmap: true
 
@@ -131,13 +137,13 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 2.0
-      publish_frequency: 1.0
+      update_frequency: 5.0
+      publish_frequency: 2.0
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: true
-      # 직사각형 footprint - 안전마진 더 추가
-      footprint: "[[0.30, 0.30], [0.30, -0.30], [-0.30, -0.30], [-0.30, 0.30]]"
+      # 직사각형 footprint - 안전마진 포함 0.45 x 0.45m
+      footprint: "[[0.225, 0.225], [0.225, -0.225], [-0.225, -0.225], [-0.225, 0.225]]"
       resolution: 0.05
       track_unknown_space: true
       # static + obstacle + inflation (모두 사용!)
@@ -171,8 +177,8 @@ global_costmap:
         # inflation_radius 넓으면 → 넓은 비용 그라디언트 생성
         # → 플래너가 장애물 사이 "중앙"으로 경로 생성!
         # ============================================================
-        cost_scaling_factor: 1.8      # 낮을수록 중앙 선호 효과 강함
-        inflation_radius: 1.5         # 넓은 그라디언트 (중앙 선호)
+        cost_scaling_factor: 2.5      # 높일수록 lethal 근처만 고비용 (좁은 통로 통과 허용)
+        inflation_radius: 0.8         # 좁은 그라디언트 (좁은 통로 통과 가능)
 
       always_send_full_costmap: true
 
@@ -212,7 +218,10 @@ behavior_server:
       plugin: "nav2_behaviors::DriveOnHeading"
     global_frame: odom
     robot_base_frame: base_footprint
-    transform_tolerance: 1.0          # 시뮬레이션용 TF 허용 오차
+    transform_tolerance: 1.0
+    max_rotational_vel: 1.5           # Spin 회전 속도
+    min_rotational_vel: 0.4           # Spin 최소 회전 속도
+    rotational_acc_lim: 2.0           # Spin 회전 가속도
 
 # =============================================================================
 # Velocity Smoother
@@ -223,9 +232,9 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: false
     feedback: "OPEN_LOOP"
-    max_velocity: [0.75, 0.0, 2.3]
-    min_velocity: [-0.38, 0.0, -2.3]
-    max_accel: [3.0, 0.0, 3.5]
-    max_decel: [-3.0, 0.0, -3.5]
+    max_velocity: [0.4, 0.0, 1.5]
+    min_velocity: [-0.2, 0.0, -1.5]
+    max_accel: [1.0, 0.0, 2.0]
+    max_decel: [-1.0, 0.0, -2.0]
     odom_topic: "odom"
     odom_duration: 0.1

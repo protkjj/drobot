@@ -34,10 +34,7 @@ class PerceptionNode(Node):
         self.latest_depth_img = None 
         self.is_processing = False
 
-        # "edible_classes" kept for reference, but logic now applies to ALL target_classes below
-        self.target_classes = [
-            'cylinder'
-        ]
+        self.target_classes = ['cylinder']
 
         # --- 2. QoS Profile ---
         qos_policy = QoSProfile(
