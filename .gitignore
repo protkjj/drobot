@@ -1,11 +1,10 @@
-# External dependencies (auto-cloned by setup.sh)
-PX4-Autopilot/
-Micro-XRCE-DDS-Agent/
-
 # ROS2 build artifacts
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
+
+# Build artifacts
+Micro-XRCE-DDS-Agent/build/
 
 # Python
 __pycache__/
