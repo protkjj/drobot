@@ -1,0 +1,40 @@
+running egg_info
+creating ../../../build/perception/perception.egg-info
+writing ../../../build/perception/perception.egg-info/PKG-INFO
+writing dependency_links to ../../../build/perception/perception.egg-info/dependency_links.txt
+writing entry points to ../../../build/perception/perception.egg-info/entry_points.txt
+writing requirements to ../../../build/perception/perception.egg-info/requires.txt
+writing top-level names to ../../../build/perception/perception.egg-info/top_level.txt
+writing manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+reading manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+writing manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/leo11dk/Desktop/drobot/build/perception/build
+creating /home/leo11dk/Desktop/drobot/build/perception/build/lib
+creating /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+copying perception/__init__.py -> /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+copying perception/perception.py -> /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+running install
+running install_lib
+creating /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+copying /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception/__init__.py -> /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+copying /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception/perception.py -> /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+byte-compiling /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception/perception.py to perception.cpython-312.pyc
+running install_data
+creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index
+creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index
+creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index/packages
+copying resource/perception -> /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index/packages
+copying package.xml -> /home/leo11dk/Desktop/drobot/install/perception/share/perception
+creating /home/leo11dk/Desktop/drobot/install/perception/share/perception/launch
+copying launch/perception.launch.py -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/launch
+creating /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+copying models/food_model.pt -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+copying models/best.pt -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+running install_egg_info
+Copying ../../../build/perception/perception.egg-info to /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception-0.0.0-py3.12.egg-info
+running install_scripts
+Installing perception_node script to /home/leo11dk/Desktop/drobot/install/perception/lib/perception
+writing list of installed files to '/home/leo11dk/Desktop/drobot/build/perception/install.log'

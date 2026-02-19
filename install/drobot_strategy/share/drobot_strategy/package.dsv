@@ -1,0 +1,6 @@
+source;share/drobot_strategy/hook/pythonpath.ps1
+source;share/drobot_strategy/hook/pythonpath.dsv
+source;share/drobot_strategy/hook/pythonpath.sh
+source;share/drobot_strategy/hook/ament_prefix_path.ps1
+source;share/drobot_strategy/hook/ament_prefix_path.dsv
+source;share/drobot_strategy/hook/ament_prefix_path.sh

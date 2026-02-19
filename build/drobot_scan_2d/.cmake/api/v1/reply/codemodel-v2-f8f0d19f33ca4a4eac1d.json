@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-3b1f0ea7596ecc91388b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "drobot_scan_2d",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_drobot_scan_2d_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_drobot_scan_2d_egg-2e8bb1012e5afd8bd3ab.json",
+					"name" : "ament_cmake_python_build_drobot_scan_2d_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_copy_drobot_scan_2d::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_copy_drobot_scan_2d-465b74387138e1949720.json",
+					"name" : "ament_cmake_python_copy_drobot_scan_2d",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "drobot_scan_2d_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-drobot_scan_2d_uninstall-fb915544e8cd989747fe.json",
+					"name" : "drobot_scan_2d_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-07a13e331b5b38f8fe1c.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/leo11dk/Desktop/drobot/build/drobot_scan_2d",
+		"source" : "/home/leo11dk/Desktop/drobot/ros2_ws/src/drobot_scan_2d"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

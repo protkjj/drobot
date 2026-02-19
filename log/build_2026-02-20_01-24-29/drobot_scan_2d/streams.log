@@ -1,0 +1,45 @@
+[0.051s] Invoking command in '/home/leo11dk/Desktop/drobot/build/drobot_scan_2d': AMENT_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/leo11dk/Desktop/drobot/build/drobot_scan_2d -- -j6 -l6
+[0.229s] Built target ament_cmake_python_copy_drobot_scan_2d
+[0.692s] running egg_info
+[0.742s] writing drobot_scan_2d.egg-info/PKG-INFO
+[0.743s] writing dependency_links to drobot_scan_2d.egg-info/dependency_links.txt
+[0.743s] writing top-level names to drobot_scan_2d.egg-info/top_level.txt
+[0.873s] reading manifest file 'drobot_scan_2d.egg-info/SOURCES.txt'
+[0.890s] writing manifest file 'drobot_scan_2d.egg-info/SOURCES.txt'
+[0.938s] Built target ament_cmake_python_build_drobot_scan_2d_egg
+[0.949s] Invoked command in '/home/leo11dk/Desktop/drobot/build/drobot_scan_2d' returned '0': AMENT_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/leo11dk/Desktop/drobot/build/drobot_scan_2d -- -j6 -l6
+[0.953s] Invoking command in '/home/leo11dk/Desktop/drobot/build/drobot_scan_2d': AMENT_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/leo11dk/Desktop/drobot/build/drobot_scan_2d
+[0.968s] -- Install configuration: ""
+[0.970s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/pythonpath.sh
+[0.970s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/pythonpath.dsv
+[0.971s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d-2.0.0-py3.12.egg-info
+[0.971s] -- Installing: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d-2.0.0-py3.12.egg-info/dependency_links.txt
+[0.972s] -- Installing: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d-2.0.0-py3.12.egg-info/top_level.txt
+[0.974s] -- Installing: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d-2.0.0-py3.12.egg-info/SOURCES.txt
+[0.974s] -- Installing: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d-2.0.0-py3.12.egg-info/PKG-INFO
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/rules
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/rules/__init__.py
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/rules/engine.py
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/__init__.py
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/config.py
+[0.980s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/goal_navigator.py
+[1.023s] Listing '/home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d'...
+[1.023s] Listing '/home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/python3.12/site-packages/drobot_scan_2d/rules'...
+[1.028s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/lib/drobot_scan_2d/goal_navigator.py
+[1.029s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/ament_index/resource_index/package_run_dependencies/drobot_scan_2d
+[1.029s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/ament_index/resource_index/parent_prefix_path/drobot_scan_2d
+[1.029s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/ament_prefix_path.sh
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/ament_prefix_path.dsv
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/path.sh
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/environment/path.dsv
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/local_setup.bash
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/local_setup.sh
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/local_setup.zsh
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/local_setup.dsv
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.dsv
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/ament_index/resource_index/packages/drobot_scan_2d
+[1.035s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/cmake/drobot_scan_2dConfig.cmake
+[1.035s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/cmake/drobot_scan_2dConfig-version.cmake
+[1.035s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.xml
+[1.041s] Invoked command in '/home/leo11dk/Desktop/drobot/build/drobot_scan_2d' returned '0': AMENT_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/leo11dk/Desktop/drobot/install/drobot_description:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/leo11dk/Desktop/drobot/build/drobot_scan_2d
