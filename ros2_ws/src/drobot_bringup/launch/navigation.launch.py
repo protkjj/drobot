@@ -201,7 +201,8 @@ def launch_setup(context):
             '-name', 'drobot',
             '-x', spawn_x,
             '-y', spawn_y,
-            '-z', '0.15'
+            '-z', '0.15',
+            '--timeout', '30000',
         ],
         output='screen'
     )
