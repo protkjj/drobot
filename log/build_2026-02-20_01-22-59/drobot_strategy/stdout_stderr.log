@@ -1,0 +1,30 @@
+running egg_info
+creating ../../../build/drobot_strategy/drobot_strategy.egg-info
+writing ../../../build/drobot_strategy/drobot_strategy.egg-info/PKG-INFO
+writing dependency_links to ../../../build/drobot_strategy/drobot_strategy.egg-info/dependency_links.txt
+writing requirements to ../../../build/drobot_strategy/drobot_strategy.egg-info/requires.txt
+writing top-level names to ../../../build/drobot_strategy/drobot_strategy.egg-info/top_level.txt
+writing manifest file '../../../build/drobot_strategy/drobot_strategy.egg-info/SOURCES.txt'
+reading manifest file '../../../build/drobot_strategy/drobot_strategy.egg-info/SOURCES.txt'
+writing manifest file '../../../build/drobot_strategy/drobot_strategy.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/leo11dk/Desktop/drobot/build/drobot_strategy/build
+creating /home/leo11dk/Desktop/drobot/build/drobot_strategy/build/lib
+creating /home/leo11dk/Desktop/drobot/build/drobot_strategy/build/lib/drobot_strategy
+copying drobot_strategy/__init__.py -> /home/leo11dk/Desktop/drobot/build/drobot_strategy/build/lib/drobot_strategy
+running install
+running install_lib
+creating /home/leo11dk/Desktop/drobot/install/drobot_strategy/lib/python3.12/site-packages/drobot_strategy
+copying /home/leo11dk/Desktop/drobot/build/drobot_strategy/build/lib/drobot_strategy/__init__.py -> /home/leo11dk/Desktop/drobot/install/drobot_strategy/lib/python3.12/site-packages/drobot_strategy
+byte-compiling /home/leo11dk/Desktop/drobot/install/drobot_strategy/lib/python3.12/site-packages/drobot_strategy/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/leo11dk/Desktop/drobot/install/drobot_strategy/share/ament_index
+creating /home/leo11dk/Desktop/drobot/install/drobot_strategy/share/ament_index/resource_index
+creating /home/leo11dk/Desktop/drobot/install/drobot_strategy/share/ament_index/resource_index/packages
+copying resource/drobot_strategy -> /home/leo11dk/Desktop/drobot/install/drobot_strategy/share/ament_index/resource_index/packages
+copying package.xml -> /home/leo11dk/Desktop/drobot/install/drobot_strategy/share/drobot_strategy
+running install_egg_info
+Copying ../../../build/drobot_strategy/drobot_strategy.egg-info to /home/leo11dk/Desktop/drobot/install/drobot_strategy/lib/python3.12/site-packages/drobot_strategy-0.0.0-py3.12.egg-info
+running install_scripts
+writing list of installed files to '/home/leo11dk/Desktop/drobot/build/drobot_strategy/install.log'

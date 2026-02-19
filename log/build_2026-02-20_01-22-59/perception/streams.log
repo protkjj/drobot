@@ -1,0 +1,42 @@
+[1.956s] Invoking command in '/home/leo11dk/Desktop/drobot/ros2_ws/src/perception': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/leo11dk/Desktop/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/perception build --build-base /home/leo11dk/Desktop/drobot/build/perception/build install --record /home/leo11dk/Desktop/drobot/build/perception/install.log --single-version-externally-managed install_data
+[2.335s] running egg_info
+[2.335s] creating ../../../build/perception/perception.egg-info
+[2.377s] writing ../../../build/perception/perception.egg-info/PKG-INFO
+[2.377s] writing dependency_links to ../../../build/perception/perception.egg-info/dependency_links.txt
+[2.377s] writing entry points to ../../../build/perception/perception.egg-info/entry_points.txt
+[2.377s] writing requirements to ../../../build/perception/perception.egg-info/requires.txt
+[2.377s] writing top-level names to ../../../build/perception/perception.egg-info/top_level.txt
+[2.377s] writing manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+[2.444s] reading manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+[2.445s] writing manifest file '../../../build/perception/perception.egg-info/SOURCES.txt'
+[2.445s] running build
+[2.445s] running build_py
+[2.446s] creating /home/leo11dk/Desktop/drobot/build/perception/build
+[2.446s] creating /home/leo11dk/Desktop/drobot/build/perception/build/lib
+[2.446s] creating /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+[2.446s] copying perception/__init__.py -> /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+[2.446s] copying perception/perception.py -> /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception
+[2.446s] running install
+[2.453s] running install_lib
+[2.512s] creating /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+[2.512s] copying /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception/__init__.py -> /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+[2.513s] copying /home/leo11dk/Desktop/drobot/build/perception/build/lib/perception/perception.py -> /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception
+[2.513s] byte-compiling /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception/__init__.py to __init__.cpython-312.pyc
+[2.514s] byte-compiling /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception/perception.py to perception.cpython-312.pyc
+[2.517s] running install_data
+[2.518s] creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index
+[2.518s] creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index
+[2.518s] creating /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index/packages
+[2.518s] copying resource/perception -> /home/leo11dk/Desktop/drobot/install/perception/share/ament_index/resource_index/packages
+[2.518s] copying package.xml -> /home/leo11dk/Desktop/drobot/install/perception/share/perception
+[2.518s] creating /home/leo11dk/Desktop/drobot/install/perception/share/perception/launch
+[2.518s] copying launch/perception.launch.py -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/launch
+[2.518s] creating /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+[2.518s] copying models/food_model.pt -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+[2.532s] copying models/best.pt -> /home/leo11dk/Desktop/drobot/install/perception/share/perception/models
+[2.535s] running install_egg_info
+[2.569s] Copying ../../../build/perception/perception.egg-info to /home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages/perception-0.0.0-py3.12.egg-info
+[2.573s] running install_scripts
+[2.779s] Installing perception_node script to /home/leo11dk/Desktop/drobot/install/perception/lib/perception
+[2.780s] writing list of installed files to '/home/leo11dk/Desktop/drobot/build/perception/install.log'
+[2.833s] Invoked command in '/home/leo11dk/Desktop/drobot/ros2_ws/src/perception' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/leo11dk/Desktop/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/leo11dk/Desktop/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/perception build --build-base /home/leo11dk/Desktop/drobot/build/perception/build install --record /home/leo11dk/Desktop/drobot/build/perception/install.log --single-version-externally-managed install_data

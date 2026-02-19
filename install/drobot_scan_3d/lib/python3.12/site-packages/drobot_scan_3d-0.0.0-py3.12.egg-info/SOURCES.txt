@@ -1,0 +1,14 @@
+package.xml
+setup.cfg
+setup.py
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/PKG-INFO
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/SOURCES.txt
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/dependency_links.txt
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/requires.txt
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/top_level.txt
+../../../build/drobot_scan_3d/drobot_scan_3d.egg-info/zip-safe
+drobot_scan_3d/__init__.py
+resource/drobot_scan_3d
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

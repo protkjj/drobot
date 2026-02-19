@@ -1,0 +1,37 @@
+[1.915s] Invoking command in '/home/leo11dk/Desktop/drobot/ros2_ws/src/drobot_controller': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/leo11dk/Desktop/drobot/build/drobot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/drobot_controller build --build-base /home/leo11dk/Desktop/drobot/build/drobot_controller/build install --record /home/leo11dk/Desktop/drobot/build/drobot_controller/install.log --single-version-externally-managed install_data
+[2.307s] running egg_info
+[2.307s] creating ../../../build/drobot_controller/drobot_controller.egg-info
+[2.337s] writing ../../../build/drobot_controller/drobot_controller.egg-info/PKG-INFO
+[2.338s] writing dependency_links to ../../../build/drobot_controller/drobot_controller.egg-info/dependency_links.txt
+[2.338s] writing entry points to ../../../build/drobot_controller/drobot_controller.egg-info/entry_points.txt
+[2.338s] writing requirements to ../../../build/drobot_controller/drobot_controller.egg-info/requires.txt
+[2.338s] writing top-level names to ../../../build/drobot_controller/drobot_controller.egg-info/top_level.txt
+[2.339s] writing manifest file '../../../build/drobot_controller/drobot_controller.egg-info/SOURCES.txt'
+[2.395s] reading manifest file '../../../build/drobot_controller/drobot_controller.egg-info/SOURCES.txt'
+[2.399s] writing manifest file '../../../build/drobot_controller/drobot_controller.egg-info/SOURCES.txt'
+[2.399s] running build
+[2.399s] running build_py
+[2.399s] creating /home/leo11dk/Desktop/drobot/build/drobot_controller/build
+[2.399s] creating /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib
+[2.399s] creating /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib/drobot_controller
+[2.399s] copying drobot_controller/__init__.py -> /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib/drobot_controller
+[2.399s] copying drobot_controller/manual_controller.py -> /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib/drobot_controller
+[2.399s] running install
+[2.406s] running install_lib
+[2.435s] creating /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller
+[2.436s] copying /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib/drobot_controller/__init__.py -> /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller
+[2.436s] copying /home/leo11dk/Desktop/drobot/build/drobot_controller/build/lib/drobot_controller/manual_controller.py -> /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller
+[2.436s] byte-compiling /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller/__init__.py to __init__.cpython-312.pyc
+[2.436s] byte-compiling /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller/manual_controller.py to manual_controller.cpython-312.pyc
+[2.437s] running install_data
+[2.437s] creating /home/leo11dk/Desktop/drobot/install/drobot_controller/share/ament_index
+[2.437s] creating /home/leo11dk/Desktop/drobot/install/drobot_controller/share/ament_index/resource_index
+[2.437s] creating /home/leo11dk/Desktop/drobot/install/drobot_controller/share/ament_index/resource_index/packages
+[2.438s] copying resource/drobot_controller -> /home/leo11dk/Desktop/drobot/install/drobot_controller/share/ament_index/resource_index/packages
+[2.438s] copying package.xml -> /home/leo11dk/Desktop/drobot/install/drobot_controller/share/drobot_controller
+[2.438s] running install_egg_info
+[2.471s] Copying ../../../build/drobot_controller/drobot_controller.egg-info to /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot_controller-0.0.0-py3.12.egg-info
+[2.498s] running install_scripts
+[2.703s] Installing manual_controller script to /home/leo11dk/Desktop/drobot/install/drobot_controller/lib/drobot_controller
+[2.703s] writing list of installed files to '/home/leo11dk/Desktop/drobot/build/drobot_controller/install.log'
+[2.755s] Invoked command in '/home/leo11dk/Desktop/drobot/ros2_ws/src/drobot_controller' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/leo11dk/Desktop/drobot/build/drobot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/leo11dk/Desktop/drobot/install/drobot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/drobot_controller build --build-base /home/leo11dk/Desktop/drobot/build/drobot_controller/build install --record /home/leo11dk/Desktop/drobot/build/drobot_controller/install.log --single-version-externally-managed install_data
