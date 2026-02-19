@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <sdf version="1.8">
-  <world name="default">
+  <world name="empty">
 
     <!-- Physics -->
     <physics name="1ms" type="ignored">

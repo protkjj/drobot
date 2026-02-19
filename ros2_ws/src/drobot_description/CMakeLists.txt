@@ -12,6 +12,7 @@ install(
   DIRECTORY
     urdf
     meshes
+    scripts
     config
     object
     worlds
