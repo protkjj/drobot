@@ -12,7 +12,6 @@ install(
   DIRECTORY
     urdf
     meshes
-    launch
     config
     object
     worlds
