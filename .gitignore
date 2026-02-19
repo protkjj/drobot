@@ -3,12 +3,9 @@ ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
 
-# Build artifacts
-Micro-XRCE-DDS-Agent/build/
-
 # External dependencies
-micro-xrce/
-px4-autopilot/
+Micro-XRCE-DDS-Agent/
+PX4-Autopilot/
 
 # Python
 __pycache__/
