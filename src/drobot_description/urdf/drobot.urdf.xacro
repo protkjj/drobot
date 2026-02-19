@@ -292,7 +292,6 @@
     </collision>
   </link>
 
-  <!-- NOTE: con_rr_wheel origin 0,0,0 from SW2URDF - may need adjustment -->
   <joint name="con_rr_wheel" type="continuous">
     <origin xyz="0.11656 0.0 0.02429" rpy="0 0 -3.1268"/>
     <parent link="right_side_frame"/>

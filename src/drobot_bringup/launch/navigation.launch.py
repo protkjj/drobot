@@ -128,11 +128,11 @@ def launch_setup(context):
         package='ros_gz_sim',
         executable='create',
         arguments=[
-            '-topic', 'robot_description',
+            '-topic', '/robot_description',
             '-name', 'drobot',
             '-x', spawn_x,
             '-y', spawn_y,
-            '-z', '0.15'
+            '-z', '0.45'
         ],
         output='screen'
     )
