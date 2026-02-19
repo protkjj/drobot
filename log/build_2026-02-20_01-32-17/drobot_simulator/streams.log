@@ -1,0 +1,20 @@
+[0.487s] Invoking command in '/home/leo11dk/Desktop/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/leo11dk/Desktop/drobot/install/perception:/home/leo11dk/Desktop/drobot/install/drobot_strategy:/home/leo11dk/Desktop/drobot/install/drobot_scan_3d:/home/leo11dk/Desktop/drobot/install/drobot_bringup:/home/leo11dk/Desktop/drobot/install/drobot_controller:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/leo11dk/Desktop/drobot/build/drobot_simulator -- -j6 -l6
+[0.739s] Invoked command in '/home/leo11dk/Desktop/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/leo11dk/Desktop/drobot/install/perception:/home/leo11dk/Desktop/drobot/install/drobot_strategy:/home/leo11dk/Desktop/drobot/install/drobot_scan_3d:/home/leo11dk/Desktop/drobot/install/drobot_bringup:/home/leo11dk/Desktop/drobot/install/drobot_controller:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/leo11dk/Desktop/drobot/build/drobot_simulator -- -j6 -l6
+[0.740s] Invoking command in '/home/leo11dk/Desktop/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/leo11dk/Desktop/drobot/install/perception:/home/leo11dk/Desktop/drobot/install/drobot_strategy:/home/leo11dk/Desktop/drobot/install/drobot_scan_3d:/home/leo11dk/Desktop/drobot/install/drobot_bringup:/home/leo11dk/Desktop/drobot/install/drobot_controller:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/leo11dk/Desktop/drobot/build/drobot_simulator
+[1.031s] -- Install configuration: ""
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/ament_index/resource_index/package_run_dependencies/drobot_simulator
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/ament_index/resource_index/parent_prefix_path/drobot_simulator
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/environment/ament_prefix_path.sh
+[1.031s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/environment/ament_prefix_path.dsv
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/environment/path.sh
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/environment/path.dsv
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.bash
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.sh
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.zsh
+[1.032s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.dsv
+[1.032s] -- Installing: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/package.dsv
+[1.033s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/ament_index/resource_index/packages/drobot_simulator
+[1.034s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/cmake/drobot_simulatorConfig.cmake
+[1.034s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/cmake/drobot_simulatorConfig-version.cmake
+[1.034s] -- Up-to-date: /home/leo11dk/Desktop/drobot/install/drobot_simulator/share/drobot_simulator/package.xml
+[1.088s] Invoked command in '/home/leo11dk/Desktop/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/leo11dk/Desktop/drobot/install/perception:/home/leo11dk/Desktop/drobot/install/drobot_strategy:/home/leo11dk/Desktop/drobot/install/drobot_scan_3d:/home/leo11dk/Desktop/drobot/install/drobot_bringup:/home/leo11dk/Desktop/drobot/install/drobot_controller:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/leo11dk/Desktop/drobot/build/drobot_simulator
