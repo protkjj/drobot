@@ -8,7 +8,7 @@ ROS 2 Jazzy + Gazebo Harmonic 기반, 4바퀴 스키드 스티어 주행 + 쿼�
 
 ```
 ros2_ws/src/
-├── drobot_description/   # 로봇 모델 (URDF, meshes, worlds, 99개 3D 모델)
+├── drobot_description/   # 로봇 모델 (URDF, meshes, worlds, 91개 3D 모델)
 ├── drobot_scan_2d/       # 2D 자율주행 (goal_navigator, rule engine)
 ├── drobot_scan_3d/       # 3D 스캔/비행 (예정)
 ├── drobot_bringup/       # 런치 파일 + 설정 + World UI
@@ -20,9 +20,9 @@ ros2_ws/src/
 
 | 패키지 | 빌드 | 상태 | 역할 |
 |--------|------|------|------|
-| `drobot_description` | ament_cmake | **구현 완료** | URDF, 13개 STL 메시, Gazebo 플러그인 (DiffDrive, LiDAR, IMU, Camera), 16개 월드 파일, 99개 3D 모델 |
+| `drobot_description` | ament_cmake | **구현 완료** | URDF, 13개 STL 메시, Gazebo 플러그인 (DiffDrive, LiDAR, IMU, Camera), 7개 월드 파일, 91개 3D 모델 |
 | `drobot_scan_2d` | ament_cmake | **구현 완료** | Nav2 기반 자율주행 + YAML 규칙 엔진 (금지구역, 속도제한, 충돌방지) |
-| `drobot_bringup` | ament_python | **구현 완료** | 런치 파일 (navigation, bringup), Nav2/SLAM/EKF 설정, World UI (Tkinter) |
+| `drobot_bringup` | ament_python | **구현 완료** | 런치 파일 (navigation), Nav2/SLAM/EKF 설정, World UI (Tkinter) |
 | `perception` | ament_python | **구현 완료** | YOLOv8 객체 인식, 거리 추정, 음성 명령 퍼블리시 |
 | `drobot_controller` | ament_python | 예정 | - |
 | `drobot_scan_3d` | ament_python | 예정 | - |
@@ -82,11 +82,8 @@ ros2 launch drobot_bringup navigation.launch.py world:=hospital_original
 # World UI (월드 생성 + 런치)
 ros2 run drobot_bringup world_ui
 
-# RViz 시각화만
-ros2 launch drobot_description display.launch.py
-
-# Gazebo 시뮬레이션만
-ros2 launch drobot_description gazebo.launch.py
+# 객체 인식 (Perception)
+ros2 launch perception perception.launch.py
 ```
 
 ## 실행 흐름 (navigation.launch.py)
@@ -128,13 +125,10 @@ drobot_description/
 │   ├── gazebo.xacro             # Gazebo 플러그인 (DiffDrive, LiDAR, IMU, Camera)
 │   └── ros2_control.xacro       # ros2_control 인터페이스
 ├── meshes/                      # 13개 STL 메시 (base, arms, wheels, frames, camera, lidar)
-├── launch/
-│   ├── display.launch.py        # RViz 시각화
-│   └── gazebo.launch.py         # Gazebo 시뮬레이션
 ├── config/display.rviz
 ├── object/obstacle_library/     # 장애물 YAML 라이브러리
-├── models/                      # 99개 Gazebo 3D 모델 (병원, 가구 등)
-└── worlds/original/             # 16개 사전 정의 월드 (hospital, warehouse, cafe 등)
+├── models/                      # 91개 Gazebo 3D 모델 (병원, 가구 등)
+└── worlds/original/             # 7개 사전 정의 월드 (hospital, basic 등)
 
 drobot_scan_2d/
 ├── drobot_scan_2d/
@@ -145,8 +139,7 @@ drobot_scan_2d/
 
 drobot_bringup/
 ├── launch/
-│   ├── navigation.launch.py    # Gazebo + SLAM + Nav2 + GoalNavigator 올인원
-│   └── bringup.launch.py       # World UI용 런치
+│   └── navigation.launch.py    # Gazebo + SLAM + Nav2 + GoalNavigator 올인원
 ├── config/
 │   ├── common/                  # EKF, SLAM, Gazebo 브릿지
 │   ├── navigation/              # Nav2, BT, rules, RViz
