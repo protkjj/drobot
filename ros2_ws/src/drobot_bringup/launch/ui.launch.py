@@ -9,6 +9,7 @@ Usage:
 import sys
 import os
 import subprocess
+import shutil
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
@@ -51,6 +52,23 @@ def resolve_world_generator_script() -> Path:
         return Path(__file__).resolve().parents[3] / "src" / "drobot_description" / "scripts" / "world_generator.py"
 
 
+def resolve_workspace_dir() -> Path:
+    """Resolve ros2 workspace directory."""
+    try:
+        # Installed path example:
+        # <ws>/install/drobot_bringup/share/drobot_bringup
+        share_dir = Path(get_package_share_directory("drobot_bringup")).resolve()
+        for parent in share_dir.parents:
+            if parent.name == "install":
+                return parent.parent
+    except Exception:
+        pass
+
+    # Source path fallback:
+    # <ws>/src/drobot_bringup/launch/ui.launch.py
+    return Path(__file__).resolve().parents[3]
+
+
 def run_ui():
     """Run Tkinter UI app."""
     window_width = 1320
@@ -76,6 +94,7 @@ def run_ui():
     worlds_root = resolve_worlds_root()
     world_files = load_world_files(worlds_root)
     world_generator_script = resolve_world_generator_script()
+    workspace_dir = resolve_workspace_dir()
 
     worlds1 = ttk.Frame(root, padding="10")
     worlds1.grid(row=0, column=0, sticky="nsew")
@@ -108,6 +127,85 @@ def run_ui():
 
     next_btn = ttk.Button(summary_content, text="Next")
 
+    def launch_generated_world(output_world_name: str):
+        """Launch navigation with generated world."""
+        world_arg = Path(output_world_name).stem
+        launch_cmd = (
+            f"cd {workspace_dir} && "
+            "source install/setup.bash && "
+            f"ros2 launch drobot_bringup navigation.launch.py world:={world_arg}"
+        )
+
+        # Prefer opening in a real terminal so launch logs are visible and process survives UI close.
+        terminal = None
+        for candidate in ("gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "xterm"):
+            if shutil.which(candidate):
+                terminal = candidate
+                break
+
+        if terminal == "gnome-terminal":
+            subprocess.Popen(
+                [terminal, "--", "bash", "-lc", f"{launch_cmd}; exec bash"],
+                start_new_session=True,
+            )
+        elif terminal == "konsole":
+            subprocess.Popen(
+                [terminal, "-e", "bash", "-lc", f"{launch_cmd}; exec bash"],
+                start_new_session=True,
+            )
+        elif terminal == "xfce4-terminal":
+            subprocess.Popen(
+                [terminal, "--command", f"bash -lc '{launch_cmd}; exec bash'"],
+                start_new_session=True,
+            )
+        elif terminal == "mate-terminal":
+            subprocess.Popen(
+                [terminal, "--", "bash", "-lc", f"{launch_cmd}; exec bash"],
+                start_new_session=True,
+            )
+        elif terminal == "xterm":
+            subprocess.Popen(
+                [terminal, "-e", "bash", "-lc", f"{launch_cmd}; exec bash"],
+                start_new_session=True,
+            )
+        else:
+            # Fallback: detached background shell.
+            subprocess.Popen(
+                ["bash", "-lc", launch_cmd],
+                start_new_session=True,
+            )
+
+        print(f"Launching generated world: {world_arg}", flush=True)
+
+    def parse_output_world_name(stdout_text: str) -> str | None:
+        for line in stdout_text.splitlines():
+            if line.startswith("OUTPUT_WORLD_NAME="):
+                value = line.split("=", 1)[1].strip()
+                if value:
+                    return value
+        return None
+
+    def show_load_world_popup(base_world_name: str, output_world_name: str):
+        """Show completion popup with a real 'Load World' button."""
+        popup = tk.Toplevel(root)
+        popup.title("World Generated")
+        popup.geometry("360x140")
+        popup.resizable(False, False)
+        popup.transient(root)
+        popup.grab_set()
+
+        ttk.Label(
+            popup,
+            text=f"Launching '{base_world_name}'.",
+            padding=(12, 16, 12, 8),
+        ).pack(anchor="w")
+
+        ttk.Button(
+            popup,
+            text="Load World",
+            command=lambda: (launch_generated_world(output_world_name), popup.destroy()),
+        ).pack(anchor="e", padx=12, pady=(0, 12))
+
     def create_world():
         base_world_name = selected_world.get()
         base_goal = selected_goal.get()
@@ -126,16 +224,33 @@ def run_ui():
             return
 
         env = os.environ.copy()
+        env["DROBOT_WORKSPACE_DIR"] = str(workspace_dir)
         env["DROBOT_BASE_WORLD_NAME"] = base_world_name
         env["DROBOT_BASE_GOALS"] = base_goal
         env["DROBOT_BASE_OPTIONS"] = base_option
-        subprocess.Popen([sys.executable, str(world_generator_script)], env=env)
-        print(
-            "Running world_generator.py with "
-            f"DROBOT_BASE_WORLD_NAME={base_world_name} "
-            f"DROBOT_BASE_GOALS={base_goal} "
-            f"DROBOT_BASE_OPTIONS={base_option}"
+        result = subprocess.run(
+            [sys.executable, str(world_generator_script)],
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
         )
+        if result.returncode != 0:
+            print("Create World failed")
+            if result.stdout:
+                print(result.stdout)
+            if result.stderr:
+                print(result.stderr)
+            return
+
+        output_world_name = parse_output_world_name(result.stdout)
+        if not output_world_name:
+            print("Create World failed: OUTPUT_WORLD_NAME not found in generator output")
+            if result.stdout:
+                print(result.stdout)
+            return
+
+        show_load_world_popup(base_world_name, output_world_name)
 
     create_world_btn = ttk.Button(summary_content, command=create_world, text="Create World")
 

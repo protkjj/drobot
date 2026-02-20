@@ -1,4 +1,4 @@
-name: cylinder_obstacle_01
+name: cylinder
 type: cylinder
 pose:
   x: 1.5
