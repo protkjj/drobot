@@ -12,7 +12,6 @@ worlds:
   # 기타 맵
   empty:                      {x: 0.0, y: 0.0}
   basic:                      {x: 0.0, y: 0.0}
-  basic_with_center_cylinder: {x: 0.0, y: 0.0}
 
 # world 목록에 없는 맵은 이 좌표 사용
 default: {x: 0.0, y: 1.5}

@@ -15,7 +15,7 @@ class PerceptionNode(Node):
         super().__init__('perception_node')
 
         # --- 1. Robust Model Loading ---
-        final_model_path = self.find_model_path('best.pt')
+        final_model_path = self.find_model_path('cone.pt')
         
         self.declare_parameter('model_path', final_model_path)
         self.declare_parameter('debug_mode', False)
@@ -34,7 +34,7 @@ class PerceptionNode(Node):
         self.latest_depth_img = None 
         self.is_processing = False
 
-        self.target_classes = ['cylinder']
+        self.target_classes = ['cone']
 
         # --- 2. QoS Profile ---
         qos_policy = QoSProfile(
@@ -59,7 +59,7 @@ class PerceptionNode(Node):
         # --- 4. Subscribers ---
         self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
         self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
-        
+        self.create_subscription(Image, '/camera/depth_image_raw', self.depth_callback, qos_policy)
         self.get_logger().info('Perception Node Started (Topics Verified)')
 
     def find_model_path(self, filename):
