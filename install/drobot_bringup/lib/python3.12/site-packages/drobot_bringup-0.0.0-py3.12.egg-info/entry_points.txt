@@ -1,2 +1,0 @@
-[console_scripts]
-world_ui = drobot_bringup.world_ui:main

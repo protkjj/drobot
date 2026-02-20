@@ -1,9 +1,0 @@
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/uninstall.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/drobot_simulator_uninstall.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/test.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/edit_cache.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/rebuild_cache.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/list_install_components.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/install.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/install/local.dir
-/home/leo11dk/Desktop/drobot/build/drobot_simulator/CMakeFiles/install/strip.dir
