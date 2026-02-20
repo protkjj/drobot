@@ -1,0 +1,11 @@
+package.xml
+setup.cfg
+setup.py
+drobot_scan_3d/__init__.py
+drobot_scan_3d.egg-info/PKG-INFO
+drobot_scan_3d.egg-info/SOURCES.txt
+drobot_scan_3d.egg-info/dependency_links.txt
+drobot_scan_3d.egg-info/requires.txt
+drobot_scan_3d.egg-info/top_level.txt
+drobot_scan_3d.egg-info/zip-safe
+resource/drobot_scan_3d

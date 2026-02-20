@@ -5,13 +5,10 @@ Gazebo + SLAM + Nav2 + Goal Navigator 한번에 실행
 
 실행 방법:
   ros2 launch drobot_bringup navigation.launch.py
-  ros2 launch drobot_bringup navigation.launch.py world:=hospital_original
-  ros2 launch drobot_bringup navigation.launch.py world:=hospital spawn:=random
+  ros2 launch drobot_bringup navigation.launch.py world:=warehouse
+  ros2 launch drobot_bringup navigation.launch.py world:=f1_circuit
 """
 import os
-import math
-import random
-import xml.etree.ElementTree as ET
 import yaml
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, SetEnvironmentVariable, ExecuteProcess, TimerAction
@@ -36,67 +33,6 @@ def get_spawn_position(bringup_pkg, world_name):
         return '0.0', '0.0'
 
 
-def get_random_spawn(world_file, clearance=1.5, max_attempts=500):
-    """Parse world SDF and find a random obstacle-free spawn position.
-
-    Extracts (x, y) from every <include>/<model> pose in the world,
-    then picks a random point that is at least `clearance` metres
-    away from every extracted position.
-    """
-    obstacles = []
-    try:
-        tree = ET.parse(world_file)
-        world_el = tree.find('.//world')
-        if world_el is None:
-            return None, None
-
-        for child in world_el:
-            # Skip non-spatial elements
-            if child.tag in ('plugin', 'gravity', 'physics', 'scene'):
-                continue
-            # Skip ground_plane (covers entire floor, not a real obstacle)
-            name = child.get('name', '')
-            if 'ground_plane' in name.lower():
-                continue
-            pose_el = child.find('pose')
-            if pose_el is not None and pose_el.text:
-                parts = pose_el.text.strip().split()
-                if len(parts) >= 2:
-                    try:
-                        x, y = float(parts[0]), float(parts[1])
-                        obstacles.append((x, y))
-                    except ValueError:
-                        pass
-    except Exception as e:
-        print(f'[spawn] SDF parse error: {e}')
-        return None, None
-
-    if not obstacles:
-        return None, None
-
-    # Compute spawn bounds (shrink inward to avoid edges/walls)
-    xs = [o[0] for o in obstacles]
-    ys = [o[1] for o in obstacles]
-    margin = 3.0
-    x_min, x_max = min(xs) + margin, max(xs) - margin
-    y_min, y_max = min(ys) + margin, max(ys) - margin
-
-    if x_min >= x_max or y_min >= y_max:
-        print('[spawn] World too small for random spawn')
-        return None, None
-
-    for _ in range(max_attempts):
-        rx = random.uniform(x_min, x_max)
-        ry = random.uniform(y_min, y_max)
-        if all(math.hypot(rx - ox, ry - oy) > clearance
-               for ox, oy in obstacles):
-            print(f'[spawn] Random position: ({rx:.2f}, {ry:.2f})')
-            return str(round(rx, 2)), str(round(ry, 2))
-
-    print('[spawn] Could not find clear position, falling back to default')
-    return None, None
-
-
 def launch_setup(context):
     """Setup launch with context for spawn positions."""
     # Package directories
@@ -107,7 +43,11 @@ def launch_setup(context):
     # Get launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time')
     world = context.launch_configurations.get('world', 'empty')
-    spawn_mode = context.launch_configurations.get('spawn', 'default')
+
+    # Get spawn position for this world
+    default_x, default_y = get_spawn_position(bringup_pkg, world)
+    spawn_x = default_x
+    spawn_y = default_y
 
     # URDF (from drobot_description)
     urdf_file = os.path.join(desc_pkg, 'urdf', 'drobot.urdf.xacro')
@@ -130,16 +70,6 @@ def launch_setup(context):
         print(f"[WARNING] World file not found: {world}")
         print(f"  Searched: worlds/, worlds/original/, worlds/generated/")
         world_file = os.path.join(desc_pkg, 'worlds', 'original', 'empty.sdf')
-
-    # Spawn position: default (YAML) or random (SDF obstacle avoidance)
-    if spawn_mode == 'random':
-        rx, ry = get_random_spawn(world_file)
-        if rx is not None:
-            spawn_x, spawn_y = rx, ry
-        else:
-            spawn_x, spawn_y = get_spawn_position(bringup_pkg, world)
-    else:
-        spawn_x, spawn_y = get_spawn_position(bringup_pkg, world)
 
     # Config files (all from bringup)
     nav2_params = os.path.join(bringup_pkg, 'config', 'navigation', 'nav2_params.yaml')
@@ -175,6 +105,7 @@ def launch_setup(context):
     )
 
     # Extract world name from SDF for unpause service
+    import xml.etree.ElementTree as ET
     try:
         _tree = ET.parse(world_file)
         _world_el = _tree.find('.//world')
@@ -184,13 +115,14 @@ def launch_setup(context):
 
     # Start Gazebo PAUSED (no -r) so arms can be initialized before physics runs
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
-        ]),
-        launch_arguments={
-            'gz_args': f'{world_file}',
-            'on_exit_shutdown': 'true'
-        }.items()
+    PythonLaunchDescriptionSource([
+        os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
+    ]),
+    launch_arguments={
+        # '-r'을 추가하여 센서 시스템을 강제로 로드하고 바로 시작하게 합니다.
+        'gz_args': f'-r {world_file}', 
+        'on_exit_shutdown': 'true'
+    }.items()
     )
 
     spawn_robot = Node(
@@ -201,8 +133,7 @@ def launch_setup(context):
             '-name', 'drobot',
             '-x', spawn_x,
             '-y', spawn_y,
-            '-z', '0.15',
-            '--timeout', '30000',
+            '-z', '0.15'
         ],
         output='screen'
     )
@@ -380,12 +311,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'world',
             default_value='empty',
-            description='World name (empty, basic, hospital_original, hospital, ...)'
-        ),
-        DeclareLaunchArgument(
-            'spawn',
-            default_value='default',
-            description='Spawn mode: default (YAML position) or random (obstacle-free random)'
+            description='World name (empty, warehouse, f1_circuit, office_maze, param_test)'
         ),
         OpaqueFunction(function=launch_setup),
     ])
