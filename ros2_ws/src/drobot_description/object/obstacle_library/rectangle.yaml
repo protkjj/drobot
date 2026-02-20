@@ -1,4 +1,4 @@
-name: rectangular_obstacle_01
+name: rectangle
 type: box
 pose:
   x: -1.0
