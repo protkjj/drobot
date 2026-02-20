@@ -3,11 +3,11 @@ val: ../valid/images
 test: ../test/images
 
 nc: 1
-names: ['cylinder']
+names: ['cone']
 
 roboflow:
   workspace: drobot-software
-  project: cylinder_detection-sbm77
-  version: 1
+  project: cone-w3wvu
+  version: 2
   license: CC BY 4.0
-  url: https://universe.roboflow.com/drobot-software/cylinder_detection-sbm77/dataset/1
+  url: https://universe.roboflow.com/drobot-software/cone-w3wvu/dataset/2

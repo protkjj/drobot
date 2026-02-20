@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'manual_controller = drobot_controller.manual_controller:main',
         ],
     },
 )
