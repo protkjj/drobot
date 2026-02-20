@@ -12,7 +12,7 @@ import subprocess
 import shutil
 from pathlib import Path
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -69,6 +69,25 @@ def resolve_workspace_dir() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def resolve_bringup_launch_dir() -> Path:
+    """Resolve drobot_bringup launch directory in install/source environments."""
+    try:
+        return Path(get_package_share_directory("drobot_bringup")) / "launch"
+    except Exception:
+        return Path(__file__).resolve().parents[2] / "launch"
+
+
+def load_option_launch_files(launch_dir: Path) -> list[str]:
+    """List launch files to expose as options, excluding ui.launch.py."""
+    if not launch_dir.exists():
+        return []
+    files = sorted(
+        p.name for p in launch_dir.glob("*.launch.py")
+        if p.is_file() and p.name != "ui.launch.py"
+    )
+    return files
+
+
 def run_ui():
     """Run Tkinter UI app."""
     window_width = 1320
@@ -95,6 +114,8 @@ def run_ui():
     world_files = load_world_files(worlds_root)
     world_generator_script = resolve_world_generator_script()
     workspace_dir = resolve_workspace_dir()
+    bringup_launch_dir = resolve_bringup_launch_dir()
+    option_files = load_option_launch_files(bringup_launch_dir)
 
     worlds1 = ttk.Frame(root, padding="10")
     worlds1.grid(row=0, column=0, sticky="nsew")
@@ -127,14 +148,8 @@ def run_ui():
 
     next_btn = ttk.Button(summary_content, text="Next")
 
-    def launch_generated_world(output_world_name: str):
-        """Launch navigation with generated world."""
-        world_arg = Path(output_world_name).stem
-        launch_cmd = (
-            f"cd {workspace_dir} && "
-            "source install/setup.bash && "
-            f"ros2 launch drobot_bringup navigation.launch.py world:={world_arg}"
-        )
+    def run_in_new_terminal(launch_cmd: str):
+        """Run a shell command in a new terminal if available."""
 
         # Prefer opening in a real terminal so launch logs are visible and process survives UI close.
         terminal = None
@@ -175,7 +190,36 @@ def run_ui():
                 start_new_session=True,
             )
 
+    def launch_selected_stack(output_world_name: str, selected_options: list[str]):
+        """Launch navigation and optionally controller/perception based on selected options."""
+        world_arg = Path(output_world_name).stem
+
+        nav_cmd = (
+            f"cd {workspace_dir} && "
+            "source install/setup.bash && "
+            f"ros2 launch drobot_bringup navigation.launch.py world:={world_arg}"
+        )
+        run_in_new_terminal(nav_cmd)
         print(f"Launching generated world: {world_arg}", flush=True)
+
+        # Start extra stacks only when selected in options.
+        if "controller.launch.py" in selected_options:
+            controller_cmd = (
+                f"cd {workspace_dir} && "
+                "source install/setup.bash && "
+                "sleep 3 && ros2 launch drobot_bringup controller.launch.py"
+            )
+            run_in_new_terminal(controller_cmd)
+            print("Launching controller stack", flush=True)
+
+        if "perception.launch.py" in selected_options:
+            perception_cmd = (
+                f"cd {workspace_dir} && "
+                "source install/setup.bash && "
+                "sleep 3 && ros2 launch drobot_bringup perception.launch.py"
+            )
+            run_in_new_terminal(perception_cmd)
+            print("Launching perception stack", flush=True)
 
     def parse_output_world_name(stdout_text: str) -> str | None:
         for line in stdout_text.splitlines():
@@ -185,7 +229,7 @@ def run_ui():
                     return value
         return None
 
-    def show_load_world_popup(base_world_name: str, output_world_name: str):
+    def show_load_world_popup(base_world_name: str, output_world_name: str, selected_options: list[str]):
         """Show completion popup with a real 'Load World' button."""
         popup = tk.Toplevel(root)
         popup.title("World Generated")
@@ -203,13 +247,16 @@ def run_ui():
         ttk.Button(
             popup,
             text="Load World",
-            command=lambda: (launch_generated_world(output_world_name), popup.destroy()),
+            command=lambda: (launch_selected_stack(output_world_name, selected_options), popup.destroy()),
         ).pack(anchor="e", padx=12, pady=(0, 12))
 
     def create_world():
         base_world_name = selected_world.get()
         base_goal = selected_goal.get()
-        base_option = selected_option.get()
+        selected_options = [
+            name for name, var in option_vars.items() if var.get()
+        ]
+        base_option = ",".join(selected_options) if selected_options else "(none)"
         if base_world_name == "(none)":
             print("Create World skipped: no world selected")
             return
@@ -218,6 +265,18 @@ def run_ui():
             return
         if base_option == "(none)":
             print("Create World skipped: no option selected")
+            return
+        requires_navigation = any(
+            opt in ("controller.launch.py", "perception.launch.py")
+            for opt in selected_options
+        )
+        has_navigation = "navigation.launch.py" in selected_options
+        if requires_navigation and not has_navigation:
+            messagebox.showerror(
+                "Invalid Options",
+                "controller/perception requires navigation.\n"
+                "Please also select navigation.launch.py",
+            )
             return
         if not world_generator_script.is_file():
             print(f"Create World skipped: script not found: {world_generator_script}")
@@ -250,7 +309,7 @@ def run_ui():
                 print(result.stdout)
             return
 
-        show_load_world_popup(base_world_name, output_world_name)
+        show_load_world_popup(base_world_name, output_world_name, selected_options)
 
     create_world_btn = ttk.Button(summary_content, command=create_world, text="Create World")
 
@@ -275,12 +334,18 @@ def run_ui():
     options_buttons = ttk.Frame(options_col)
     options_buttons.pack(fill="both", expand=True)
 
-    def on_select_option(option_name: str):
-        selected_option.set(option_name)
-        print(f"Selected option: {option_name}")
+    option_vars: dict[str, tk.BooleanVar] = {}
+
+    def refresh_selected_options():
+        selected = [name for name, var in option_vars.items() if var.get()]
+        if selected:
+            selected_option.set(", ".join(selected))
+            if not create_world_btn.winfo_ismapped():
+                create_world_btn.pack(anchor="w", pady=(button_pady, 0))
+        else:
+            selected_option.set("(none)")
+            create_world_btn.pack_forget()
         next_btn.pack_forget()
-        if not create_world_btn.winfo_ismapped():
-            create_world_btn.pack(anchor="w", pady=(button_pady, 0))
 
     sep2 = ttk.Separator(root, orient="vertical")
     sep2.grid(row=0, column=4, sticky="ns")
@@ -288,16 +353,28 @@ def run_ui():
     def reset_option_step():
         """Clear selected option and force option re-selection."""
         selected_option.set("(none)")
+        for var in option_vars.values():
+            var.set(False)
         create_world_btn.pack_forget()
         if options_col.winfo_ismapped():
             options_col.grid_remove()
 
-    for option_name in ["moving", "stationary", "random"]:
-        ttk.Button(
+    if option_files:
+        for option_name in option_files:
+            var = tk.BooleanVar(value=False)
+            option_vars[option_name] = var
+            ttk.Checkbutton(
+                options_buttons,
+                text=option_name,
+                variable=var,
+                command=refresh_selected_options,
+            ).pack(fill="x", pady=button_pady)
+    else:
+        ttk.Label(
             options_buttons,
-            text=option_name,
-            command=lambda name=option_name: on_select_option(name)
-        ).pack(fill="x", pady=button_pady)
+            text=f"No launch options found under:\n{bringup_launch_dir}",
+            justify="left",
+        ).pack(anchor="w")
 
     def on_next_pressed():
         # Step 1: show goals. Step 2: show options.

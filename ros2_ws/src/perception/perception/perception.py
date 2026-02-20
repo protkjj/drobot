@@ -19,9 +19,12 @@ class PerceptionNode(Node):
         
         self.declare_parameter('model_path', final_model_path)
         self.declare_parameter('debug_mode', False)
+        self.declare_parameter('device', 'cpu')
         self.debug_mode = self.get_parameter('debug_mode').get_parameter_value().bool_value
+        self.device = self.get_parameter('device').get_parameter_value().string_value
 
         self.get_logger().info(f'Loading YOLO model from: {final_model_path}')
+        self.get_logger().info(f'Using inference device: {self.device}')
         
         try:
             self.model = YOLO(final_model_path)
@@ -110,7 +113,7 @@ class PerceptionNode(Node):
             height, width, _ = cv_img.shape
             
             # Inference
-            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.9)
+            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.9, device=self.device)
             
             # Default values to publish if nothing detected
             current_frame_label = "None"
