@@ -1,1 +1,0 @@
-/home/essong/drobot/build/drobot_bringup/launch/navigation.launch.py
