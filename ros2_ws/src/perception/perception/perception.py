@@ -59,7 +59,13 @@ class PerceptionNode(Node):
         # --- 4. Subscribers ---
         self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
         self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
-        self.create_subscription(Image, '/camera/depth_image_raw', self.depth_callback, qos_policy)
+
+        depth_qos = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+        self.create_subscription(Image, '/camera/depth_image_raw', self.depth_callback, depth_qos)
         self.get_logger().info('Perception Node Started (Topics Verified)')
 
     def find_model_path(self, filename):
@@ -104,7 +110,7 @@ class PerceptionNode(Node):
             height, width, _ = cv_img.shape
             
             # Inference
-            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.5)
+            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.9)
             
             # Default values to publish if nothing detected
             current_frame_label = "None"
