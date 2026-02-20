@@ -159,20 +159,21 @@ def run_ui():
         print(f"Selected world: {world_name}")
         selected_goal.set("(none)")
         reset_option_step()
+
         if goals_col.winfo_ismapped():
             goals_col.grid_remove()
-        # Show Next button only after a selection is made.
+        
         if not next_btn.winfo_ismapped() and not create_world_btn.winfo_ismapped():
             next_btn.pack(anchor="w", pady=(button_pady, 0))
 
     def on_select_goal(goal_name: str):
         selected_goal.set(goal_name)
         print(f"Selected goal: {goal_name}")
-        # Changing goal invalidates any previous option selection.
         reset_option_step()
-        # Bring back Next to proceed to options again.
+
         if not next_btn.winfo_ismapped():
             next_btn.pack(anchor="w", pady=(4, 0))
+    
     worlds_list = ttk.Frame(worlds1)
     worlds_list.pack(fill="both", expand=True)
 

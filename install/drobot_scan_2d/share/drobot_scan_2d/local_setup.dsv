@@ -1,3 +1,0 @@
-source;share/drobot_scan_2d/environment/ament_prefix_path.sh
-source;share/drobot_scan_2d/environment/path.sh
-source;share/drobot_scan_2d/environment/pythonpath.sh
