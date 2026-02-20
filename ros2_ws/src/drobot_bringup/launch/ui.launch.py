@@ -7,6 +7,8 @@ Usage:
 """
 
 import sys
+import os
+import subprocess
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
@@ -41,6 +43,14 @@ def resolve_worlds_root() -> Path:
         return Path(__file__).resolve().parents[3] / "src" / "drobot_description" / "worlds" / "original"
 
 
+def resolve_world_generator_script() -> Path:
+    """Resolve world_generator.py in install/source environments."""
+    try:
+        return Path(get_package_share_directory("drobot_description")) / "scripts" / "world_generator.py"
+    except Exception:
+        return Path(__file__).resolve().parents[3] / "src" / "drobot_description" / "scripts" / "world_generator.py"
+
+
 def run_ui():
     """Run Tkinter UI app."""
     window_width = 1320
@@ -65,6 +75,7 @@ def run_ui():
 
     worlds_root = resolve_worlds_root()
     world_files = load_world_files(worlds_root)
+    world_generator_script = resolve_world_generator_script()
 
     worlds1 = ttk.Frame(root, padding="10")
     worlds1.grid(row=0, column=0, sticky="nsew")
@@ -96,7 +107,39 @@ def run_ui():
     ttk.Label(summary_content, textvariable=selected_option).pack(anchor="w", pady=value_pady)
 
     next_btn = ttk.Button(summary_content, text="Next")
-    create_world_btn = ttk.Button(summary_content, text="Create World")
+
+    def create_world():
+        base_world_name = selected_world.get()
+        base_goal = selected_goal.get()
+        base_option = selected_option.get()
+        if base_world_name == "(none)":
+            print("Create World skipped: no world selected")
+            return
+        if base_goal == "(none)":
+            print("Create World skipped: no goal selected")
+            return
+        if base_option == "(none)":
+            print("Create World skipped: no option selected")
+            return
+        if not world_generator_script.is_file():
+            print(f"Create World skipped: script not found: {world_generator_script}")
+            return
+
+        env = os.environ.copy()
+        env["DROBOT_BASE_WORLD_NAME"] = base_world_name
+        env["DROBOT_BASE_GOALS"] = base_goal
+        env["DROBOT_BASE_OPTIONS"] = base_option
+        subprocess.Popen([sys.executable, str(world_generator_script)], env=env)
+        print(
+            "Running world_generator.py with "
+            f"DROBOT_BASE_WORLD_NAME={base_world_name} "
+            f"DROBOT_BASE_GOALS={base_goal} "
+            f"DROBOT_BASE_OPTIONS={base_option}"
+        )
+
+    create_world_btn = ttk.Button(summary_content, command=create_world, text="Create World")
+
+
 
     goals_col = ttk.Frame(root, padding="10")
     goals_col.grid_propagate(False)
