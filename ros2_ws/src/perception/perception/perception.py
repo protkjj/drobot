@@ -59,7 +59,7 @@ class PerceptionNode(Node):
         # --- 4. Subscribers ---
         self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
         self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
-        
+        self.create_subscription(Image, '/camera/depth_image_raw', self.depth_callback, qos_policy)
         self.get_logger().info('Perception Node Started (Topics Verified)')
 
     def find_model_path(self, filename):
