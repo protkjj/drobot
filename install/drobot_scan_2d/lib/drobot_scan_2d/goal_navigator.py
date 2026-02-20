@@ -1,1 +1,0 @@
-/home/essong/drobot/ros2_ws/src/drobot_scan_2d/drobot_scan_2d/goal_navigator.py
