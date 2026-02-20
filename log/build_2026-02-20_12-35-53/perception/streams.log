@@ -1,0 +1,17 @@
+[0.939s] Invoking command in '/home/essong/drobot/build/perception': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/perception/build --no-deps symlink_data
+[1.295s] running develop
+[1.533s] running egg_info
+[1.555s] writing perception.egg-info/PKG-INFO
+[1.555s] writing dependency_links to perception.egg-info/dependency_links.txt
+[1.556s] writing entry points to perception.egg-info/entry_points.txt
+[1.556s] writing requirements to perception.egg-info/requires.txt
+[1.556s] writing top-level names to perception.egg-info/top_level.txt
+[1.601s] reading manifest file 'perception.egg-info/SOURCES.txt'
+[1.601s] writing manifest file 'perception.egg-info/SOURCES.txt'
+[1.625s] running build_ext
+[1.625s] Creating /home/essong/drobot/install/perception/lib/python3.12/site-packages/perception.egg-link (link to .)
+[1.625s] Installing perception_node script to /home/essong/drobot/install/perception/lib/perception
+[1.625s] 
+[1.626s] Installed /home/essong/drobot/build/perception
+[1.626s] running symlink_data
+[1.658s] Invoked command in '/home/essong/drobot/build/perception' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/perception/build --no-deps symlink_data

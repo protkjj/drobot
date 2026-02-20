@@ -1,0 +1,618 @@
+[0.110s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install']
+[0.110s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=12, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7f78f64be4e0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f78f6446570>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f78f6446570>>, mixin_verb=('build',))
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.151s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.151s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/essong/drobot'
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['ignore', 'ignore_ament_install']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'ignore'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'ignore_ament_install'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['colcon_pkg']
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'colcon_pkg'
+[0.178s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['colcon_meta']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'colcon_meta'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['ros']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'ros'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['cmake', 'python']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'cmake'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'python'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extensions ['python_setup_py']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception) by extension 'python_setup_py'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['ignore', 'ignore_ament_install']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'ignore'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'ignore_ament_install'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['colcon_pkg']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'colcon_pkg'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['colcon_meta']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'colcon_meta'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['ros']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'ros'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['cmake', 'python']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'cmake'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'python'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extensions ['python_setup_py']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception) by extension 'python_setup_py'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'ignore'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'ignore_ament_install'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['colcon_pkg']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'colcon_pkg'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['colcon_meta']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'colcon_meta'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['ros']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'ros'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['cmake', 'python']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'cmake'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'python'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extensions ['python_setup_py']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(perception/perception/__pycache__) by extension 'python_setup_py'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['ignore', 'ignore_ament_install']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'ignore'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'ignore_ament_install'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['colcon_pkg']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'colcon_pkg'
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['colcon_meta']
+[0.180s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'colcon_meta'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['ros']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'ros'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['cmake', 'python']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'cmake'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'python'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extensions ['python_setup_py']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws) by extension 'python_setup_py'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'ignore'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'ignore_ament_install'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['colcon_pkg']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'colcon_pkg'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['colcon_meta']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'colcon_meta'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['ros']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'ros'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['cmake', 'python']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'cmake'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'python'
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extensions ['python_setup_py']
+[0.181s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src) by extension 'python_setup_py'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extensions ['colcon_pkg']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extension 'colcon_pkg'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extensions ['colcon_meta']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extension 'colcon_meta'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_bringup) by extension 'ros'
+[0.184s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_bringup' with type 'ros.ament_python' and name 'drobot_bringup'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extensions ['ignore', 'ignore_ament_install']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extension 'ignore'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extension 'ignore_ament_install'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extensions ['colcon_pkg']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extension 'colcon_pkg'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extensions ['colcon_meta']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extension 'colcon_meta'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extensions ['ros']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_controller) by extension 'ros'
+[0.186s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_controller' with type 'ros.ament_python' and name 'drobot_controller'
+[0.186s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extensions ['ignore', 'ignore_ament_install']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extension 'ignore'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extension 'ignore_ament_install'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extensions ['colcon_pkg']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extension 'colcon_pkg'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extensions ['colcon_meta']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extension 'colcon_meta'
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extensions ['ros']
+[0.187s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_description) by extension 'ros'
+[0.187s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_description' with type 'ros.ament_cmake' and name 'drobot_description'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extensions ['ignore', 'ignore_ament_install']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extension 'ignore'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extension 'ignore_ament_install'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extensions ['colcon_pkg']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extension 'colcon_pkg'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extensions ['colcon_meta']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extension 'colcon_meta'
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extensions ['ros']
+[0.188s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_2d) by extension 'ros'
+[0.189s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_scan_2d' with type 'ros.ament_cmake' and name 'drobot_scan_2d'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extensions ['ignore', 'ignore_ament_install']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extension 'ignore'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extension 'ignore_ament_install'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extensions ['colcon_pkg']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extension 'colcon_pkg'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extensions ['colcon_meta']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extension 'colcon_meta'
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extensions ['ros']
+[0.189s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_scan_3d) by extension 'ros'
+[0.190s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_scan_3d' with type 'ros.ament_python' and name 'drobot_scan_3d'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extensions ['ignore', 'ignore_ament_install']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extension 'ignore'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extension 'ignore_ament_install'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extensions ['colcon_pkg']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extension 'colcon_pkg'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extensions ['colcon_meta']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extension 'colcon_meta'
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extensions ['ros']
+[0.190s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_simulator) by extension 'ros'
+[0.191s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_simulator' with type 'ros.ament_cmake' and name 'drobot_simulator'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extensions ['ignore', 'ignore_ament_install']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extension 'ignore'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extension 'ignore_ament_install'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extensions ['colcon_pkg']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extension 'colcon_pkg'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extensions ['colcon_meta']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extension 'colcon_meta'
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extensions ['ros']
+[0.191s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/drobot_strategy) by extension 'ros'
+[0.191s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/drobot_strategy' with type 'ros.ament_python' and name 'drobot_strategy'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extensions ['ignore', 'ignore_ament_install']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extension 'ignore'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extension 'ignore_ament_install'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extensions ['colcon_pkg']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extension 'colcon_pkg'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extensions ['colcon_meta']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extension 'colcon_meta'
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extensions ['ros']
+[0.192s] Level 1:colcon.colcon_core.package_identification:_identify(ros2_ws/src/perception) by extension 'ros'
+[0.192s] DEBUG:colcon.colcon_core.package_identification:Package 'ros2_ws/src/perception' with type 'ros.ament_python' and name 'perception'
+[0.192s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.193s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.193s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.193s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.193s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.213s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.213s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/perception' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_strategy' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_simulator' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_scan_3d' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_bringup' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_scan_2d' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.214s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_description' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.215s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/essong/drobot/install/drobot_controller' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.215s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/essong/drobot/install/drobot_simulator' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.216s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/essong/drobot/install/drobot_scan_2d' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.216s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/home/essong/drobot/install/drobot_description' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.217s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 0 installed packages in /home/essong/drobot/install
+[0.217s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 9 installed packages in /home/essong/make_ai_robot/install
+[0.218s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 12 installed packages in /home/essong/make-ai-robot/install
+[0.220s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 464 installed packages in /opt/ros/jazzy
+[0.221s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_target' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_clean_cache' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_clean_first' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'cmake_force_configure' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'ament_cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'catkin_cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_controller' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.299s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_controller' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_controller', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_controller', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_controller', 'symlink_install': True, 'test_result_base': None}
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_target' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_clean_cache' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_clean_first' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'cmake_force_configure' from command line to 'False'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'ament_cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'catkin_cmake_args' from command line to 'None'
+[0.299s] Level 5:colcon.colcon_core.verb:set package 'drobot_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.299s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_description', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_description', 'symlink_install': True, 'test_result_base': None}
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_target' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_clean_cache' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_clean_first' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'cmake_force_configure' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'ament_cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'catkin_cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_3d' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.300s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_scan_3d' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_scan_3d', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_scan_3d', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_scan_3d', 'symlink_install': True, 'test_result_base': None}
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_target' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_clean_cache' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_clean_first' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'cmake_force_configure' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'ament_cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'catkin_cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_simulator' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.300s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_simulator' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_simulator', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_simulator', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_simulator', 'symlink_install': True, 'test_result_base': None}
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_args' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_target' from command line to 'None'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_clean_cache' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_clean_first' from command line to 'False'
+[0.300s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'cmake_force_configure' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'ament_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'catkin_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_strategy' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.301s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_strategy' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_strategy', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_strategy', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_strategy', 'symlink_install': True, 'test_result_base': None}
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_target' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_clean_cache' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_clean_first' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'cmake_force_configure' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'ament_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'catkin_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'perception' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.301s] DEBUG:colcon.colcon_core.verb:Building package 'perception' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/perception', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/perception', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/perception', 'symlink_install': True, 'test_result_base': None}
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_target' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_clean_cache' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_clean_first' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'cmake_force_configure' from command line to 'False'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'ament_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'catkin_cmake_args' from command line to 'None'
+[0.301s] Level 5:colcon.colcon_core.verb:set package 'drobot_scan_2d' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.301s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_scan_2d' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_scan_2d', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_scan_2d', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_scan_2d', 'symlink_install': True, 'test_result_base': None}
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_args' from command line to 'None'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_target' from command line to 'None'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_clean_cache' from command line to 'False'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_clean_first' from command line to 'False'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'cmake_force_configure' from command line to 'False'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'ament_cmake_args' from command line to 'None'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'catkin_cmake_args' from command line to 'None'
+[0.302s] Level 5:colcon.colcon_core.verb:set package 'drobot_bringup' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.302s] DEBUG:colcon.colcon_core.verb:Building package 'drobot_bringup' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/essong/drobot/build/drobot_bringup', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/essong/drobot/install/drobot_bringup', 'merge_install': False, 'path': '/home/essong/drobot/ros2_ws/src/drobot_bringup', 'symlink_install': True, 'test_result_base': None}
+[0.302s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.303s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.303s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_description' with build type 'ament_cmake'
+[0.303s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/essong/drobot/ros2_ws/src/drobot_description'
+[0.306s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.306s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.306s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.312s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_controller' with build type 'ament_python'
+[0.312s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_controller', 'ament_prefix_path')
+[0.312s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/ament_prefix_path.ps1'
+[0.314s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/ament_prefix_path.dsv'
+[0.314s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/ament_prefix_path.sh'
+[0.315s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.315s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.321s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_scan_3d' with build type 'ament_python'
+[0.321s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_3d', 'ament_prefix_path')
+[0.321s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/ament_prefix_path.ps1'
+[0.322s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/ament_prefix_path.dsv'
+[0.322s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/ament_prefix_path.sh'
+[0.322s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.322s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.328s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_simulator' with build type 'ament_cmake'
+[0.329s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/essong/drobot/ros2_ws/src/drobot_simulator'
+[0.329s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.329s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.335s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_strategy' with build type 'ament_python'
+[0.336s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_strategy', 'ament_prefix_path')
+[0.336s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/ament_prefix_path.ps1'
+[0.337s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/ament_prefix_path.dsv'
+[0.337s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/ament_prefix_path.sh'
+[0.337s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.337s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.344s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/perception' with build type 'ament_python'
+[0.344s] Level 1:colcon.colcon_core.shell:create_environment_hook('perception', 'ament_prefix_path')
+[0.344s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/perception/share/perception/hook/ament_prefix_path.ps1'
+[0.345s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/perception/share/perception/hook/ament_prefix_path.dsv'
+[0.345s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/perception/share/perception/hook/ament_prefix_path.sh'
+[0.346s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.346s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.356s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_description
+[0.644s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/essong/drobot/ros2_ws/src/drobot_controller'
+[0.644s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.644s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.952s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/essong/drobot/ros2_ws/src/drobot_scan_3d'
+[0.953s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.953s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.964s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_simulator -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_simulator
+[1.272s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/essong/drobot/ros2_ws/src/drobot_strategy'
+[1.273s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.273s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.575s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/essong/drobot/ros2_ws/src/perception'
+[1.575s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.575s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.696s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_description -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_description
+[1.698s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_description -- -j12 -l12
+[1.782s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_description -- -j12 -l12
+[1.804s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_description
+[2.197s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_simulator -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_simulator
+[2.199s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_simulator -- -j12 -l12
+[2.258s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_simulator -- -j12 -l12
+[2.259s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_simulator
+[2.516s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_simulator)
+[2.517s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_simulator
+[2.522s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator' for CMake module files
+[2.522s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator' for CMake config files
+[2.523s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_simulator', 'cmake_prefix_path')
+[2.523s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.ps1'
+[2.524s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.dsv'
+[2.525s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.sh'
+[2.526s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/bin'
+[2.526s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/lib/pkgconfig/drobot_simulator.pc'
+[2.526s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/lib/python3.12/site-packages'
+[2.527s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/bin'
+[2.527s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.ps1'
+[2.528s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.dsv'
+[2.529s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.sh'
+[2.530s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.bash'
+[2.531s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.zsh'
+[2.532s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_simulator/share/colcon-core/packages/drobot_simulator)
+[2.533s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_simulator)
+[2.533s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator' for CMake module files
+[2.534s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator' for CMake config files
+[2.535s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_simulator', 'cmake_prefix_path')
+[2.535s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.ps1'
+[2.536s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.dsv'
+[2.537s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/hook/cmake_prefix_path.sh'
+[2.538s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/bin'
+[2.538s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/lib/pkgconfig/drobot_simulator.pc'
+[2.538s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/lib/python3.12/site-packages'
+[2.539s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_simulator/bin'
+[2.539s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.ps1'
+[2.540s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.dsv'
+[2.541s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.sh'
+[2.542s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.bash'
+[2.543s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.zsh'
+[2.543s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_simulator/share/colcon-core/packages/drobot_simulator)
+[2.583s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_strategy': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_strategy/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_strategy/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_strategy/build --no-deps symlink_data
+[2.589s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_scan_3d': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_scan_3d/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_scan_3d/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_scan_3d/build --no-deps symlink_data
+[2.602s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/perception': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/perception/build --no-deps symlink_data
+[2.650s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_controller': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_controller/build --no-deps symlink_data
+[3.734s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_strategy', 'pythonpath_develop')
+[3.734s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_strategy/share/drobot_strategy/hook/pythonpath_develop.ps1'
+[3.735s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_strategy' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_strategy/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_strategy/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_strategy/build --no-deps symlink_data
+[3.736s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/build/drobot_strategy/share/drobot_strategy/hook/pythonpath_develop.dsv'
+[3.736s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_strategy/share/drobot_strategy/hook/pythonpath_develop.sh'
+[3.737s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy' for CMake module files
+[3.737s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy' for CMake config files
+[3.738s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy/lib'
+[3.738s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy/bin'
+[3.738s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy/lib/pkgconfig/drobot_strategy.pc'
+[3.738s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy/lib/python3.12/site-packages'
+[3.739s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_strategy', 'pythonpath')
+[3.739s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/pythonpath.ps1'
+[3.739s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/pythonpath.dsv'
+[3.739s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/hook/pythonpath.sh'
+[3.740s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_strategy/bin'
+[3.740s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_strategy)
+[3.741s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/package.ps1'
+[3.741s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/package.dsv'
+[3.742s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/package.sh'
+[3.743s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/package.bash'
+[3.743s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_strategy/share/drobot_strategy/package.zsh'
+[3.745s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_strategy/share/colcon-core/packages/drobot_strategy)
+[3.760s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_3d', 'pythonpath_develop')
+[3.761s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath_develop.ps1'
+[3.762s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_scan_3d' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_scan_3d/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_scan_3d/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_scan_3d/build --no-deps symlink_data
+[3.762s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/build/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath_develop.dsv'
+[3.763s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath_develop.sh'
+[3.764s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d' for CMake module files
+[3.764s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d' for CMake config files
+[3.765s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d/lib'
+[3.765s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d/bin'
+[3.765s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d/lib/pkgconfig/drobot_scan_3d.pc'
+[3.766s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d/lib/python3.12/site-packages'
+[3.766s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_3d', 'pythonpath')
+[3.766s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath.ps1'
+[3.767s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath.dsv'
+[3.769s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/hook/pythonpath.sh'
+[3.770s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_3d/bin'
+[3.770s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_scan_3d)
+[3.770s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/package.ps1'
+[3.771s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/package.dsv'
+[3.771s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/package.sh'
+[3.772s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/package.bash'
+[3.772s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_3d/share/drobot_scan_3d/package.zsh'
+[3.773s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_scan_3d/share/colcon-core/packages/drobot_scan_3d)
+[3.782s] Level 1:colcon.colcon_core.shell:create_environment_hook('perception', 'pythonpath_develop')
+[3.782s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/perception' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/perception/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/perception/build --no-deps symlink_data
+[3.783s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/perception/share/perception/hook/pythonpath_develop.ps1'
+[3.784s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/build/perception/share/perception/hook/pythonpath_develop.dsv'
+[3.784s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/perception/share/perception/hook/pythonpath_develop.sh'
+[3.785s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception' for CMake module files
+[3.785s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception' for CMake config files
+[3.786s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception/lib'
+[3.786s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception/bin'
+[3.786s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception/lib/pkgconfig/perception.pc'
+[3.787s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception/lib/python3.12/site-packages'
+[3.787s] Level 1:colcon.colcon_core.shell:create_environment_hook('perception', 'pythonpath')
+[3.787s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/perception/share/perception/hook/pythonpath.ps1'
+[3.787s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/perception/share/perception/hook/pythonpath.dsv'
+[3.788s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/perception/share/perception/hook/pythonpath.sh'
+[3.788s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/perception/bin'
+[3.788s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(perception)
+[3.789s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/perception/share/perception/package.ps1'
+[3.789s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/perception/share/perception/package.dsv'
+[3.790s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/perception/share/perception/package.sh'
+[3.790s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/perception/share/perception/package.bash'
+[3.791s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/perception/share/perception/package.zsh'
+[3.791s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/perception/share/colcon-core/packages/perception)
+[3.807s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_controller', 'pythonpath_develop')
+[3.807s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_controller/share/drobot_controller/hook/pythonpath_develop.ps1'
+[3.808s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_controller' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_controller/build --no-deps symlink_data
+[3.808s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/build/drobot_controller/share/drobot_controller/hook/pythonpath_develop.dsv'
+[3.809s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_controller/share/drobot_controller/hook/pythonpath_develop.sh'
+[3.809s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller' for CMake module files
+[3.810s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller' for CMake config files
+[3.811s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller/lib'
+[3.811s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller/bin'
+[3.811s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller/lib/pkgconfig/drobot_controller.pc'
+[3.811s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages'
+[3.811s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_controller', 'pythonpath')
+[3.811s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/pythonpath.ps1'
+[3.812s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/pythonpath.dsv'
+[3.812s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_controller/share/drobot_controller/hook/pythonpath.sh'
+[3.813s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_controller/bin'
+[3.813s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_controller)
+[3.813s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_controller/share/drobot_controller/package.ps1'
+[3.814s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_controller/share/drobot_controller/package.dsv'
+[3.814s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_controller/share/drobot_controller/package.sh'
+[3.814s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_controller/share/drobot_controller/package.bash'
+[3.815s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_controller/share/drobot_controller/package.zsh'
+[3.815s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_controller/share/colcon-core/packages/drobot_controller)
+[12.571s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_description)
+[12.572s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description' for CMake module files
+[12.572s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_description
+[12.573s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description' for CMake config files
+[12.574s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_description', 'cmake_prefix_path')
+[12.574s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.ps1'
+[12.574s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.dsv'
+[12.575s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.sh'
+[12.575s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/bin'
+[12.575s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/lib/pkgconfig/drobot_description.pc'
+[12.575s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/lib/python3.12/site-packages'
+[12.576s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/bin'
+[12.576s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.ps1'
+[12.576s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_description/share/drobot_description/package.dsv'
+[12.576s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.sh'
+[12.577s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.bash'
+[12.577s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.zsh'
+[12.577s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_description/share/colcon-core/packages/drobot_description)
+[12.578s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_description)
+[12.578s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description' for CMake module files
+[12.578s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description' for CMake config files
+[12.578s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_description', 'cmake_prefix_path')
+[12.579s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.ps1'
+[12.579s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.dsv'
+[12.579s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_description/share/drobot_description/hook/cmake_prefix_path.sh'
+[12.580s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/bin'
+[12.580s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/lib/pkgconfig/drobot_description.pc'
+[12.580s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/lib/python3.12/site-packages'
+[12.581s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_description/bin'
+[12.581s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.ps1'
+[12.581s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_description/share/drobot_description/package.dsv'
+[12.581s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.sh'
+[12.582s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.bash'
+[12.582s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_description/share/drobot_description/package.zsh'
+[12.582s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_description/share/colcon-core/packages/drobot_description)
+[12.583s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_scan_2d' with build type 'ament_cmake'
+[12.583s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/essong/drobot/ros2_ws/src/drobot_scan_2d'
+[12.583s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[12.583s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[12.597s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_scan_2d': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_scan_2d -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_scan_2d
+[13.606s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_scan_2d' returned '0': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_scan_2d -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_scan_2d
+[13.607s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_scan_2d': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_scan_2d -- -j12 -l12
+[14.070s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_scan_2d' returned '0': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_scan_2d -- -j12 -l12
+[14.072s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_scan_2d': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_scan_2d
+[14.444s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_scan_2d)
+[14.444s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d' for CMake module files
+[14.445s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_scan_2d' returned '0': CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_2d:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_scan_2d
+[14.445s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d' for CMake config files
+[14.445s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_2d', 'cmake_prefix_path')
+[14.446s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.ps1'
+[14.446s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.dsv'
+[14.446s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.sh'
+[14.447s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib'
+[14.447s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/bin'
+[14.447s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib/pkgconfig/drobot_scan_2d.pc'
+[14.447s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib/python3.12/site-packages'
+[14.447s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_2d', 'pythonpath')
+[14.448s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.ps1'
+[14.448s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.dsv'
+[14.448s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.sh'
+[14.449s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/bin'
+[14.449s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.ps1'
+[14.449s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.dsv'
+[14.450s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.sh'
+[14.450s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.bash'
+[14.450s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.zsh'
+[14.450s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_scan_2d/share/colcon-core/packages/drobot_scan_2d)
+[14.451s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_scan_2d)
+[14.451s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d' for CMake module files
+[14.452s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d' for CMake config files
+[14.452s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_2d', 'cmake_prefix_path')
+[14.452s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.ps1'
+[14.452s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.dsv'
+[14.453s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/cmake_prefix_path.sh'
+[14.453s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib'
+[14.453s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/bin'
+[14.453s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib/pkgconfig/drobot_scan_2d.pc'
+[14.453s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/lib/python3.12/site-packages'
+[14.453s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_scan_2d', 'pythonpath')
+[14.454s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.ps1'
+[14.454s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.dsv'
+[14.454s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/hook/pythonpath.sh'
+[14.455s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_scan_2d/bin'
+[14.455s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.ps1'
+[14.455s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.dsv'
+[14.456s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.sh'
+[14.456s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.bash'
+[14.457s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_scan_2d/share/drobot_scan_2d/package.zsh'
+[14.457s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_scan_2d/share/colcon-core/packages/drobot_scan_2d)
+[14.457s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/essong/drobot/ros2_ws/src/drobot_bringup' with build type 'ament_python'
+[14.457s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_bringup', 'ament_prefix_path')
+[14.457s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/ament_prefix_path.ps1'
+[14.458s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/ament_prefix_path.dsv'
+[14.459s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/ament_prefix_path.sh'
+[14.459s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[14.459s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[14.704s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/essong/drobot/ros2_ws/src/drobot_bringup'
+[14.704s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[14.704s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[15.408s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/essong/drobot/build/drobot_bringup': AMENT_PREFIX_PATH=/home/essong/drobot/install/drobot_controller:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_scan_2d:/home/essong/drobot/install/drobot_description:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/module_test:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/module_test:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_scan_2d:/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_bringup/lib/python3.12/site-packages:/home/essong/drobot/install/drobot_scan_2d/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_controller:/home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages:/home/essong/drobot/build/perception:/home/essong/drobot/install/perception/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_strategy:/home/essong/drobot/install/drobot_strategy/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_scan_3d:/home/essong/drobot/install/drobot_scan_3d/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_bringup:/home/essong/drobot/install/drobot_bringup/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/go1_simulation/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/path_tracker/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/module_test/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/language_command_handler/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/custom_interfaces/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/go1_simulation/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs/lib/python3.12/site-packages:/home/essong/make-ai-robot/build/perception:/home/essong/make-ai-robot/install/perception/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/path_tracker/lib/python3.12/site-packages:/home/essong/make-ai-robot/build/module_test:/home/essong/make-ai-robot/install/module_test/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/language_command_handler/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/custom_interfaces/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_bringup/build --no-deps symlink_data
+[16.174s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_bringup', 'pythonpath_develop')
+[16.174s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_bringup/share/drobot_bringup/hook/pythonpath_develop.ps1'
+[16.175s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/essong/drobot/build/drobot_bringup' returned '0': AMENT_PREFIX_PATH=/home/essong/drobot/install/drobot_controller:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_simulator:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_scan_2d:/home/essong/drobot/install/drobot_description:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/module_test:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/module_test:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy CMAKE_PREFIX_PATH=/home/essong/drobot/install/drobot_scan_2d:/home/essong/drobot/install/drobot_description:/home/essong/drobot/install/drobot_simulator:/home/essong/make_ai_robot/install/unitree_guide2:/home/essong/make_ai_robot/install/go1_simulation:/home/essong/make_ai_robot/install/ros2_unitree_legged_control:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs:/home/essong/make_ai_robot/install/path_tracker:/home/essong/make_ai_robot/install/language_command_handler:/home/essong/make_ai_robot/install/custom_interfaces:/home/essong/make_ai_robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/unitree_guide2:/home/essong/make-ai-robot/install/go1_simulation:/home/essong/make-ai-robot/install/ros2_unitree_legged_control:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs:/home/essong/make-ai-robot/install/path_tracker:/home/essong/make-ai-robot/install/localization:/home/essong/make-ai-robot/install/language_command_handler:/home/essong/make-ai-robot/install/custom_interfaces:/home/essong/make-ai-robot/install/aws_robomaker_hospital_world:/home/essong/make-ai-robot/install/astar_planner:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/essong/drobot/build/drobot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/essong/drobot/install/drobot_bringup/lib/python3.12/site-packages:/home/essong/drobot/install/drobot_scan_2d/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_controller:/home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages:/home/essong/drobot/build/perception:/home/essong/drobot/install/perception/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_strategy:/home/essong/drobot/install/drobot_strategy/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_scan_3d:/home/essong/drobot/install/drobot_scan_3d/lib/python3.12/site-packages:/home/essong/drobot/build/drobot_bringup:/home/essong/drobot/install/drobot_bringup/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/go1_simulation/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/ros2_unitree_legged_msgs/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/path_tracker/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/module_test/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/language_command_handler/lib/python3.12/site-packages:/home/essong/make_ai_robot/install/custom_interfaces/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/go1_simulation/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/ros2_unitree_legged_msgs/lib/python3.12/site-packages:/home/essong/make-ai-robot/build/perception:/home/essong/make-ai-robot/install/perception/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/path_tracker/lib/python3.12/site-packages:/home/essong/make-ai-robot/build/module_test:/home/essong/make-ai-robot/install/module_test/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/language_command_handler/lib/python3.12/site-packages:/home/essong/make-ai-robot/install/custom_interfaces/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/essong/drobot/build/drobot_bringup/build --no-deps symlink_data
+[16.175s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/build/drobot_bringup/share/drobot_bringup/hook/pythonpath_develop.dsv'
+[16.176s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/build/drobot_bringup/share/drobot_bringup/hook/pythonpath_develop.sh'
+[16.176s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup' for CMake module files
+[16.176s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup' for CMake config files
+[16.177s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup/lib'
+[16.177s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup/bin'
+[16.177s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup/lib/pkgconfig/drobot_bringup.pc'
+[16.177s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup/lib/python3.12/site-packages'
+[16.177s] Level 1:colcon.colcon_core.shell:create_environment_hook('drobot_bringup', 'pythonpath')
+[16.177s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/pythonpath.ps1'
+[16.178s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/pythonpath.dsv'
+[16.178s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/hook/pythonpath.sh'
+[16.179s] Level 1:colcon.colcon_core.environment:checking '/home/essong/drobot/install/drobot_bringup/bin'
+[16.179s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(drobot_bringup)
+[16.179s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/package.ps1'
+[16.179s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/package.dsv'
+[16.180s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/package.sh'
+[16.180s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/package.bash'
+[16.180s] INFO:colcon.colcon_core.shell:Creating package script '/home/essong/drobot/install/drobot_bringup/share/drobot_bringup/package.zsh'
+[16.180s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/essong/drobot/install/drobot_bringup/share/colcon-core/packages/drobot_bringup)
+[16.181s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[16.181s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[16.181s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[16.181s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[16.188s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[16.188s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[16.188s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[16.203s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[16.203s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/essong/drobot/install/local_setup.ps1'
+[16.204s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/essong/drobot/install/_local_setup_util_ps1.py'
+[16.205s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/essong/drobot/install/setup.ps1'
+[16.208s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/essong/drobot/install/local_setup.sh'
+[16.208s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/essong/drobot/install/_local_setup_util_sh.py'
+[16.209s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/essong/drobot/install/setup.sh'
+[16.211s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/essong/drobot/install/local_setup.bash'
+[16.211s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/essong/drobot/install/setup.bash'
+[16.213s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/essong/drobot/install/local_setup.zsh'
+[16.213s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/essong/drobot/install/setup.zsh'

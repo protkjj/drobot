@@ -1,0 +1,4 @@
+import sys
+if sys.prefix == '/usr':
+    sys.real_prefix = sys.prefix
+    sys.prefix = sys.exec_prefix = '/home/essong/drobot/install/drobot_scan_3d'

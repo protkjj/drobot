@@ -1,0 +1,44 @@
+[0.636s] Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_simulator -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_simulator
+[0.955s] -- The C compiler identification is GNU 13.3.0
+[0.955s] -- The CXX compiler identification is GNU 13.3.0
+[0.955s] -- Detecting C compiler ABI info
+[0.955s] -- Detecting C compiler ABI info - done
+[0.955s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.955s] -- Detecting C compile features
+[0.956s] -- Detecting C compile features - done
+[0.956s] -- Detecting CXX compiler ABI info
+[1.081s] -- Detecting CXX compiler ABI info - done
+[1.091s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.091s] -- Detecting CXX compile features
+[1.091s] -- Detecting CXX compile features - done
+[1.100s] -- Found ament_cmake: 2.5.5 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[1.365s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[1.487s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.652s] -- Found ament_lint_auto: 0.17.4 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[1.849s] -- Added test 'lint_cmake' to check CMake code style
+[1.851s] -- Added test 'xmllint' to check XML markup files
+[1.855s] -- Configuring done (1.2s)
+[1.859s] -- Generating done (0.0s)
+[1.861s] -- Build files have been written to: /home/essong/drobot/build/drobot_simulator
+[1.868s] Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/essong/drobot/ros2_ws/src/drobot_simulator -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/essong/drobot/install/drobot_simulator
+[1.870s] Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_simulator -- -j12 -l12
+[1.929s] Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/essong/drobot/build/drobot_simulator -- -j12 -l12
+[1.931s] Invoking command in '/home/essong/drobot/build/drobot_simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_simulator
+[1.945s] -- Install configuration: ""
+[1.945s] -- Execute custom install script
+[1.946s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/ament_index/resource_index/package_run_dependencies/drobot_simulator
+[1.961s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/ament_index/resource_index/parent_prefix_path/drobot_simulator
+[1.974s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/environment/ament_prefix_path.sh
+[1.992s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/environment/ament_prefix_path.dsv
+[2.009s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/environment/path.sh
+[2.027s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/environment/path.dsv
+[2.044s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.bash
+[2.062s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.sh
+[2.075s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.zsh
+[2.090s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/local_setup.dsv
+[2.105s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.dsv
+[2.122s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/ament_index/resource_index/packages/drobot_simulator
+[2.136s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/cmake/drobot_simulatorConfig.cmake
+[2.153s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/cmake/drobot_simulatorConfig-version.cmake
+[2.167s] -- Symlinking: /home/essong/drobot/install/drobot_simulator/share/drobot_simulator/package.xml
+[2.189s] Invoked command in '/home/essong/drobot/build/drobot_simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/essong/drobot/install/perception:/home/essong/drobot/install/drobot_strategy:/home/essong/drobot/install/drobot_scan_3d:/home/essong/drobot/install/drobot_bringup:/home/essong/drobot/install/drobot_controller:/home/essong/make_ai_robot/install/module_test:/home/essong/make-ai-robot/install/perception:/home/essong/make-ai-robot/install/module_test:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/essong/drobot/build/drobot_simulator
