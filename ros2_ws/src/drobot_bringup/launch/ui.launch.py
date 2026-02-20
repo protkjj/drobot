@@ -8,8 +8,11 @@ Usage:
 
 import sys
 import os
+import signal
 import subprocess
 import shutil
+import tempfile
+import atexit
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -17,6 +20,24 @@ from tkinter import ttk, messagebox
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import ExecuteProcess
+
+_spawned_procs: list[subprocess.Popen] = []
+
+
+def _cleanup():
+    """Kill all spawned Terminator processes and related ROS/Gazebo processes."""
+    for proc in _spawned_procs:
+        if proc.poll() is None:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            except (ProcessLookupError, PermissionError, OSError):
+                pass
+    _spawned_procs.clear()
+    # Force kill any remaining ROS/Gazebo processes
+    subprocess.run(
+        ["pkill", "-9", "-f", "gz sim|rviz|nav2|slam|ekf|goal_navigator|teleop_twist"],
+        capture_output=True,
+    )
 
 
 def load_world_files(worlds_root: Path):
@@ -88,8 +109,133 @@ def load_option_launch_files(launch_dir: Path) -> list[str]:
     return files
 
 
+def launch_in_terminator(commands: list[tuple[str, str]]):
+    """Launch all commands in one Terminator window with split panes."""
+    n = len(commands)
+    if n == 0:
+        return
+
+    # Write each command to a temp script
+    script_paths = []
+    for title, cmd in commands:
+        fd, path = tempfile.mkstemp(suffix=".sh", prefix="drobot_")
+        with os.fdopen(fd, "w") as f:
+            f.write("#!/bin/bash -l\n")
+            f.write(f"{cmd}\n")
+            f.write("exec bash\n")
+        os.chmod(path, 0o755)
+        script_paths.append(path)
+
+    # Build Terminator config — custom_command goes in profiles, layout references profiles
+    cfg = [
+        "[global_config]",
+        "  dbus = False",
+        "  suppress_multiple_term_dialog = True",
+        "[keybindings]",
+        "[profiles]",
+    ]
+
+    # First command uses the default profile, rest get named profiles
+    for i in range(n):
+        profile_name = "default" if i == 0 else f"drobot_{i}"
+        cfg += [
+            f"  [[{profile_name}]]",
+            "    use_custom_command = True",
+            f"    custom_command = {script_paths[i]}",
+        ]
+
+    cfg += [
+        "[layouts]",
+        "  [[default]]",
+        "    [[[window0]]]",
+        "      type = Window",
+        '      parent = ""',
+    ]
+
+    if n == 1:
+        cfg += [
+            "    [[[term0]]]",
+            "      type = Terminal",
+            "      parent = window0",
+            "      profile = default",
+        ]
+    elif n == 2:
+        cfg += [
+            "    [[[child1]]]",
+            "      type = HPaned",
+            "      parent = window0",
+        ]
+        for i in range(2):
+            profile = "default" if i == 0 else f"drobot_{i}"
+            cfg += [
+                f"    [[[term{i}]]]",
+                "      type = Terminal",
+                "      parent = child1",
+                f"      profile = {profile}",
+            ]
+    elif n == 3:
+        cfg += [
+            "    [[[child1]]]",
+            "      type = VPaned",
+            "      parent = window0",
+            "    [[[child2]]]",
+            "      type = HPaned",
+            "      parent = child1",
+        ]
+        for i in range(2):
+            profile = "default" if i == 0 else f"drobot_{i}"
+            cfg += [
+                f"    [[[term{i}]]]",
+                "      type = Terminal",
+                "      parent = child2",
+                f"      profile = {profile}",
+            ]
+        cfg += [
+            "    [[[term2]]]",
+            "      type = Terminal",
+            "      parent = child1",
+            "      profile = drobot_2",
+        ]
+    else:  # 4+: 2x2 grid
+        cfg += [
+            "    [[[child1]]]",
+            "      type = VPaned",
+            "      parent = window0",
+            "    [[[child2]]]",
+            "      type = HPaned",
+            "      parent = child1",
+            "    [[[child3]]]",
+            "      type = HPaned",
+            "      parent = child1",
+        ]
+        for i in range(min(n, 4)):
+            parent = "child2" if i < 2 else "child3"
+            profile = "default" if i == 0 else f"drobot_{i}"
+            cfg += [
+                f"    [[[term{i}]]]",
+                "      type = Terminal",
+                f"      parent = {parent}",
+                f"      profile = {profile}",
+            ]
+
+    cfg.append("[plugins]")
+    config_text = "\n".join(cfg) + "\n"
+
+    fd, config_path = tempfile.mkstemp(suffix=".cfg", prefix="drobot_terminator_")
+    with os.fdopen(fd, "w") as f:
+        f.write(config_text)
+
+    proc = subprocess.Popen(
+        ["terminator", "-g", config_path, "--maximise"],
+        start_new_session=True,
+    )
+    _spawned_procs.append(proc)
+
+
 def run_ui():
     """Run Tkinter UI app."""
+    atexit.register(_cleanup)
+    signal.signal(signal.SIGTERM, lambda s, f: (_cleanup(), sys.exit(0)))
     window_width = 1320
     window_height = 560
     header_pady = (0, 10)
@@ -194,22 +340,31 @@ def run_ui():
         """Launch navigation and optionally controller/perception based on selected options."""
         world_arg = Path(output_world_name).stem
 
+        # Collect all commands to launch
+        commands = []
+
         nav_cmd = (
             f"cd {workspace_dir} && "
             "source install/setup.bash && "
             f"ros2 launch drobot_bringup navigation.launch.py world:={world_arg}"
         )
-        run_in_new_terminal(nav_cmd)
+        commands.append(("Navigation", nav_cmd))
         print(f"Launching generated world: {world_arg}", flush=True)
 
-        # Start extra stacks only when selected in options.
+        teleop_cmd = (
+            f"cd {workspace_dir} && "
+            "source install/setup.bash && "
+            "sleep 5 && ros2 run teleop_twist_keyboard teleop_twist_keyboard"
+        )
+        commands.append(("Teleop", teleop_cmd))
+
         if "controller.launch.py" in selected_options:
             controller_cmd = (
                 f"cd {workspace_dir} && "
                 "source install/setup.bash && "
-                "sleep 3 && ros2 launch drobot_bringup controller.launch.py"
+                "sleep 3 && ros2 launch drobot_bringup controller.launch.py open_teleop_terminal:=false"
             )
-            run_in_new_terminal(controller_cmd)
+            commands.append(("Controller", controller_cmd))
             print("Launching controller stack", flush=True)
 
         if "perception.launch.py" in selected_options:
@@ -218,8 +373,15 @@ def run_ui():
                 "source install/setup.bash && "
                 "sleep 3 && ros2 launch drobot_bringup perception.launch.py"
             )
-            run_in_new_terminal(perception_cmd)
+            commands.append(("Perception", perception_cmd))
             print("Launching perception stack", flush=True)
+
+        # Use Terminator split panes if available, else fallback to separate windows
+        if shutil.which("terminator"):
+            launch_in_terminator(commands)
+        else:
+            for _, cmd in commands:
+                run_in_new_terminal(cmd)
 
     def parse_output_world_name(stdout_text: str) -> str | None:
         for line in stdout_text.splitlines():
@@ -429,6 +591,7 @@ def run_ui():
     sep1 = ttk.Separator(root, orient="vertical")
     sep1.grid(row=0, column=1, sticky="ns")
 
+    root.protocol("WM_DELETE_WINDOW", lambda: (_cleanup(), root.destroy()))
     root.mainloop()
 
 
