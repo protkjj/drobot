@@ -98,10 +98,11 @@
     <axis
       xyz="1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
+      lower="-0.60"
+      upper="0.60"
+      effort="100"
+      velocity="2.0" />
+    <dynamics damping="40.0" friction="8.0" />
   </joint>
   <link
     name="arm_left">
@@ -156,10 +157,11 @@
     <axis
       xyz="1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
+      lower="-0.40"
+      upper="0.90"
+      effort="120"
+      velocity="2.0" />
+    <dynamics damping="50.0" friction="10.0" />
   </joint>
   <link
     name="wheel_LF">
@@ -202,7 +204,7 @@
     </collision>
   </link>
   <joint
-    name="wheejoint_LF"
+    name="wheeljoint_LF"
     type="continuous">
     <origin
       xyz="0.023562 0.08366 -0.059076"
@@ -330,14 +332,11 @@
     <axis
       xyz="-1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
-    <mimic
-      joint="servo_LF"
-      multiplier="-1"
-      offset="0" />
+      lower="-0.60"
+      upper="0.60"
+      effort="100"
+      velocity="2.0" />
+    <dynamics damping="40.0" friction="8.0" />
   </joint>
   <link
     name="L_shaped_RF">
@@ -392,14 +391,11 @@
     <axis
       xyz="-1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
-    <mimic
-      joint="servo_LF"
-      multiplier="1"
-      offset="0" />
+      lower="-0.60"
+      upper="0.60"
+      effort="100"
+      velocity="2.0" />
+    <dynamics damping="40.0" friction="8.0" />
   </joint>
   <link
     name="arm_right">
@@ -454,14 +450,11 @@
     <axis
       xyz="-1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
-    <mimic
-      joint="armjoint_left"
-      multiplier="1"
-      offset="0" />
+      lower="-0.40"
+      upper="0.90"
+      effort="120"
+      velocity="2.0" />
+    <dynamics damping="50.0" friction="10.0" />
   </joint>
   <link
     name="wheel_RF">
@@ -632,14 +625,11 @@
     <axis
       xyz="1 0 0" />
     <limit
-      lower="-3.14"
-      upper="3.14"
-      effort="1"
-      velocity="1" />
-    <mimic
-      joint="servo_RF"
-      multiplier="-1"
-      offset="0" />
+      lower="-0.60"
+      upper="0.60"
+      effort="100"
+      velocity="2.0" />
+    <dynamics damping="40.0" friction="8.0" />
   </joint>
 
   <!-- Gazebo systems for teleop (/cmd_vel) -->
@@ -664,6 +654,86 @@
       <wheel_separation>0.35</wheel_separation>
       <wheel_radius>0.112</wheel_radius>
       <topic>/cmd_vel</topic>
+    </plugin>
+  </gazebo>
+
+  <!-- Joint position controllers (Gazebo topic control) -->
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>servo_LF</joint_name>
+      <topic>/servo_LF/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>servo_LR</joint_name>
+      <topic>/servo_LR/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>servo_RF</joint_name>
+      <topic>/servo_RF/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>servo_RR</joint_name>
+      <topic>/servo_RR/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>armjoint_left</joint_name>
+      <topic>/armjoint_left/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="gz-sim-joint-position-controller-system"
+            name="gz::sim::systems::JointPositionController">
+      <joint_name>armjoint_right</joint_name>
+      <topic>/armjoint_right/cmd_pos</topic>
+      <initial_position>0.0</initial_position>
+      <p_gain>20.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>1.0</d_gain>
+      <cmd_max>200.0</cmd_max>
+      <cmd_min>-200.0</cmd_min>
     </plugin>
   </gazebo>
 

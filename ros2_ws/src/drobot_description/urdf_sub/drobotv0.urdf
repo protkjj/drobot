@@ -201,7 +201,7 @@
     </collision>
   </link>
   <joint
-    name="wheejoint_LF"
+    name="wheeljoint_LF"
     type="continuous">
     <origin
       xyz="0.023562 0.08366 -0.059076"
