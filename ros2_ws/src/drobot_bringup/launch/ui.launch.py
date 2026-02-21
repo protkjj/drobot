@@ -354,7 +354,7 @@ def run_ui():
         teleop_cmd = (
             f"cd {workspace_dir} && "
             "source install/setup.bash && "
-            "sleep 5 && ros2 run teleop_twist_keyboard teleop_twist_keyboard"
+            "sleep 5 && ros2 run drobot_controller teleop_keyboard"
         )
         commands.append(("Teleop", teleop_cmd))
 

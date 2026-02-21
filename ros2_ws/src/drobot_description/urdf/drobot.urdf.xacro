@@ -141,8 +141,8 @@
     <parent link="base_link"/>
     <child link="left_front_arm"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="100" velocity="2"/>
-    <dynamics damping="500.0" friction="50.0"/>
+    <limit lower="0" upper="1.5708" effort="2.45" velocity="8.06"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
 
   <!-- ==================== LEFT SIDE FRAME ==================== -->
@@ -255,8 +255,8 @@
     <parent link="base_link"/>
     <child link="left_rear_arm"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="100" velocity="2"/>
-    <dynamics damping="500.0" friction="50.0"/>
+    <limit lower="0" upper="1.5708" effort="2.45" velocity="8.06"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
 
   <!-- ==================== RIGHT FRONT ARM ==================== -->
@@ -283,8 +283,8 @@
     <parent link="base_link"/>
     <child link="right_front_arm"/>
     <axis xyz="1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="100" velocity="2"/>
-    <dynamics damping="500.0" friction="50.0"/>
+    <limit lower="0" upper="1.5708" effort="2.45" velocity="8.06"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
 
   <!-- ==================== RIGHT SIDE FRAME ==================== -->
@@ -393,8 +393,8 @@
     <parent link="base_link"/>
     <child link="right_rear_arm"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="100" velocity="2"/>
-    <dynamics damping="500.0" friction="50.0"/>
+    <limit lower="0" upper="1.5708" effort="2.45" velocity="8.06"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
 
   <!-- ==================== ROS2 CONTROL ==================== -->

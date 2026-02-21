@@ -29,12 +29,12 @@ def _build_teleop_terminal_action(context):
             LogInfo(
                 msg=(
                     '[controller.launch.py] No terminal emulator found. '
-                    'Run teleop manually: ros2 run teleop_twist_keyboard teleop_twist_keyboard'
+                    'Run teleop manually: ros2 run drobot_controller teleop_keyboard'
                 )
             )
         ]
 
-    teleop_cmd = 'ros2 run teleop_twist_keyboard teleop_twist_keyboard; exec bash'
+    teleop_cmd = 'ros2 run drobot_controller teleop_keyboard; exec bash'
     if terminal == 'gnome-terminal':
         cmd = [terminal, '--', 'bash', '-lc', teleop_cmd]
     elif terminal == 'konsole':

@@ -1,13 +1,11 @@
-import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('perception')
-    
-    # Ensure this path matches where you put your .pt file in the package
-    model_path = os.path.join(pkg_share, 'models', 'best.pt')
+    # model_path: 모델 파일명 (cone.pt, best.pt 등)
+    # conf_threshold: YOLO 추론 임계값
+    # post_filter_conf: 후처리 confidence 임계값
+    # max_detect_distance: 최대 감지 거리 (m)
 
     return LaunchDescription([
         Node(
@@ -16,8 +14,24 @@ def generate_launch_description():
             name='perception_node',
             output='screen',
             parameters=[
-                {'model_path': model_path},
-                {'debug_mode': True} 
+                {'model_path': 'cone.pt'},
+                {'conf_threshold': 0.9},
+                {'post_filter_conf': 0.7},
+                {'max_detect_distance': 5.0},
+                {'debug_mode': True},
             ]
-        )
+        ),
+        # Node(
+        #     package='perception',
+        #     executable='perception_node',
+        #     name='perception_node_best',
+        #     output='screen',
+        #     parameters=[
+        #         {'model_path': 'best.pt'},
+        #         {'conf_threshold': 0.6},
+        #         {'post_filter_conf': 0.5},
+        #         {'max_detect_distance': 5.0},
+        #         {'debug_mode': True},
+        #     ]
+        # ),
     ])
