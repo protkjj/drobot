@@ -1,9 +1,0 @@
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/uninstall.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/drobot_simulator_uninstall.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/test.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/edit_cache.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/rebuild_cache.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/list_install_components.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/install.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/install/local.dir
-/home/essong/drobot/build/drobot_simulator/CMakeFiles/install/strip.dir
