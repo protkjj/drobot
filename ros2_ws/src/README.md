@@ -8,34 +8,34 @@ ROS 2 Jazzy + Gazebo Harmonic 기반, 4바퀴 스키드 스티어 주행 + 쿼�
 
 ```
 ros2_ws/src/
-├── drobot_description/   # 로봇 모델 (URDF, meshes, worlds, 99개 3D 모델)
-├── drobot_scan_2d/       # 2D 자율주행 (goal_navigator, rule engine)
+├── drobot_description/   # 로봇 모델 (URDF, meshes, worlds, 3D models)
+├── drobot_scan_2d/       # 2D 네비게이션 (goal_navigator, rule engine)
 ├── drobot_scan_3d/       # 3D 스캔/비행 (예정)
 ├── drobot_bringup/       # 런치 파일 + 설정 + World UI
 ├── drobot_controller/    # 로봇 컨트롤러 (예정)
 ├── drobot_simulator/     # 시뮬레이션 (예정)
 ├── drobot_strategy/      # 전략/의사결정 (예정)
-└── perception/           # YOLOv8 객체 인식 (카메라 기반)
+└── perception/           # YOLO 객체 인식 (카메라 기반 음식 감지)
 ```
 
-| 패키지 | 빌드 | 상태 | 역할 |
-|--------|------|------|------|
-| `drobot_description` | ament_cmake | **구현 완료** | URDF, 13개 STL 메시, Gazebo 플러그인 (DiffDrive, LiDAR, IMU, Camera), 16개 월드, 99개 3D 모델 |
-| `drobot_scan_2d` | ament_cmake | **구현 완료** | Nav2 기반 자율주행 + YAML 규칙 엔진 (금지구역, 속도제한, 충돌방지) |
-| `drobot_bringup` | ament_python | **구현 완료** | 런치 파일 (navigation, bringup), Nav2/SLAM/EKF 설정, World UI (Tkinter) |
-| `perception` | ament_python | **구현 완료** | YOLOv8 객체 인식, 거리 추정, 음성 명령 퍼블리시 |
-| `drobot_controller` | ament_python | 예정 | - |
-| `drobot_scan_3d` | ament_python | 예정 | - |
-| `drobot_simulator` | ament_cmake | 예정 | - |
-| `drobot_strategy` | ament_python | 예정 | - |
+| 패키지 | 빌드 | 역할 |
+|--------|------|------|
+| `drobot_description` | ament_cmake | URDF, 11개 STL 메시, Gazebo 플러그인, 월드 파일, 98개 3D 모델 |
+| `drobot_scan_2d` | ament_cmake | 목표 기반 자율주행 노드 + YAML 규칙 엔진 |
+| `drobot_bringup` | ament_python | 런치 파일 (navigation, bringup), Nav2/SLAM/EKF 설정, World UI |
+| `perception` | ament_python | YOLO 기반 객체 인식 (카메라 → 음식 감지) |
+| `drobot_controller` | ament_python | (예정) |
+| `drobot_scan_3d` | ament_python | (예정) |
+| `drobot_simulator` | ament_cmake | (예정) |
+| `drobot_strategy` | ament_python | (예정) |
 
 ## 빠른 시작
 
 ### 1. 클론
 
 ```bash
-git clone https://github.com/protkjj/drobot.git
-cd drobot
+cd ~/Documents
+git clone -b kangjun-version2 https://github.com/protkjj/drobot.git ros2_ws/src
 ```
 
 ### 2. 의존성 설치
@@ -60,7 +60,7 @@ pip install ultralytics
 ### 3. 빌드
 
 ```bash
-cd ros2_ws
+cd ~/Documents/ros2_ws
 colcon build --symlink-install
 source install/setup.bash
 ```
@@ -90,10 +90,8 @@ ros2 topic pub /goal_pose geometry_msgs/PoseStamped "{
 
 | 상황 | 명령어 |
 |------|--------|
-| 터미널 열었을 때 | `source install/setup.bash` |
+| 터미널 열었을 때 | `source ~/Documents/ros2_ws/install/setup.bash` |
 | 코드 수정 후 | `colcon build --symlink-install && source install/setup.bash` |
-| 자율주행 실행 | `ros2 launch drobot_bringup navigation.launch.py` |
-| 월드 변경 | `... world:=<월드이름>` |
-| World UI | `ros2 run drobot_bringup world_ui` |
+| Hospital 자율주행 | `ros2 launch drobot_bringup navigation.launch.py world:=hospital_original` |
 | 키보드 조종 | `ros2 run teleop_twist_keyboard teleop_twist_keyboard` |
 | 프로세스 전체 종료 | `pkill -9 -f "gz\|rviz\|nav2\|slam\|ekf\|goal"` |

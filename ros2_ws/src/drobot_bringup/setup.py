@@ -27,6 +27,8 @@ setup(
     entry_points={
         'console_scripts': [
             'world_ui = drobot_bringup.world_ui:main',
+            'fake_diff_odom = drobot_bringup.fake_diff_odom:main',
+            'joint_key_teleop = drobot_bringup.joint_key_teleop:main',
         ],
     },
 )

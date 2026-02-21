@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="drobotv0"
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0889244188854842 -0.0297072849881794 -0.00929750180536801"
+        rpy="0 0 0" />
+      <mass
+        value="0.833077329855222" />
+      <inertia
+        ixx="0.000773080517150311"
+        ixy="4.75348987099268E-07"
+        ixz="3.15411374662775E-05"
+        iyy="0.00170443636203176"
+        iyz="-5.22766703200179E-06"
+        izz="0.00134882396575001" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.262745098039216 0.282352941176471 0.301960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="L_shaped_LF">
+    <inertial>
+      <origin
+        xyz="-0.0914999999999999 -0.226139844904917 -0.00606387284104033"
+        rpy="0 0 0" />
+      <mass
+        value="0.05" />
+      <inertia
+        ixx="1e-5"
+        ixy="0"
+        ixz="0"
+        iyy="1e-5"
+        iyz="0"
+        izz="1e-5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_LF.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.32156862745098 0.156862745098039 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_LF.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="servo_LF"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="L_shaped_LF" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="arm_left">
+    <inertial>
+      <origin
+        xyz="-0.0931620123430914 0.0448986931827952 -0.046046331460358"
+        rpy="0 0 0" />
+      <mass
+        value="0.24484228934346" />
+      <inertia
+        ixx="0.000170537098668617"
+        ixy="-1.58233646520693E-06"
+        ixz="-1.7429684129348E-06"
+        iyy="0.00224130018665751"
+        iyz="5.42649839520087E-05"
+        izz="0.00220859312793653" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/arm_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.301960784313725 0.301960784313725 0.301960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/arm_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="armjoint_left"
+    type="revolute">
+    <origin
+      xyz="0 0.05 -0.06"
+      rpy="0 0 0" />
+    <parent
+      link="L_shaped_LF" />
+    <child
+      link="arm_left" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="wheel_LF">
+    <inertial>
+      <origin
+        xyz="2.60862526024752E-10 -0.000286889805765134 -3.12484399267454E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.154468165769782" />
+      <inertia
+        ixx="0.000600971981829425"
+        ixy="1.08364593575826E-12"
+        ixz="7.04343356440919E-11"
+        iyy="0.00115439211878326"
+        iyz="6.13580681107254E-06"
+        izz="0.000601040353425951" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_LF.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.647058823529412 0.647058823529412 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_LF.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheejoint_LF"
+    type="continuous">
+    <origin
+      xyz="0.023562 0.08366 -0.059076"
+      rpy="0 0 0" />
+    <parent
+      link="arm_left" />
+    <child
+      link="wheel_LF" />
+    <axis
+      xyz="0 0.99994 0.011086" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="Wheel_LR">
+    <inertial>
+      <origin
+        xyz="-5.15756337221562E-08 0.000105250285688585 1.17488931114518E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.152312962480992" />
+      <inertia
+        ixx="0.000598326596096096"
+        ixy="-1.78118226081761E-11"
+        ixz="-1.27742129121258E-10"
+        iyy="0.00115245973115687"
+        iyz="6.14368741670457E-06"
+        izz="0.000598394447443558" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/Wheel_LR.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.647058823529412 0.647058823529412 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/Wheel_LR.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheeljoint_LR"
+    type="continuous">
+    <origin
+      xyz="-0.20956 0.08166 -0.059098"
+      rpy="0 0 0" />
+    <parent
+      link="arm_left" />
+    <child
+      link="Wheel_LR" />
+    <axis
+      xyz="0 0.99994 0.011086" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="L_shaped_LR">
+    <inertial>
+      <origin
+        xyz="0.0935000000000001 -0.226000000000001 -0.00999999999998616"
+        rpy="0 0 0" />
+      <mass
+        value="0.05" />
+      <inertia
+        ixx="1e-5"
+        ixy="0"
+        ixz="0"
+        iyy="1e-5"
+        iyz="0"
+        izz="1e-5" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_LR.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.32156862745098 0.156862745098039 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_LR.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="servo_LR"
+    type="revolute">
+    <origin
+      xyz="-0.185 0 0"
+      rpy="-0.017411 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="L_shaped_LR" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+    <mimic
+      joint="servo_LF"
+      multiplier="-1"
+      offset="0" />
+  </joint>
+  <link
+    name="L_shaped_RF">
+    <inertial>
+      <origin
+        xyz="-0.0019695833812847 -0.0309831143748686 -0.0138278315830626"
+        rpy="0 0 0" />
+      <mass
+        value="0.0905005401209127" />
+      <inertia
+        ixx="7.54905591561205E-05"
+        ixy="6.13267441308909E-06"
+        ixz="3.92994349377663E-06"
+        iyy="5.55206991037999E-05"
+        iyz="-2.21490616791507E-05"
+        izz="5.79185192001968E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_RF.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.32156862745098 0.156862745098039 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_RF.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="servo_RF"
+    type="revolute">
+    <origin
+      xyz="0 -0.058991 0.0010272"
+      rpy="-0.017411 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="L_shaped_RF" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+    <mimic
+      joint="servo_LF"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="arm_right">
+    <inertial>
+      <origin
+        xyz="-0.0908822478205685 -0.050184669302771 -0.0447973541801233"
+        rpy="0 0 0" />
+      <mass
+        value="0.308279334191148" />
+      <inertia
+        ixx="0.000203101220752389"
+        ixy="-4.87097044355127E-06"
+        ixz="1.17916791952934E-05"
+        iyy="0.00240539625392237"
+        iyz="-5.88234514179037E-05"
+        izz="0.00237296769471379" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/arm_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.301960784313725 0.301960784313725 0.301960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/arm_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="armjoint_right"
+    type="revolute">
+    <origin
+      xyz="0 -0.049908 -0.060076"
+      rpy="0.0015296 0 0" />
+    <parent
+      link="L_shaped_RF" />
+    <child
+      link="arm_right" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+    <mimic
+      joint="armjoint_left"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="wheel_RF">
+    <inertial>
+      <origin
+        xyz="-4.40591140654645E-08 0.000284922709760382 -3.3868641609841E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.154467898219019" />
+      <inertia
+        ixx="0.000600971578740358"
+        ixy="6.12602918489903E-11"
+        ixz="1.30353191446884E-10"
+        iyy="0.0011467663289071"
+        iyz="-6.47976005816027E-05"
+        izz="0.000608664714579085" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_RF.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.647058823529412 0.647058823529412 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_RF.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheeljoint_RF"
+    type="continuous">
+    <origin
+      xyz="0.023562 -0.089495 -0.049796"
+      rpy="0 0 0" />
+    <parent
+      link="arm_right" />
+    <child
+      link="wheel_RF" />
+    <axis
+      xyz="0 0.99303 -0.11789" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="wheel_RR">
+    <inertial>
+      <origin
+        xyz="-6.45995504866548E-08 0.000284926543628723 -3.38366730441714E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.154467896551541" />
+      <inertia
+        ixx="0.000600971815877821"
+        ixy="6.64266647788824E-11"
+        ixz="1.46664691471037E-10"
+        iyy="0.00114676631343275"
+        iyz="-6.47976414259165E-05"
+        izz="0.000608664474500489" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_RR.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.647058823529412 0.647058823529412 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/wheel_RR.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheeljoint_RR"
+    type="continuous">
+    <origin
+      xyz="-0.20956 -0.089495 -0.049796"
+      rpy="0 0 0" />
+    <parent
+      link="arm_right" />
+    <child
+      link="wheel_RR" />
+    <axis
+      xyz="0 0.99303 -0.11789" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="L_shaped_RR">
+    <inertial>
+      <origin
+        xyz="-0.00191858997035284 -0.0307223401278325 -0.0137316842235734"
+        rpy="0 0 0" />
+      <mass
+        value="0.087853253481173" />
+      <inertia
+        ixx="7.23346796635378E-05"
+        ixy="6.0188816086711E-06"
+        ixz="3.98510495451234E-06"
+        iyy="5.36793164280707E-05"
+        iyz="-2.11530981944826E-05"
+        izz="5.58695162641352E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_RR.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.32156862745098 0.156862745098039 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://drobot_description/mesh_sub/L_shaped_RR.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="servo_RR"
+    type="revolute">
+    <origin
+      xyz="-0.185 -0.058991 0.0010272"
+      rpy="-0.017411 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="L_shaped_RR" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+    <mimic
+      joint="servo_RF"
+      multiplier="-1"
+      offset="0" />
+  </joint>
+
+  <!-- Gazebo systems for teleop (/cmd_vel) -->
+  <gazebo>
+    <self_collide>false</self_collide>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+      <topic>/joint_states</topic>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
+      <left_joint>wheeljoint_LF</left_joint>
+      <left_joint>wheeljoint_LR</left_joint>
+      <right_joint>wheeljoint_RF</right_joint>
+      <right_joint>wheeljoint_RR</right_joint>
+      <wheel_separation>0.35</wheel_separation>
+      <wheel_radius>0.112</wheel_radius>
+      <topic>/cmd_vel</topic>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <odom_topic>/odom</odom_topic>
+    </plugin>
+  </gazebo>
+</robot>

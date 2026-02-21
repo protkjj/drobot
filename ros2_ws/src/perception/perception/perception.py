@@ -15,16 +15,13 @@ class PerceptionNode(Node):
         super().__init__('perception_node')
 
         # --- 1. Robust Model Loading ---
-        final_model_path = self.find_model_path('cone.pt')
+        final_model_path = self.find_model_path('best.pt')
         
         self.declare_parameter('model_path', final_model_path)
         self.declare_parameter('debug_mode', False)
-        self.declare_parameter('device', 'cpu')
         self.debug_mode = self.get_parameter('debug_mode').get_parameter_value().bool_value
-        self.device = self.get_parameter('device').get_parameter_value().string_value
 
         self.get_logger().info(f'Loading YOLO model from: {final_model_path}')
-        self.get_logger().info(f'Using inference device: {self.device}')
         
         try:
             self.model = YOLO(final_model_path)
@@ -37,7 +34,7 @@ class PerceptionNode(Node):
         self.latest_depth_img = None 
         self.is_processing = False
 
-        self.target_classes = ['cone']
+        self.target_classes = ['cylinder']
 
         # --- 2. QoS Profile ---
         qos_policy = QoSProfile(
@@ -62,13 +59,7 @@ class PerceptionNode(Node):
         # --- 4. Subscribers ---
         self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
         self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
-
-        depth_qos = QoSProfile(
-            reliability=ReliabilityPolicy.RELIABLE,
-            history=HistoryPolicy.KEEP_LAST,
-            depth=1
-        )
-        self.create_subscription(Image, '/camera/depth_image_raw', self.depth_callback, depth_qos)
+        
         self.get_logger().info('Perception Node Started (Topics Verified)')
 
     def find_model_path(self, filename):
@@ -113,7 +104,7 @@ class PerceptionNode(Node):
             height, width, _ = cv_img.shape
             
             # Inference
-            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.9, device=self.device)
+            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.5)
             
             # Default values to publish if nothing detected
             current_frame_label = "None"

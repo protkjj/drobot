@@ -91,11 +91,13 @@
 
   <!-- ========== CAMERA ========== -->
   <gazebo reference="camera">
-    <sensor name="camera" type="rgbd"> <gz_frame_id>camera</gz_frame_id>
+    <sensor name="camera" type="camera">
+      <topic>/camera/image_raw</topic>
+      <gz_frame_id>camera</gz_frame_id>
       <update_rate>15</update_rate>
       <always_on>true</always_on>
-      <visualize>true</visualize>
-      <topic>/camera</topic> <camera>
+      <visualize>false</visualize>
+      <camera>
         <horizontal_fov>1.047</horizontal_fov>
         <image>
           <width>640</width>
@@ -104,7 +106,7 @@
         </image>
         <clip>
           <near>0.1</near>
-          <far>10</far>
+          <far>100</far>
         </clip>
       </camera>
     </sensor>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="linkage_practice_added">
+  <link
+    name="lineararm_link">
+    <inertial>
+      <origin
+        xyz="-0.266 0.121769388512479 0.10221909427659"
+        rpy="0 0 0" />
+      <mass
+        value="5.49410623391477E-06" />
+      <inertia
+        ixx="6.92323180775161E-09"
+        ixy="3.22748469370683E-25"
+        ixz="-1.05345036057419E-24"
+        iyy="6.316034038019E-09"
+        iyz="1.90936143561025E-09"
+        izz="6.30089879040589E-10" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://linkage_practice_added/meshes/lineararm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.764705882352941 0.886274509803922 0.949019607843137 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://linkage_practice_added/meshes/lineararm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="arm_link">
+    <inertial>
+      <origin
+        xyz="-0.2705 0.337017061192491 -0.103266075603212"
+        rpy="0 0 0" />
+      <mass
+        value="1.46126039649547E-05" />
+      <inertia
+        ixx="4.51599175385728E-08"
+        ixy="3.93920417629385E-23"
+        ixz="9.09546391805135E-25"
+        iyy="3.26023132960842E-09"
+        iyz="3.0775714451625E-09"
+        izz="4.19386531528709E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://linkage_practice_added/meshes/arm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.976470588235294 0.709803921568627 0.00392156862745098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://linkage_practice_added/meshes/arm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="add_joint"
+    type="revolute">
+    <origin
+      xyz="0 0.016948 0.43499"
+      rpy="-1.8494 0 0" />
+    <parent
+      link="lineararm_link" />
+    <child
+      link="arm_link" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="1"
+      velocity="1" />
+  </joint>
+</robot>

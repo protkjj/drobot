@@ -11,8 +11,10 @@ find_package(ament_cmake REQUIRED)
 install(
   DIRECTORY
     urdf
+    urdf_sub
     meshes
-    scripts
+    mesh_sub
+    launch
     config
     object
     worlds

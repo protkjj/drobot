@@ -57,51 +57,19 @@ def launch_setup(context):
     )
 
     # World file (from drobot_description)
-    # Search order:
-    # 1) install-space share
-    # 2) source-space generated/original (for newly generated worlds not yet installed)
-    ws_env = os.environ.get('DROBOT_WORKSPACE_DIR', '')
-    ws_candidates = []
-    if ws_env:
-        ws_candidates.append(ws_env)
-    ws_candidates.append(os.getcwd())
-
-    source_generated_candidates = []
-    source_original_candidates = []
-    for ws in ws_candidates:
-        ws_src = os.path.join(ws, 'src', 'drobot_description', 'worlds')
-        source_generated_candidates.extend([
-            os.path.join(ws_src, 'generated', f'{world}.sdf'),
-            os.path.join(ws_src, 'generated', f'{world}.world'),
-        ])
-        source_original_candidates.extend([
-            os.path.join(ws_src, 'original', f'{world}.sdf'),
-            os.path.join(ws_src, 'original', f'{world}.world'),
-            os.path.join(ws_src, f'{world}.sdf'),
-            os.path.join(ws_src, f'{world}.world'),
-        ])
-
-    world_candidates = [
-        os.path.join(desc_pkg, 'worlds', f'{world}.sdf'),
-        os.path.join(desc_pkg, 'worlds', f'{world}.world'),
-        os.path.join(desc_pkg, 'worlds', 'original', f'{world}.sdf'),
-        os.path.join(desc_pkg, 'worlds', 'original', f'{world}.world'),
-        os.path.join(desc_pkg, 'worlds', 'generated', f'{world}.sdf'),
-        os.path.join(desc_pkg, 'worlds', 'generated', f'{world}.world'),
-        *source_generated_candidates,
-        *source_original_candidates,
-    ]
-
-    world_file = next((p for p in world_candidates if os.path.exists(p)), None)
-    if world_file is None:
+    # Search order: worlds/ → worlds/original/ → worlds/generated/
+    world_file = os.path.join(desc_pkg, 'worlds', f'{world}.sdf')
+    if not os.path.exists(world_file):
+        world_file = os.path.join(desc_pkg, 'worlds', 'original', f'{world}.sdf')
+    if not os.path.exists(world_file):
+        # Also try .world extension
+        world_file = os.path.join(desc_pkg, 'worlds', 'original', f'{world}.world')
+    if not os.path.exists(world_file):
+        world_file = os.path.join(desc_pkg, 'worlds', 'generated', f'{world}.sdf')
+    if not os.path.exists(world_file):
         print(f"[WARNING] World file not found: {world}")
-        print("  Searched install/share and source-space worlds directories.")
-        fallback_candidates = [
-            os.path.join(desc_pkg, 'worlds', 'original', 'empty.sdf'),
-            os.path.join(desc_pkg, 'worlds', 'original', 'empty.world'),
-            *[p for p in source_original_candidates if os.path.basename(p) in ('empty.sdf', 'empty.world')],
-        ]
-        world_file = next((p for p in fallback_candidates if os.path.exists(p)), fallback_candidates[0])
+        print(f"  Searched: worlds/, worlds/original/, worlds/generated/")
+        world_file = os.path.join(desc_pkg, 'worlds', 'original', 'empty.sdf')
 
     # Config files (all from bringup)
     nav2_params = os.path.join(bringup_pkg, 'config', 'navigation', 'nav2_params.yaml')
@@ -147,14 +115,13 @@ def launch_setup(context):
 
     # Start Gazebo PAUSED (no -r) so arms can be initialized before physics runs
     gazebo = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([
-        os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
-    ]),
-    launch_arguments={
-        # '-r'을 추가하여 센서 시스템을 강제로 로드하고 바로 시작하게 합니다.
-        'gz_args': f'-r {world_file}', 
-        'on_exit_shutdown': 'true'
-    }.items()
+        PythonLaunchDescriptionSource([
+            os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
+        ]),
+        launch_arguments={
+            'gz_args': f'{world_file}',
+            'on_exit_shutdown': 'true'
+        }.items()
     )
 
     spawn_robot = Node(
