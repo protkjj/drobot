@@ -137,7 +137,7 @@ class FakeDiffOdom(Node):
         joint.name = [
             'servo_LF',
             'armjoint_left',
-            'wheeljoint_LF',
+            'wheejoint_LF',
             'wheeljoint_LR',
             'wheeljoint_RF',
             'wheeljoint_RR',

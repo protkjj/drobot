@@ -138,34 +138,3 @@ ros2 run drobot_bringup joint_key_teleop
 source /opt/ros/jazzy/setup.bash
 source ~/Desktop/drobot/ros2_ws/install/setup.bash
 ```
-
-## 11) 2026-02-21 Gazebo 조인트 안정화 + 개별 조인트 제어 추가
-- 목표:
-  - `new_gazebo.launch.py` 실행 시 모델 조인트가 무너져 보이는 문제 해결
-  - Gazebo에서 각 조인트를 토픽으로 직접 제어 가능하도록 구성
-
-- 파일: `src/drobot_description/urdf_sub/drobotv0.urdf.xacro`
-  - 수정:
-    - LF 바퀴 조인트 오타 수정: `wheejoint_LF` -> `wheeljoint_LF`
-    - `servo_*`, `armjoint_*`를 `revolute`로 복원
-    - 조인트 안정화용 `limit`, `dynamics(damping/friction)` 추가
-    - `gz::sim::systems::JointPositionController` 플러그인 6개 추가
-      - `/servo_LF/cmd_pos`
-      - `/servo_LR/cmd_pos`
-      - `/servo_RF/cmd_pos`
-      - `/servo_RR/cmd_pos`
-      - `/armjoint_left/cmd_pos`
-      - `/armjoint_right/cmd_pos`
-
-- 파일: `src/drobot_description/urdf_sub/drobotv0.urdf`
-  - 수정:
-    - LF 바퀴 조인트 오타 정합: `wheejoint_LF` -> `wheeljoint_LF`
-
-- 파일: `src/drobot_bringup/drobot_bringup/fake_diff_odom.py`
-  - 수정:
-    - 조인트 이름 정합: `wheejoint_LF` -> `wheeljoint_LF`
-
-- 검증:
-  - `xacro` 전개 확인 완료
-  - `colcon build --packages-select drobot_description drobot_bringup` 성공
-  - `colcon build --packages-select drobot_description` 재검증 성공
