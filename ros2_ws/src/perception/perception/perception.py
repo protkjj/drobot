@@ -14,27 +14,37 @@ class PerceptionNode(Node):
     def __init__(self):
         super().__init__('perception_node')
 
-        # --- 1. Robust Model Loading ---
-        final_model_path = self.find_model_path('cone.pt')
-        
-        self.declare_parameter('model_path', final_model_path)
+        # --- 1. Parameters ---
+        self.declare_parameter('model_path', 'cone.pt')
         self.declare_parameter('debug_mode', False)
         self.declare_parameter('device', 'cpu')
+        self.declare_parameter('conf_threshold', 0.9)
+        self.declare_parameter('post_filter_conf', 0.7)
+        self.declare_parameter('max_detect_distance', 5.0)
+
+        model_filename = self.get_parameter('model_path').get_parameter_value().string_value
         self.debug_mode = self.get_parameter('debug_mode').get_parameter_value().bool_value
         self.device = self.get_parameter('device').get_parameter_value().string_value
+        self.conf_threshold = self.get_parameter('conf_threshold').get_parameter_value().double_value
+        self.post_filter_conf = self.get_parameter('post_filter_conf').get_parameter_value().double_value
+        self.max_detect_distance = self.get_parameter('max_detect_distance').get_parameter_value().double_value
+
+        # --- 2. Model Loading ---
+        final_model_path = self.find_model_path(model_filename)
 
         self.get_logger().info(f'Loading YOLO model from: {final_model_path}')
+        self.get_logger().info(f'conf_threshold={self.conf_threshold}, post_filter_conf={self.post_filter_conf}, max_dist={self.max_detect_distance}m')
         self.get_logger().info(f'Using inference device: {self.device}')
-        
+
         try:
             self.model = YOLO(final_model_path)
         except Exception as e:
             self.get_logger().error(f"CRITICAL: Failed to load model at {final_model_path}. Error: {e}")
             self.get_logger().warn("Downloading standard YOLOv8n.pt as emergency fallback...")
-            self.model = YOLO("yolov8n.pt") 
+            self.model = YOLO("yolov8n.pt")
 
         self.bridge = CvBridge()
-        self.latest_depth_img = None 
+        self.latest_depth_img = None
         self.is_processing = False
 
         self.target_classes = ['cone']
@@ -113,7 +123,7 @@ class PerceptionNode(Node):
             height, width, _ = cv_img.shape
             
             # Inference
-            results = self.model(cv_img, verbose=False, imgsz=320, conf=0.9, device=self.device)
+            results = self.model(cv_img, verbose=False, imgsz=320, conf=self.conf_threshold, device=self.device)
             
             # Default values to publish if nothing detected
             current_frame_label = "None"
@@ -152,9 +162,9 @@ class PerceptionNode(Node):
                                 dist = float(raw_dist)
                         except IndexError: pass
 
-                    # 3. Logic: found if Conf > 0.7 AND Dist <= 3.0m
-                    is_confident = conf > 0.7
-                    is_near = 0.0 < dist <= 5.0
+                    # 3. Logic: found if Conf > post_filter_conf AND Dist <= max_detect_distance
+                    is_confident = conf > self.post_filter_conf
+                    is_near = 0.0 < dist <= self.max_detect_distance
 
                     box_color = (0, 255, 0) # Green for detection
 

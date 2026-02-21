@@ -16,3 +16,6 @@ __pycache__/
 .idea/
 .claude/
 
+# macOS
+.DS_Store
+
