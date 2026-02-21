@@ -1,0 +1,22 @@
+running develop
+running egg_info
+creating drobot_controller.egg-info
+writing drobot_controller.egg-info/PKG-INFO
+writing dependency_links to drobot_controller.egg-info/dependency_links.txt
+writing entry points to drobot_controller.egg-info/entry_points.txt
+writing requirements to drobot_controller.egg-info/requires.txt
+writing top-level names to drobot_controller.egg-info/top_level.txt
+writing manifest file 'drobot_controller.egg-info/SOURCES.txt'
+reading manifest file 'drobot_controller.egg-info/SOURCES.txt'
+writing manifest file 'drobot_controller.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/essong/drobot/install/drobot_controller/lib/python3.12/site-packages/drobot-controller.egg-link (link to .)
+Installing manual_controller script to /home/essong/drobot/install/drobot_controller/lib/drobot_controller
+
+Installed /home/essong/drobot/build/drobot_controller
+running symlink_data
+creating /home/essong/drobot/install/drobot_controller/share/ament_index
+creating /home/essong/drobot/install/drobot_controller/share/ament_index/resource_index
+creating /home/essong/drobot/install/drobot_controller/share/ament_index/resource_index/packages
+symbolically linking /home/essong/drobot/build/drobot_controller/resource/drobot_controller -> /home/essong/drobot/install/drobot_controller/share/ament_index/resource_index/packages
+symbolically linking /home/essong/drobot/build/drobot_controller/package.xml -> /home/essong/drobot/install/drobot_controller/share/drobot_controller

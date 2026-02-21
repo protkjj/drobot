@@ -152,9 +152,9 @@ class PerceptionNode(Node):
                                 dist = float(raw_dist)
                         except IndexError: pass
 
-                    # 3. Logic: Bark if Conf > 0.7 AND Dist <= 3.0m
+                    # 3. Logic: found if Conf > 0.7 AND Dist <= 3.0m
                     is_confident = conf > 0.7
-                    is_near = 0.0 < dist <= 3.0
+                    is_near = 0.0 < dist <= 5.0
 
                     box_color = (0, 255, 0) # Green for detection
 
@@ -162,7 +162,7 @@ class PerceptionNode(Node):
                     if is_confident and is_near:
                         current_frame_label = cls_name
                         current_frame_dist = dist
-                        speech_cmd = "bark"
+                        speech_cmd = "found"
                         box_color = (0, 0, 255) # Red for active trigger
                         cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), -1)
 
@@ -180,7 +180,7 @@ class PerceptionNode(Node):
             cv2.putText(cv_img, f"DST: {current_frame_dist:.2f}m", (10, 50), font, 0.6, (255, 255, 255), 1)
             
             # Right: Command State
-            cmd_color = (0, 255, 0) if speech_cmd == "bark" else (100, 100, 100)
+            cmd_color = (0, 255, 0) if speech_cmd == "found" else (100, 100, 100)
             cv2.putText(cv_img, f"CMD: {speech_cmd}", (width - 160, 40), font, 0.7, cmd_color, 2)
 
             # --- PUBLISHING (Matches Table) ---
