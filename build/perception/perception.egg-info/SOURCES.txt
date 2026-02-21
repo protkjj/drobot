@@ -1,0 +1,15 @@
+package.xml
+setup.cfg
+setup.py
+models/cone.pt
+models/food_model.pt
+perception/__init__.py
+perception/perception.py
+perception.egg-info/PKG-INFO
+perception.egg-info/SOURCES.txt
+perception.egg-info/dependency_links.txt
+perception.egg-info/entry_points.txt
+perception.egg-info/requires.txt
+perception.egg-info/top_level.txt
+perception.egg-info/zip-safe
+resource/perception

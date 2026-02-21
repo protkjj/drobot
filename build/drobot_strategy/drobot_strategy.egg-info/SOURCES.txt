@@ -1,0 +1,11 @@
+package.xml
+setup.cfg
+setup.py
+drobot_strategy/__init__.py
+drobot_strategy.egg-info/PKG-INFO
+drobot_strategy.egg-info/SOURCES.txt
+drobot_strategy.egg-info/dependency_links.txt
+drobot_strategy.egg-info/requires.txt
+drobot_strategy.egg-info/top_level.txt
+drobot_strategy.egg-info/zip-safe
+resource/drobot_strategy
