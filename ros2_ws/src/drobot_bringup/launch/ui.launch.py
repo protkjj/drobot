@@ -22,6 +22,7 @@ from launch import LaunchDescription
 from launch.actions import ExecuteProcess
 
 _spawned_procs: list[subprocess.Popen] = []
+_shutdown_requested = False
 
 
 def _cleanup():
@@ -241,8 +242,13 @@ def launch_in_terminator(commands: list[tuple[str, str]]):
 def run_ui():
     """Run Tkinter UI app."""
     atexit.register(_cleanup)
-    signal.signal(signal.SIGTERM, lambda s, f: (_cleanup(), sys.exit(0)))
-    signal.signal(signal.SIGINT, lambda s, f: (_cleanup(), sys.exit(0)))
+
+    def _request_shutdown(signum=None, frame=None):
+        global _shutdown_requested
+        _shutdown_requested = True
+
+    signal.signal(signal.SIGTERM, _request_shutdown)
+    signal.signal(signal.SIGINT, _request_shutdown)
     window_width = 1320
     window_height = 560
     header_pady = (0, 10)
@@ -253,6 +259,15 @@ def run_ui():
     root.title("Start UI")
     root.geometry(f"{window_width}x{window_height}")
     root.resizable(False, False)
+
+    def _poll_shutdown():
+        if _shutdown_requested:
+            _cleanup()
+            root.destroy()
+            return
+        root.after(200, _poll_shutdown)
+
+    root.after(200, _poll_shutdown)
 
     root.grid_rowconfigure(0, weight=1)
     root.grid_columnconfigure(0, weight=0, minsize=300)  # worlds
