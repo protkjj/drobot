@@ -173,6 +173,7 @@ class PerceptionNode(Node):
                         current_frame_label = cls_name
                         current_frame_dist = dist
                         speech_cmd = "found"
+                        self.get_logger().info(f'Cone found! dist={dist:.2f}m conf={conf:.2f}')
                         box_color = (0, 0, 255) # Red for active trigger
                         cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), -1)
 

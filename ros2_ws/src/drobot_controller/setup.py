@@ -24,7 +24,6 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'manual_controller = drobot_controller.manual_controller:main',
             'teleop_keyboard = drobot_controller.teleop_keyboard:main',
         ],
     },
