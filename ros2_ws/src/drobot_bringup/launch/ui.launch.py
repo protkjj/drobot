@@ -25,8 +25,7 @@ _spawned_procs: list[subprocess.Popen] = []
 
 
 def _cleanup():
-    """Kill all spawned Terminator processes and related ROS/Gazebo processes."""
-    # 1. SIGTERM to spawned process groups
+    """Kill only processes spawned by this launch file (by process group)."""
     for proc in _spawned_procs:
         if proc.poll() is None:
             try:
@@ -34,11 +33,10 @@ def _cleanup():
             except (ProcessLookupError, PermissionError, OSError):
                 pass
 
-    # 2. Wait briefly for graceful shutdown
+    # Give processes a moment to shut down gracefully, then force-kill survivors
     import time
-    time.sleep(2)
+    time.sleep(1)
 
-    # 3. SIGKILL any survivors
     for proc in _spawned_procs:
         if proc.poll() is None:
             try:
@@ -46,15 +44,6 @@ def _cleanup():
             except (ProcessLookupError, PermissionError, OSError):
                 pass
     _spawned_procs.clear()
-
-    # 4. Force kill remaining ROS/Gazebo processes
-    subprocess.run(
-        ["pkill", "-9", "-f",
-         "gz sim|gz-sim|rviz|nav2|slam|ekf|goal_navigator|teleop_keyboard"
-         "|controller_server|planner_server|behavior_server|bt_navigator"
-         "|velocity_smoother|robot_state_publisher|ros_gz_bridge"],
-        capture_output=True,
-    )
 
 
 def load_world_files(worlds_root: Path):
@@ -315,44 +304,48 @@ def run_ui():
     def run_in_new_terminal(launch_cmd: str):
         """Run a shell command in a new terminal if available."""
 
-        # Prefer opening in a real terminal so launch logs are visible and process survives UI close.
+        # Prefer opening in a real terminal so launch logs are visible.
         terminal = None
         for candidate in ("gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "xterm"):
             if shutil.which(candidate):
                 terminal = candidate
                 break
 
+        proc = None
         if terminal == "gnome-terminal":
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 [terminal, "--", "bash", "-lc", f"{launch_cmd}; exec bash"],
                 start_new_session=True,
             )
         elif terminal == "konsole":
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 [terminal, "-e", "bash", "-lc", f"{launch_cmd}; exec bash"],
                 start_new_session=True,
             )
         elif terminal == "xfce4-terminal":
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 [terminal, "--command", f"bash -lc '{launch_cmd}; exec bash'"],
                 start_new_session=True,
             )
         elif terminal == "mate-terminal":
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 [terminal, "--", "bash", "-lc", f"{launch_cmd}; exec bash"],
                 start_new_session=True,
             )
         elif terminal == "xterm":
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 [terminal, "-e", "bash", "-lc", f"{launch_cmd}; exec bash"],
                 start_new_session=True,
             )
         else:
             # Fallback: detached background shell.
-            subprocess.Popen(
+            proc = subprocess.Popen(
                 ["bash", "-lc", launch_cmd],
                 start_new_session=True,
             )
+
+        if proc:
+            _spawned_procs.append(proc)
 
     def launch_selected_stack(output_world_name: str, selected_options: list[str]):
         """Launch navigation and optionally controller/perception based on selected options."""

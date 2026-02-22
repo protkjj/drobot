@@ -47,8 +47,8 @@ controller_server:
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "dwb_core::DWBLocalPlanner"
-      angular_dist_threshold: 0.5    # rad (~29°) 이상 차이나면 제자리 회전
-      forward_sampling_distance: 0.5  # 경로 앞 0.5m 지점 방향 기준
+      angular_dist_threshold: 0.785  # rad (~45°) 이상 차이나면 제자리 회전
+      forward_sampling_distance: 1.0  # 경로 앞 1.0m 지점 방향 기준 (재계획 시 heading 흔들림 감소)
       rotate_to_heading_angular_vel: 1.5  # 제자리 회전 속도 (rad/s)
       max_angular_accel: 1.5          # 회전 가속 제한
       # 속도 제한 (+30% 추가!)
@@ -179,8 +179,8 @@ global_costmap:
         # inflation_radius 넓으면 → 넓은 비용 그라디언트 생성
         # → 플래너가 장애물 사이 "중앙"으로 경로 생성!
         # ============================================================
-        cost_scaling_factor: 2.5      # 높일수록 lethal 근처만 고비용 (좁은 통로 통과 허용)
-        inflation_radius: 0.8         # 좁은 그라디언트 (좁은 통로 통과 가능)
+        cost_scaling_factor: 2.0      # 낮을수록 벽 비용이 넓게 퍼짐 → 코너 여유 확보
+        inflation_radius: 1.0         # 비용 그라디언트 범위 (0.8→1.0, 코너에서 더 넓게 돌기)
 
       always_send_full_costmap: true
 
