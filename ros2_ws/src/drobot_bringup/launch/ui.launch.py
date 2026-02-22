@@ -26,16 +26,33 @@ _spawned_procs: list[subprocess.Popen] = []
 
 def _cleanup():
     """Kill all spawned Terminator processes and related ROS/Gazebo processes."""
+    # 1. SIGTERM to spawned process groups
     for proc in _spawned_procs:
         if proc.poll() is None:
             try:
                 os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
             except (ProcessLookupError, PermissionError, OSError):
                 pass
+
+    # 2. Wait briefly for graceful shutdown
+    import time
+    time.sleep(2)
+
+    # 3. SIGKILL any survivors
+    for proc in _spawned_procs:
+        if proc.poll() is None:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            except (ProcessLookupError, PermissionError, OSError):
+                pass
     _spawned_procs.clear()
-    # Force kill any remaining ROS/Gazebo processes
+
+    # 4. Force kill remaining ROS/Gazebo processes
     subprocess.run(
-        ["pkill", "-9", "-f", "gz sim|rviz|nav2|slam|ekf|goal_navigator|teleop_twist"],
+        ["pkill", "-9", "-f",
+         "gz sim|gz-sim|rviz|nav2|slam|ekf|goal_navigator|teleop_keyboard"
+         "|controller_server|planner_server|behavior_server|bt_navigator"
+         "|velocity_smoother|robot_state_publisher|ros_gz_bridge"],
         capture_output=True,
     )
 
@@ -236,6 +253,7 @@ def run_ui():
     """Run Tkinter UI app."""
     atexit.register(_cleanup)
     signal.signal(signal.SIGTERM, lambda s, f: (_cleanup(), sys.exit(0)))
+    signal.signal(signal.SIGINT, lambda s, f: (_cleanup(), sys.exit(0)))
     window_width = 1320
     window_height = 560
     header_pady = (0, 10)
@@ -358,15 +376,6 @@ def run_ui():
         )
         commands.append(("Teleop", teleop_cmd))
 
-        if "controller.launch.py" in selected_options:
-            controller_cmd = (
-                f"cd {workspace_dir} && "
-                "source install/setup.bash && "
-                "sleep 3 && ros2 launch drobot_bringup controller.launch.py open_teleop_terminal:=false"
-            )
-            commands.append(("Controller", controller_cmd))
-            print("Launching controller stack", flush=True)
-
         if "perception.launch.py" in selected_options:
             perception_cmd = (
                 f"cd {workspace_dir} && "
@@ -429,7 +438,7 @@ def run_ui():
             print("Create World skipped: no option selected")
             return
         requires_navigation = any(
-            opt in ("controller.launch.py", "perception.launch.py")
+            opt in ("perception.launch.py",)
             for opt in selected_options
         )
         has_navigation = "navigation.launch.py" in selected_options

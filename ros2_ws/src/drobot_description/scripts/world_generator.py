@@ -310,7 +310,7 @@ def sample_goal_positions(goal_count: int, base_world_name: str, template_pose: 
     robot_x, robot_y = get_robot_spawn_xy(base_world_name)
 
     robot_exclusion_radius = 1.2
-    obstacle_clearance = 0.25
+    obstacle_clearance = 0.6
     goal_spacing = 0.45
     max_attempts = 5000
 

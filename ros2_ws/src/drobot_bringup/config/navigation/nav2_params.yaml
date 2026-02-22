@@ -121,9 +121,9 @@ local_costmap:
           data_type: "LaserScan"
           inf_is_valid: true    #adding valid value for empty space
           raytrace_max_range: 3.0
-          raytrace_min_range: 0.35
+          raytrace_min_range: 0.3
           obstacle_max_range: 2.5
-          obstacle_min_range: 0.35
+          obstacle_min_range: 0.3
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -166,9 +166,9 @@ global_costmap:
           data_type: "LaserScan"
           inf_is_valid: true      #adding valid value for empty space
           raytrace_max_range: 3.0
-          raytrace_min_range: 0.35
+          raytrace_min_range: 0.3
           obstacle_max_range: 2.5
-          obstacle_min_range: 0.35
+          obstacle_min_range: 0.3
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -194,10 +194,11 @@ planner_server:
     planner_plugins: ["GridBased"]
 
     GridBased:
-      plugin: "nav2_navfn_planner::NavfnPlanner"
+      plugin: "nav2_smac_planner::SmacPlanner2D"
       tolerance: 0.5
-      use_astar: true
       allow_unknown: true
+      max_iterations: 1000000
+      max_on_approach_iterations: 1000
 
 # =============================================================================
 # Behavior Server (복구 동작)
