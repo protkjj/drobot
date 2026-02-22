@@ -1,0 +1,15 @@
+<sdf version="1.6">
+  <world name="empty_world">
+
+    
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+  <model name="goal_cone_01"><pose>0.224 2.348 0.5 5.254459108606895e-17 -7.713284103729037e-10 1.8794</pose><static>false</static><self_collide>false</self_collide><link name="goal_cone_link"><pose>0 0 0 0 0 0</pose><inertial><pose>0 0 0 0 0 0</pose><mass>1.0</mass><inertia><ixx>0.075</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.075</iyy><iyz>0</iyz><izz>0.075</izz></inertia></inertial><collision name="goal_cone_collision"><geometry><cone><radius>0.5</radius><length>1.0</length></cone></geometry></collision><visual name="goal_cone_visual"><geometry><cone><radius>0.5</radius><length>1.0</length></cone></geometry><material><ambient>0.699999988 0.699999988 0.699999988 1.0</ambient><diffuse>0.699999988 0.699999988 0.699999988 1.0</diffuse><specular>1 1 1 1</specular></material></visual></link></model></world>
+</sdf>
