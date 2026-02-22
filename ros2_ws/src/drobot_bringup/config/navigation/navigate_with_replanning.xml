@@ -1,6 +1,8 @@
 <!--
-  Drobot Navigation Behavior Tree v2
+  Drobot Navigation Behavior Tree v3
   목표 방향 회전 → 경로 추종 → 막히면 복구
+  - 내부 recovery: costmap 클리어 + backup만 (spin 제거 → replanner + RotationShim이 방향 처리)
+  - 외부 recovery: costmap 클리어 + backup + 작은 spin (최후 수단)
 -->
 <root BTCPP_format="4" main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
@@ -21,23 +23,22 @@
           </RecoveryNode>
         </RateController>
 
-        <!-- 경로 추종 (실패 시 후진 → 회전 후 재시도) -->
+        <!-- 경로 추종 (실패 시 클리어 + backup만, spin 없음) -->
         <RecoveryNode number_of_retries="3" name="FollowPathWithRecovery">
           <FollowPath path="{path}" controller_id="{selected_controller}"/>
           <Sequence name="BackupAndRetry">
             <ClearEntireCostmap name="ClearLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
             <BackUp backup_dist="0.3" backup_speed="0.15" name="BackUpSmall"/>
-            <Spin spin_dist="1.57" name="SpinToReorient"/>
           </Sequence>
         </RecoveryNode>
       </PipelineSequence>
 
-      <!-- 복구 시퀀스: costmap 클리어 → 후진 → 회전 -->
+      <!-- 최후 복구: costmap 클리어 → 후진 → 작은 회전 (45°) -->
       <Sequence name="RecoveryActions">
         <ClearEntireCostmap name="ClearLocalCostmap" service_name="local_costmap/clear_entirely_local_costmap"/>
         <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
         <BackUp backup_dist="0.5" backup_speed="0.15" name="BackUp"/>
-        <Spin spin_dist="1.57" name="Spin90"/>
+        <Spin spin_dist="0.785" name="Spin45"/>
       </Sequence>
     </RecoveryNode>
   </BehaviorTree>
