@@ -284,7 +284,7 @@ def launch_setup(context):
     rules_file = os.path.join(bringup_pkg, 'config', 'navigation', 'rules.yaml')
     goal_navigator = Node(
         package='drobot_scan_2d',
-        executable='goal_navigator.py',
+        executable='goal_navigator',
         name='goal_navigator',
         output='screen',
         parameters=[{

@@ -119,6 +119,7 @@ local_costmap:
           clearing: true
           marking: true
           data_type: "LaserScan"
+          inf_is_valid: true    #adding valid value for empty space
           raytrace_max_range: 3.0
           raytrace_min_range: 0.35
           obstacle_max_range: 2.5
@@ -163,6 +164,7 @@ global_costmap:
           clearing: true
           marking: true
           data_type: "LaserScan"
+          inf_is_valid: true      #adding valid value for empty space
           raytrace_max_range: 3.0
           raytrace_min_range: 0.35
           obstacle_max_range: 2.5
