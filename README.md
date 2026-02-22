@@ -2,7 +2,7 @@
 
 드론-로버 하이브리드 변형 로봇
 
-## 초기 세팅 (최초 1회) 중요 !!
+## 초기 세팅 (최초 1회)
 
 ```bash
 cd ~/Desktop
@@ -11,22 +11,48 @@ cd drobot
 bash setup.sh
 ```
 
-비밀번호 한 번 입력 후 자동으로 PX4, DDS Agent, ROS2 빌드까지 완료됩니다.
+비밀번호 한 번 입력 후 자동으로 의존성 설치 및 ROS2 빌드까지 완료됩니다.
 
 ## 실행 방법
 
-터미널 3개를 열고 각각 실행:
+### UI 런처 (권장)
 
 ```bash
-# 터미널 1: PX4 SITL + Gazebo
-cd ~/Desktop/drobot/PX4-Autopilot && make px4_sitl gz_x500
-
-# 터미널 2: DDS 브릿지
-MicroXRCEAgent udp4 -p 8888
-
-# 터미널 3: ROS2 노드
 cd ~/Desktop/drobot/ros2_ws && source install/setup.bash
-ros2 launch drobot_bringup drobot_sim.launch.py
+ros2 launch drobot_bringup ui.launch.py
+```
+
+Tkinter UI에서 월드/목표/옵션을 선택하면 Terminator 분할 창으로 필요한 노드들이 자동 실행됩니다.
+
+### 수동 실행
+
+```bash
+cd ~/Desktop/drobot/ros2_ws && source install/setup.bash
+
+# Navigation (Gazebo + SLAM + Nav2 + Goal Navigator)
+ros2 launch drobot_bringup navigation.launch.py world:=<월드이름>
+
+# Teleop (별도 터미널)
+ros2 run drobot_controller teleop_keyboard
+
+# Perception (별도 터미널, 선택)
+ros2 launch drobot_bringup perception.launch.py
+```
+
+### Teleop 키 조작
+
+```
+이동:                   홀로노믹(shift):
+   u    i    o             U    I    O
+   j    k    l             J    K    L
+   m    ,    .             M    <    >
+
+t/b : 상승/하강          q/z : 전체 속도 증감
+w/x : 직진 속도 증감     e/c : 회전 속도 증감
+
+Arm:
+   1 : fold (지상 모드)
+   2 : unfold (비행 모드)
 ```
 
 ## 코드 업데이트 받기
@@ -41,20 +67,30 @@ cd ros2_ws && colcon build
 
 ```
 drobot/
-├── setup.sh                    # 환경 세팅 스크립트
+├── setup.sh                     # 환경 세팅 스크립트
 ├── README.md
-├── ros2_ws/                    # ROS2 워크스페이스 (우리 코드)
-│   └── src/
-│       ├── drobot_msgs/
-│       ├── drobot_description/
-│       ├── drobot_bringup/
-│       ├── drobot_firmware_bridge/
-│       ├── drobot_perception/
-│       ├── drobot_navigation/
-│       ├── drobot_strategy/
-│       ├── drobot_control/
-│       ├── drobot_gazebo/
-│       └── px4_msgs/
-├── PX4-Autopilot/              # setup.sh이 자동 클론
-└── Micro-XRCE-DDS-Agent/       # setup.sh이 자동 클론+빌드
+└── ros2_ws/
+    └── src/
+        ├── drobot_description/  # URDF, 메시, 월드, Gazebo 플러그인
+        ├── drobot_bringup/      # Launch 파일, Nav2/SLAM/EKF 설정
+        ├── drobot_controller/   # teleop_keyboard (수동 조작)
+        ├── drobot_scan_2d/      # goal_navigator, 2D 스캔 기반 네비게이션
+        ├── drobot_scan_3d/      # 3D 스캔 처리
+        ├── drobot_simulator/    # 시뮬레이션 유틸
+        ├── drobot_strategy/     # 전략/행동 로직
+        └── perception/          # YOLO 기반 콘 인식 (카메라 + depth)
 ```
+
+## 주요 설정 파일
+
+| 파일 | 설명 |
+|------|------|
+| `drobot_bringup/config/navigation/nav2_params.yaml` | Nav2 파라미터 (플래너, costmap, 속도 제한) |
+| `drobot_bringup/config/navigation/navigate_with_replanning.xml` | Behavior Tree (경로 추종 + 복구 동작) |
+| `drobot_bringup/config/navigation/rules.yaml` | 자율주행 규칙 |
+| `drobot_bringup/config/common/slam_params.yaml` | SLAM 설정 |
+| `drobot_bringup/config/common/ekf.yaml` | EKF 로컬라이제이션 |
+| `drobot_bringup/config/spawn_positions.yaml` | 월드별 로봇 스폰 위치 |
+| `drobot_description/urdf/drobot.urdf.xacro` | 로봇 URDF (관절, 센서) |
+| `drobot_description/urdf/gazebo.xacro` | Gazebo 플러그인 (PID, 센서, Diff Drive) |
+| `drobot_description/scripts/world_generator.py` | 월드 생성기 (콘 배치) |
