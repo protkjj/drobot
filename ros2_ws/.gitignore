@@ -11,3 +11,4 @@ src/perception/dataset/train/
 src/perception/dataset/valid/
 src/perception/dataset/test/
 src/perception/dataset/cone_dataset/
+src/drobot_description/worlds/generated/
