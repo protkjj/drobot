@@ -46,13 +46,13 @@
             name="gz::sim::systems::JointPositionController">
       <joint_name>lf_arm_rev</joint_name>
       <topic>/model/drobot/joint/lf_arm_rev/cmd_pos</topic>
-      <p_gain>5.0</p_gain>
+      <p_gain>10.0</p_gain>
       <i_gain>0.5</i_gain>
       <d_gain>1.0</d_gain>
       <i_max>1.0</i_max>
       <i_min>-1.0</i_min>
-      <cmd_max>2.45</cmd_max>
-      <cmd_min>-2.45</cmd_min>
+      <cmd_max>5.0</cmd_max>
+      <cmd_min>-5.0</cmd_min>
     </plugin>
   </gazebo>
 
@@ -61,13 +61,13 @@
             name="gz::sim::systems::JointPositionController">
       <joint_name>lr_arm_rev</joint_name>
       <topic>/model/drobot/joint/lr_arm_rev/cmd_pos</topic>
-      <p_gain>5.0</p_gain>
+      <p_gain>10.0</p_gain>
       <i_gain>0.5</i_gain>
       <d_gain>1.0</d_gain>
       <i_max>1.0</i_max>
       <i_min>-1.0</i_min>
-      <cmd_max>2.45</cmd_max>
-      <cmd_min>-2.45</cmd_min>
+      <cmd_max>5.0</cmd_max>
+      <cmd_min>-5.0</cmd_min>
     </plugin>
   </gazebo>
 
@@ -76,13 +76,13 @@
             name="gz::sim::systems::JointPositionController">
       <joint_name>rf_arm_rev</joint_name>
       <topic>/model/drobot/joint/rf_arm_rev/cmd_pos</topic>
-      <p_gain>5.0</p_gain>
+      <p_gain>10.0</p_gain>
       <i_gain>0.5</i_gain>
       <d_gain>1.0</d_gain>
       <i_max>1.0</i_max>
       <i_min>-1.0</i_min>
-      <cmd_max>2.45</cmd_max>
-      <cmd_min>-2.45</cmd_min>
+      <cmd_max>5.0</cmd_max>
+      <cmd_min>-5.0</cmd_min>
     </plugin>
   </gazebo>
 
@@ -91,13 +91,13 @@
             name="gz::sim::systems::JointPositionController">
       <joint_name>rr_arm_rev</joint_name>
       <topic>/model/drobot/joint/rr_arm_rev/cmd_pos</topic>
-      <p_gain>5.0</p_gain>
+      <p_gain>10.0</p_gain>
       <i_gain>0.5</i_gain>
       <d_gain>1.0</d_gain>
       <i_max>1.0</i_max>
       <i_min>-1.0</i_min>
-      <cmd_max>2.45</cmd_max>
-      <cmd_min>-2.45</cmd_min>
+      <cmd_max>5.0</cmd_max>
+      <cmd_min>-5.0</cmd_min>
     </plugin>
   </gazebo>
 
