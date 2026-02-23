@@ -141,8 +141,8 @@
     <parent link="base_link"/>
     <child link="left_front_arm"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="7.0" velocity="0.5"/>
-    <dynamics damping="3.0" friction="3.0"/>
+    <limit lower="0" upper="1.5708" effort="14.0" velocity="0.5"/>
+    <dynamics damping="4.0" friction="5.0"/>
   </joint>
 
   <!-- ==================== LEFT SIDE FRAME ==================== -->
@@ -255,7 +255,7 @@
     <parent link="base_link"/>
     <child link="left_rear_arm"/>
     <axis xyz="-1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="7.0" velocity="0.5"/>
+    <limit lower="0" upper="1.5708" effort="14.0" velocity="0.5"/>
     <dynamics damping="3.0" friction="3.0"/>
   </joint>
 
@@ -283,8 +283,8 @@
     <parent link="base_link"/>
     <child link="right_front_arm"/>
     <axis xyz="1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="7.0" velocity="0.5"/>
-    <dynamics damping="3.0" friction="3.0"/>
+    <limit lower="0" upper="1.5708" effort="14.0" velocity="0.5"/>
+    <dynamics damping="4.0" friction="5.0"/>
   </joint>
 
   <!-- ==================== RIGHT SIDE FRAME ==================== -->
@@ -393,7 +393,7 @@
     <parent link="base_link"/>
     <child link="right_rear_arm"/>
     <axis xyz="1 0 0"/>
-    <limit lower="0" upper="1.5708" effort="7.0" velocity="0.5"/>
+    <limit lower="0" upper="1.5708" effort="14.0" velocity="0.5"/>
     <dynamics damping="3.0" friction="3.0"/>
   </joint>
 

@@ -25,8 +25,31 @@ _spawned_procs: list[subprocess.Popen] = []
 _shutdown_requested = False
 
 
+def _kill_gazebo_processes():
+    """Kill any remaining Gazebo simulator processes."""
+    gazebo_patterns = [
+        "gzserver",
+        "gzclient",
+        "gz sim",
+        "ign gazebo",
+        "parameter_bridge",
+        "ros2 launch drobot_bringup navigation.launch.py",
+        "ros2 launch drobot_bringup perception.launch.py",
+        "ros2 run drobot_controller teleop_keyboard",
+    ]
+    for pattern in gazebo_patterns:
+        try:
+            subprocess.run(
+                ["pkill", "-f", pattern],
+                capture_output=True,
+                timeout=5,
+            )
+        except Exception:
+            pass
+
+
 def _cleanup():
-    """Kill only processes spawned by this launch file (by process group)."""
+    """Kill processes spawned by this launch file and Gazebo processes."""
     for proc in _spawned_procs:
         if proc.poll() is None:
             try:
@@ -34,9 +57,11 @@ def _cleanup():
             except (ProcessLookupError, PermissionError, OSError):
                 pass
 
+    _kill_gazebo_processes()
+
     # Give processes a moment to shut down gracefully, then force-kill survivors
     import time
-    time.sleep(1)
+    time.sleep(2)
 
     for proc in _spawned_procs:
         if proc.poll() is None:
@@ -44,6 +69,28 @@ def _cleanup():
                 os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
             except (ProcessLookupError, PermissionError, OSError):
                 pass
+
+    # Force-kill any stubborn Gazebo processes
+    for pattern in ["gzserver", "gzclient", "gz sim", "ign gazebo"]:
+        try:
+            subprocess.run(
+                ["pkill", "-9", "-f", pattern],
+                capture_output=True,
+                timeout=5,
+            )
+        except Exception:
+            pass
+
+    # Final cleanup: kill all related ROS/Gazebo processes
+    try:
+        subprocess.run(
+            ["pkill", "-9", "-f", "gz|rviz|nav2|slam|ekf|goal"],
+            capture_output=True,
+            timeout=5,
+        )
+    except Exception:
+        pass
+
     _spawned_procs.clear()
 
 
