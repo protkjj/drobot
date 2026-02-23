@@ -177,7 +177,7 @@ def main():
     arm_pubs = {}
     for jn in ARM_JOINTS:
         arm_pubs[jn] = node.create_publisher(
-            std_msgs.msg.Float64, '/model/drobot/joint/%s/cmd_pos' % jn, 10)
+            std_msgs.msg.Float64, '/arm/%s/cmd_pos' % jn, 10)
 
     # --- Arm state ---
     arm_current = {jn: 0.0 for jn in ARM_JOINTS}
