@@ -277,6 +277,15 @@ def main():
                     arm_mode = 'transitioning'
                 print('ARM -> UNFOLD (flight mode)')
                 continue
+            elif key == '3': 
+                with arm_lock:
+                    arm_start['rr_arm_rev'] = arm_current['rr_arm_rev']
+                    arm_target['rr_arm_rev'] = ARM_UNFOLD
+                    arm_transition_t = 0.0
+                    arm_transitioning = True
+                    arm_mode = 'transitioning'
+                print('rrm unfold')
+                continue
             else:
                 x = 0.0
                 y = 0.0
