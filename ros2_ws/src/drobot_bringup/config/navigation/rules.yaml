@@ -18,7 +18,7 @@ speed_limit_zones:
 
 # ==================== 정지 규칙 ====================
 stop_rules:
-  # 장애물 감지 시
+  # 장애물 감지 시 
   - name: "obstacle_detected"
     trigger: "obstacle_in_path"
     distance: 0.5               # m - 감지 거리
