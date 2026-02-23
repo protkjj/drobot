@@ -47,10 +47,10 @@ controller_server:
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "dwb_core::DWBLocalPlanner"
-      angular_dist_threshold: 0.785  # rad (~45°) 이상 차이나면 제자리 회전
+      angular_dist_threshold: 0.1  # rad (~45°) 이상 차이나면 제자리 회전
       forward_sampling_distance: 1.0  # 경로 앞 1.0m 지점 방향 기준 (재계획 시 heading 흔들림 감소)
       rotate_to_heading_angular_vel: 1.5  # 제자리 회전 속도 (rad/s)
-      max_angular_accel: 1.5          # 회전 가속 제한
+      max_angular_accel: 5.0          # 회전 가속 제한
       # 속도 제한 (+30% 추가!)
       min_vel_x: 0.0              # DWB 경로추종은 전진만 (후진은 BackUp 복구에서 처리)
       max_vel_x: 0.4
@@ -59,13 +59,13 @@ controller_server:
       max_vel_theta: 1.5            # 회전 속도 (~86°/s)
       min_speed_xy: 0.0
       max_speed_xy: 0.4
-      min_speed_theta: 0.0          # 0→직진 시 미세보정 허용 (Spin은 behavior_server에서 별도 제어)
+      min_speed_theta: 0.5          # 0→직진 시 미세보정 허용 (Spin은 behavior_server에서 별도 제어)
       # 가속 제한
       acc_lim_x: 0.5
       acc_lim_y: 0.0
-      acc_lim_theta: 1.5            # 부드러운 회전 가속
+      acc_lim_theta: 5.0            # 부드러운 회전 가속
       decel_lim_x: -0.5
-      decel_lim_theta: -1.5
+      decel_lim_theta: -5.0
       # 샘플링
       vx_samples: 20
       vy_samples: 1
@@ -77,12 +77,12 @@ controller_server:
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "PathAlign", "PathDist", "GoalDist"]
       Oscillation.scale: 1.0           # 진동 방지
       BaseObstacle.scale: 0.5         # 장애물 회피
-      PathAlign.scale: 32.0
+      PathAlign.scale: 10.0
       PathAlign.forward_point_distance: 0.5   # 0.3→0.5 (더 앞의 경로에 정렬 → 부드러운 커브)
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0
-      RotateToGoal.scale: 12.0
-      RotateToGoal.slowing_factor: 5.0
+      PathDist.scale: 10.0
+      GoalDist.scale: 10.0
+      RotateToGoal.scale: 2.0
+      RotateToGoal.slowing_factor: 2.0
 
 # =============================================================================
 # Local Costmap (실시간 장애물 감지)
@@ -235,9 +235,9 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: false
     feedback: "OPEN_LOOP"
-    max_velocity: [0.4, 0.0, 1.5]
+    max_velocity: [0.4, 0.0, 2.0]
     min_velocity: [-0.2, 0.0, -1.5]
-    max_accel: [1.0, 0.0, 2.0]
+    max_accel: [1.0, 0.0, 3.0]
     max_decel: [-1.0, 0.0, -2.0]
     odom_topic: "odom"
     odom_duration: 0.1
