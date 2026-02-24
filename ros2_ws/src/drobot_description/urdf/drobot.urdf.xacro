@@ -120,24 +120,24 @@
   <!-- ==================== LEFT FRONT ARM ==================== -->
   <link name="left_front_arm">
     <inertial>
-      <origin xyz="0.018998 -0.000534 0.112534" rpy="0 0 0"/>
+      <origin xyz="0.018998 0.04 0.112534" rpy="0 0 0"/>
       <mass value="0.123064431731573"/>
       <inertia ixx="0.000135741612972814" ixy="6.13644622591408E-06" ixz="-3.91949328277525E-06"
                iyy="6.76036048729945E-05" iyz="4.48906032629936E-05" izz="0.000106939767969889"/>
     </inertial>
     <visual>
-      <origin xyz="0 -0.003671 -0.216881" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.216881" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/left_front_arm.STL"/></geometry>
       <material name="arm_color"/>
     </visual>
     <collision>
-      <origin xyz="0 -0.003671 -0.216881" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.216881" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/left_front_arm.STL"/></geometry>
     </collision>
   </link>
 
   <joint name="lf_arm_rev" type="revolute">
-    <origin xyz="0.001 0.022 0.240" rpy="3.1416 0 3.1416"/>
+    <origin xyz="0.001 0.024 0.240" rpy="3.1416 0 3.1416"/>
     <parent link="base_link"/>
     <child link="left_front_arm"/>
     <axis xyz="-1 0 0"/>
@@ -240,7 +240,7 @@
                iyy="6.76036048729945E-05" iyz="4.48906032629936E-05" izz="0.000106939767969889"/>
     </inertial>
     <visual>
-      <origin xyz="0 -0.023671 -0.216881" rpy="0 0 0"/>
+      <origin xyz="0 -0.022671 -0.216881" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/left_rear_arm.STL"/></geometry>
       <material name="arm_color"/>
     </visual>
@@ -251,7 +251,7 @@
   </link>
 
   <joint name="lr_arm_rev" type="revolute">
-    <origin xyz="0.001 0.022 0.240" rpy="1.5708 0 3.1416"/>
+    <origin xyz="0.001 0.024 0.240" rpy="1.5708 0 3.1416"/>
     <parent link="base_link"/>
     <child link="left_rear_arm"/>
     <axis xyz="-1 0 0"/>
@@ -262,24 +262,24 @@
   <!-- ==================== RIGHT FRONT ARM ==================== -->
   <link name="right_front_arm">
     <inertial>
-      <origin xyz="-0.072133 0.029001 -0.051593" rpy="0 0 0"/>
+      <origin xyz="-0.072133 0.017001 -0.051593" rpy="0 0 0"/>
       <mass value="0.123064431731573"/>
       <inertia ixx="0.000135741612972814" ixy="6.13644622591408E-06" ixz="-3.91949328277525E-06"
                iyy="6.76036048729945E-05" iyz="4.48906032629936E-05" izz="0.000106939767969889"/>
     </inertial>
     <visual>
-      <origin xyz="0 -0.002488 -0.180993" rpy="0 0 0"/>
+      <origin xyz="0 -0.002488 -0.175993" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/right_front_arm.STL"/></geometry>
       <material name="arm_color"/>
     </visual>
     <collision>
-      <origin xyz="0 -0.002488 -0.180993" rpy="0 0 0"/>
+      <origin xyz="0 -0.002488 -0.175993" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/right_front_arm.STL"/></geometry>
     </collision>
   </link>
 
   <joint name="rf_arm_rev" type="revolute">
-    <origin xyz="0.001 -0.023 0.245" rpy="0 0 3.1416"/>
+    <origin xyz="0.001 -0.025 0.249" rpy="0 0 3.1416"/>
     <parent link="base_link"/>
     <child link="right_front_arm"/>
     <axis xyz="1 0 0"/>
@@ -372,13 +372,13 @@
   <!-- ==================== RIGHT REAR ARM ==================== -->
   <link name="right_rear_arm">
     <inertial>
-      <origin xyz="-0.072133 0.029001 -0.151593" rpy="0 0 0"/>
+      <origin xyz="-0.072133 0.027001 -0.151593" rpy="0 0 0"/>
       <mass value="0.123064431731573"/>
       <inertia ixx="0.000135741612972814" ixy="6.13644622591408E-06" ixz="-3.91949328277525E-06"
                iyy="6.76036048729945E-05" iyz="4.48906032629936E-05" izz="0.000106939767969889"/>
     </inertial>
     <visual>
-      <origin xyz="0 -0.022488 -0.180993" rpy="0 0 0"/>
+      <origin xyz="0 -0.022488 -0.175993" rpy="0 0 0"/>
       <geometry><mesh filename="package://drobot_description/meshes/right_rear_arm.STL"/></geometry>
       <material name="arm_color"/>
     </visual>
@@ -390,7 +390,7 @@
   </link>
 
   <joint name="rr_arm_rev" type="revolute">
-    <origin xyz="0.001 -0.023 0.245" rpy="1.5708 0 3.1416"/>
+    <origin xyz="0.001 -0.025 0.249" rpy="1.5708 0 3.1416"/>
     <parent link="base_link"/>
     <child link="right_rear_arm"/>
     <axis xyz="1 0 0"/>

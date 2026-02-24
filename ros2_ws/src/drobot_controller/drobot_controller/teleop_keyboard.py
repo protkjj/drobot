@@ -110,10 +110,10 @@ ARM_JOINTS = ['lf_arm_rev', 'lr_arm_rev', 'rf_arm_rev', 'rr_arm_rev']
 
 # Arm target positions (radians)
 ARM_FOLD = 0.0             # ground mode
-ARM_UNFOLD = math.pi / 2   # flight mode (90 deg)
+ARM_UNFOLD = 1.7   # flight mode (90 deg)
 
 # Transition parameters
-TRANSITION_DURATION = 2.0   # seconds
+TRANSITION_DURATION = 2.5   # seconds
 TRANSITION_HZ = 20          # timer frequency
 
 
@@ -276,6 +276,7 @@ def main():
                     arm_transitioning = True
                     arm_mode = 'transitioning'
                 print('ARM -> UNFOLD (flight mode)')
+                print(arm_current)
                 continue
             elif key == '3': 
                 with arm_lock:
