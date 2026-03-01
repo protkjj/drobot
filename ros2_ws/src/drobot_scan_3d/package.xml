@@ -3,9 +3,9 @@
 <package format="3">
   <name>drobot_scan_3d</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>3D 스캔 및 포인트클라우드 처리</description>
   <maintainer email="dongukleokim@gmail.com">leo11dk</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <depend>rclpy</depend>
 

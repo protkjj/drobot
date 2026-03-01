@@ -3,9 +3,9 @@
 <package format="3">
   <name>perception</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>YOLOv8 기반 물체 인식</description>
   <maintainer email="kimjw0196@naver.com">jungwon</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>

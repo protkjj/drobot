@@ -3,9 +3,9 @@
 <package format="3">
   <name>drobot_simulator</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Gazebo 시뮬레이션 환경 및 월드 관리</description>
   <maintainer email="dongukleokim@gmail.com">leo11dk</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

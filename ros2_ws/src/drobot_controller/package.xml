@@ -3,9 +3,9 @@
 <package format="3">
   <name>drobot_controller</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>키보드 텔레오퍼레이션 컨트롤러</description>
   <maintainer email="dongukleokim@gmail.com">leo11dk</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
