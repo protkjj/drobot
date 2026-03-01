@@ -7,6 +7,19 @@ echo "============================="
 echo "  DROBOT 개발환경 세팅 시작"
 echo "============================="
 
+# Git LFS 확인 및 파일 다운로드
+if ! command -v git-lfs &> /dev/null; then
+    echo "[ERROR] git-lfs가 설치되어 있지 않습니다."
+    echo "  macOS: brew install git-lfs"
+    echo "  Ubuntu: sudo apt install git-lfs"
+    exit 1
+fi
+
+echo "[0/4] Git LFS 파일 다운로드 중..."
+cd "$DROBOT_DIR"
+git lfs install
+git lfs pull
+
 # PX4-Autopilot 클론
 if [ ! -d "$DROBOT_DIR/PX4-Autopilot" ]; then
     echo "[1/4] PX4-Autopilot 클론 중..."
