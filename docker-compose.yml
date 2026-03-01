@@ -1,0 +1,54 @@
+services:
+  # ============================================
+  # DROBOT - ROS2 + Gazebo + Nav2 + SLAM + YOLO
+  # ============================================
+  drobot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: drobot:latest
+    container_name: drobot
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=0
+    volumes:
+      - ./ros2_ws/src:/root/ros2_ws/src        # 소스코드 마운트 (개발용)
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    network_mode: host
+    stdin_open: true
+    tty: true
+
+  # ============================================
+  # PX4 SITL 시뮬레이터
+  # ============================================
+  px4:
+    build:
+      context: .
+      dockerfile: Dockerfile.px4
+    image: drobot-px4:latest
+    container_name: px4-sitl
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - PX4_SIM_MODEL=gz_x500
+      - ROS_DOMAIN_ID=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    network_mode: host
+    stdin_open: true
+    tty: true
+    command: bash -c "cd /root/PX4-Autopilot && make px4_sitl gz_x500"
+
+  # ============================================
+  # Micro-XRCE-DDS Agent (PX4 <-> ROS2 브릿지)
+  # ============================================
+  dds-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: drobot:latest
+    container_name: dds-agent
+    network_mode: host
+    command: MicroXRCEAgent udp4 -p 8888

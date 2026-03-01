@@ -1,0 +1,50 @@
+FROM osrf/ros:jazzy-desktop-full
+
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-c"]
+
+# ============================================
+# 1. PX4 빌드 의존성
+# ============================================
+RUN apt-get update && apt-get install -y \
+    git \
+    cmake \
+    build-essential \
+    python3-pip \
+    python3-jinja2 \
+    python3-empy \
+    python3-toml \
+    python3-numpy \
+    python3-packaging \
+    python3-jsonschema \
+    wget \
+    curl \
+    unzip \
+    astyle \
+    ninja-build \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-plugins-bad \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir \
+    kconfiglib \
+    pyros-genmsg \
+    future
+
+# ============================================
+# 2. PX4-Autopilot 클론 및 빌드
+# ============================================
+WORKDIR /root
+RUN git clone https://github.com/PX4/PX4-Autopilot.git --recursive --branch v1.16.1 --depth 1 \
+    && cd PX4-Autopilot \
+    && git submodule update --init --recursive
+
+WORKDIR /root/PX4-Autopilot
+RUN source /opt/ros/jazzy/setup.bash \
+    && DONT_RUN=1 make px4_sitl gz_x500 \
+    || true
+
+RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc
+
+CMD ["bash"]

@@ -1,0 +1,9 @@
+PX4-Autopilot/
+Micro-XRCE-DDS-Agent/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+.git/
+*.pdf
+*.docx
+.DS_Store
