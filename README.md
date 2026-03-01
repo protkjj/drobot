@@ -2,12 +2,13 @@
 
 드론-로버 하이브리드 변형 로봇
 
-## 초기 세팅
+---
 
-### Docker (권장, Ubuntu)
+## Docker 사용법
 
-Docker를 사용하면 의존성 설치 없이 동일한 환경에서 실행됩니다.
-Gazebo/RViz 등 GUI가 필요하므로 **Ubuntu에서 사용**을 권장합니다. (Mac에서는 GUI 불가)
+Gazebo/RViz 등 GUI가 필요하므로 **Ubuntu에서 사용**을 권장합니다. (Mac/Windows에서는 GUI 불가)
+
+### 초기 세팅 (최초 1회)
 
 ```bash
 git clone https://github.com/protkjj/drobot.git
@@ -15,7 +16,49 @@ cd drobot
 docker compose up --build
 ```
 
-### 로컬 설치 (Ubuntu 24.04 + ROS2 Jazzy)
+### 실행
+
+```bash
+cd drobot
+docker compose up
+
+# 별도 터미널에서 컨테이너 접속
+docker exec -it drobot bash
+ros2 launch drobot_bringup ui.launch.py
+```
+
+### 코드 수정 후 반영
+
+로컬에서 코드를 수정하면 컨테이너에 자동 반영됩니다. (volume 마운트)
+
+```bash
+docker exec -it drobot bash
+cd /root/ros2_ws
+colcon build --symlink-install
+```
+
+`--symlink-install`로 빌드하면 이후 Python 코드는 빌드 없이 바로 반영됩니다.
+C++ 코드(drobot_description, drobot_simulator)를 수정한 경우에만 `colcon build`를 다시 해주세요.
+
+### 코드 업데이트 받기
+
+```bash
+cd drobot
+git pull
+
+# 소스코드만 바뀐 경우
+docker exec -it drobot bash
+cd /root/ros2_ws && colcon build
+
+# Dockerfile이 바뀐 경우
+docker compose up --build
+```
+
+---
+
+## 로컬 사용법 (Ubuntu 24.04 + ROS2 Jazzy)
+
+### 초기 세팅 (최초 1회)
 
 ```bash
 cd ~/Desktop
@@ -26,25 +69,7 @@ bash setup.sh
 
 비밀번호 한 번 입력 후 자동으로 의존성 설치 및 ROS2 빌드까지 완료됩니다.
 
-## 실행 방법
-
-### Docker 실행
-
-```bash
-cd drobot
-
-# DROBOT만 실행
-docker compose up drobot
-
-# PX4 + DDS Agent + DROBOT 전부 실행
-docker compose up
-
-# DROBOT 컨테이너 접속
-docker exec -it drobot bash
-ros2 launch drobot_bringup navigation.launch.py world:=hospital
-```
-
-### 로컬 실행
+### 실행
 
 #### UI 런처 (권장)
 
@@ -70,7 +95,25 @@ ros2 run drobot_controller teleop_keyboard
 ros2 launch drobot_bringup perception.launch.py
 ```
 
-### Teleop 키 조작
+### 코드 수정 후 반영
+
+```bash
+cd ~/Desktop/drobot/ros2_ws
+colcon build --symlink-install
+source install/setup.bash
+```
+
+### 코드 업데이트 받기
+
+```bash
+cd ~/Desktop/drobot
+git pull
+cd ros2_ws && colcon build
+```
+
+---
+
+## Teleop 키 조작
 
 ```
 이동:                   홀로노믹(shift):
@@ -84,53 +127,6 @@ w/x : 직진 속도 증감     e/c : 회전 속도 증감
 Arm:
    1 : fold (지상 모드)
    2 : unfold (비행 모드)
-```
-
-## 코드 수정 후 반영
-
-### Docker
-
-소스코드가 volume 마운트되어 있으므로 로컬에서 코드를 수정하면 컨테이너에 바로 반영됩니다.
-
-```bash
-# 최초 1회 (symlink-install로 빌드하면 이후 Python 코드는 빌드 불필요)
-docker exec -it drobot bash
-cd /root/ros2_ws
-colcon build --symlink-install
-
-# 이후 Python 코드 수정 시 → 빌드 없이 바로 실행 가능
-# C++ 코드 수정 시 → colcon build 필요
-```
-
-### 로컬
-
-```bash
-cd ~/Desktop/drobot/ros2_ws
-colcon build --symlink-install
-source install/setup.bash
-```
-
-## 코드 업데이트 받기 (git pull)
-
-### Docker
-
-```bash
-cd drobot
-git pull
-# 소스코드만 바뀐 경우 → colcon build만 하면 됨
-docker exec -it drobot bash
-cd /root/ros2_ws && colcon build
-
-# Dockerfile이 바뀐 경우 → 이미지 재빌드 필요
-docker compose up --build
-```
-
-### 로컬
-
-```bash
-cd ~/Desktop/drobot
-git pull
-cd ros2_ws && colcon build
 ```
 
 ## 폴더 구조
