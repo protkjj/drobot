@@ -6,7 +6,47 @@
 
 ## Docker 사용법
 
-Gazebo/RViz 등 GUI가 필요하므로 **Ubuntu에서 사용**을 권장합니다. (Mac/Windows에서는 GUI 불가)
+Gazebo/RViz 등 GUI가 필요하므로 **Ubuntu에서 사용**을 권장
+
+
+## DOCKER 설치 
+
+### 기존 Docker 완전 제거
+
+```jsx
+sudo apt-get remove docker docker-engine docker.io containerd runc docker-compose
+sudo apt-get autoremove -y
+```
+
+### Docker 엔진 및 최신 Compose 설치
+
+```jsx
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+### 권한 설정
+
+```jsx
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+### GUI 설정 (ROS 2 Jazzy/Gazebo용)
+
+```jsx
+xhost +local:docker
+```
+
+### Docker 설치확인
+
+```jsx
+docker --version
+docker compose version  # 'docker-compose'가 아니라 'docker compose'입니다.
+docker run hello-world
+```
+
 
 ### 초기 세팅 (최초 1회)
 
