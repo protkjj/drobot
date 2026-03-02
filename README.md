@@ -4,12 +4,12 @@
 
 ---
 
-## Docker 사용법
+
+
+## Docker 사용법 - 설치
 
 Gazebo/RViz 등 GUI가 필요하므로 **Ubuntu에서 사용**을 권장
 
-
-## DOCKER 설치 
 
 ### 기존 Docker 완전 제거
 
@@ -55,6 +55,8 @@ git clone https://github.com/protkjj/drobot.git
 cd drobot
 docker compose up --build
 ```
+
+## Docker 사용볍 - 실행
 
 ### 실행
 
