@@ -35,15 +35,28 @@ newgrp docker
 
 ### GUI 설정 (ROS 2 Jazzy/Gazebo용)
 
-```jsx
-xhost +local:docker
+로그인 시 자동으로 Docker GUI 권한을 열도록 설정합니다. (최초 1회)
+
+```bash
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/xhost-docker.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=xhost Docker
+Exec=xhost +local:docker
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
 ```
+
+설정 후 **로그아웃 → 재로그인** 하면 이후부터는 자동 적용됩니다.
 
 ### Docker 설치확인
 
 ```jsx
 docker --version
-docker compose version  # 'docker-compose'가 아니라 'docker compose'입니다.
+docker compose version
 docker run hello-world
 ```
 
