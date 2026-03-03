@@ -42,8 +42,7 @@ RUN git clone https://github.com/PX4/PX4-Autopilot.git --recursive --branch v1.1
 
 WORKDIR /root/PX4-Autopilot
 RUN source /opt/ros/jazzy/setup.bash \
-    && DONT_RUN=1 make px4_sitl gz_x500 \
-    || true
+    && make px4_sitl_default
 
 RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc
 

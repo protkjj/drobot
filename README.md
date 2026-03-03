@@ -66,10 +66,20 @@ docker run hello-world
 ```bash
 git clone https://github.com/protkjj/drobot.git
 cd drobot
-docker compose up --build
+docker compose build
 ```
 
-## Docker 사용볍 - 실행
+## Docker 사용법 - VS Code Dev Container (권장)
+
+빌드 완료 후 VS Code에서 바로 개발 환경에 접속할 수 있습니다.
+
+1. VS Code에서 `drobot` 폴더 열기
+2. `Ctrl+Shift+P` → `Dev Containers: Reopen in Container` 선택
+3. `drobot` 서비스 컨테이너에 접속되며 워크스페이스가 `/root/ros2_ws`로 열림
+
+Python, C++, CMake, URDF, ROS 확장이 자동 설치됩니다.
+
+## Docker 사용법 - 실행
 
 ### 실행
 
