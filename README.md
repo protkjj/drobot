@@ -79,11 +79,48 @@ docker compose build
 
 Python, C++, CMake, URDF, ROS 확장이 자동 설치됩니다.
 
-## Docker 사용법 - 실행
+### 실행
+
+컨테이너 안에서 바로 실행합니다.
+
+```bash
+ros2 launch drobot_bringup ui.launch.py
+```
+
+### 코드 수정 후 반영
+
+소스코드가 volume 마운트되어 있어 로컬에서 수정하면 컨테이너에 자동 반영됩니다.
+
+```bash
+cd /root/ros2_ws
+colcon build --symlink-install
+```
+
+`--symlink-install`로 빌드하면 이후 Python 코드는 빌드 없이 바로 반영됩니다.
+C++ 코드(drobot_description, drobot_simulator)를 수정한 경우에만 `colcon build`를 다시 해주세요.
+
+### 코드 업데이트 받기
+
+호스트에서 `git pull` 후 컨테이너 안에서 빌드합니다.
+
+```bash
+# 호스트에서
+git pull
+
+# 컨테이너 안에서
+cd /root/ros2_ws && colcon build
+```
+
+Dockerfile이 바뀐 경우 VS Code에서 `Rebuild Container`를 실행하세요.
+
+## Docker 사용법 - 터미널에서 직접 실행
+
+Dev Container 없이 터미널에서 직접 컨테이너를 띄우는 방법입니다.
 
 ### 실행
 
 ```bash
+# 호스트에서
 cd drobot
 docker compose up
 
@@ -94,20 +131,16 @@ ros2 launch drobot_bringup ui.launch.py
 
 ### 코드 수정 후 반영
 
-로컬에서 코드를 수정하면 컨테이너에 자동 반영됩니다. (volume 마운트)
-
 ```bash
 docker exec -it drobot bash
 cd /root/ros2_ws
 colcon build --symlink-install
 ```
 
-`--symlink-install`로 빌드하면 이후 Python 코드는 빌드 없이 바로 반영됩니다.
-C++ 코드(drobot_description, drobot_simulator)를 수정한 경우에만 `colcon build`를 다시 해주세요.
-
 ### 코드 업데이트 받기
 
 ```bash
+# 호스트에서
 cd drobot
 git pull
 
