@@ -35,22 +35,24 @@ newgrp docker
 
 ### GUI 설정 (ROS 2 Jazzy/Gazebo용)
 
-로그인 시 자동으로 Docker GUI 권한을 열도록 설정합니다. (최초 1회)
+로그인 시 자동으로 Docker GUI 권한을 열도록 설정합니다.
 
 ```bash
+xhost +local:docker && xhost +local:root
+
 mkdir -p ~/.config/autostart
 cat > ~/.config/autostart/xhost-docker.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=xhost Docker
-Exec=xhost +local:docker
+Exec=bash -c "xhost +local:docker && xhost +local:root"
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
 EOF
 ```
 
-설정 후 **로그아웃 → 재로그인** 하면 이후부터는 자동 적용됩니다.
+첫 줄로 즉시 권한이 열리고, autostart 등록으로 이후 로그인 시에도 자동 적용됩니다.
 
 ### Docker 설치확인
 
@@ -61,7 +63,7 @@ docker run hello-world
 ```
 
 
-### 초기 세팅 (최초 1회)
+### 초기 세팅
 
 ```bash
 git clone https://github.com/protkjj/drobot.git
@@ -156,7 +158,7 @@ docker compose up --build
 
 ## 로컬 사용법 (Ubuntu 24.04 + ROS2 Jazzy)
 
-### 초기 세팅 (최초 1회)
+### 초기 세팅
 
 ```bash
 cd ~/Desktop
