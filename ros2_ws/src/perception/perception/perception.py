@@ -101,10 +101,6 @@ class PerceptionNode(Node):
         if os.path.exists(dev_path_2):
             return dev_path_2
 
-        abs_path = os.path.expanduser(f'~/make-ai-robot/src/perception/perception/models/{filename}')
-        if os.path.exists(abs_path):
-            return abs_path
-
         self.get_logger().warn(f"Model file '{filename}' not found in any standard location.")
         return filename 
 

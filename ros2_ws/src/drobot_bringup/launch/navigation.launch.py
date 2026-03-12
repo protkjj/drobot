@@ -11,8 +11,7 @@ Gazebo + SLAM + Nav2 + Goal Navigator 한번에 실행
 import os
 import yaml
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, SetEnvironmentVariable, ExecuteProcess, TimerAction
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, SetEnvironmentVariable
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -38,8 +37,6 @@ def launch_setup(context):
     # Package directories
     bringup_pkg = get_package_share_directory('drobot_bringup')
     desc_pkg = get_package_share_directory('drobot_description')
-    gz_sim_pkg = get_package_share_directory('ros_gz_sim')
-
     # Get launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time')
     world = context.launch_configurations.get('world', 'empty')
@@ -136,39 +133,7 @@ def launch_setup(context):
         }]
     )
 
-    # Extract world name from SDF for unpause service
-    import xml.etree.ElementTree as ET
-    try:
-        _tree = ET.parse(world_file)
-        _world_el = _tree.find('.//world')
-        gz_world_name = _world_el.get('name', 'default') if _world_el is not None else 'default'
-    except Exception:
-        gz_world_name = 'default'
-
-    # Start Gazebo PAUSED (no -r) so arms can be initialized before physics runs
-    gazebo = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([
-        os.path.join(gz_sim_pkg, 'launch', 'gz_sim.launch.py')
-    ]),
-    launch_arguments={
-        # '-r'을 추가하여 센서 시스템을 강제로 로드하고 바로 시작하게 합니다.
-        'gz_args': f'-r {world_file}', 
-        'on_exit_shutdown': 'true'
-    }.items()
-    )
-
-    spawn_robot = Node(
-        package='ros_gz_sim',
-        executable='create',
-        arguments=[
-            '-topic', 'robot_description',
-            '-name', 'drobot',
-            '-x', spawn_x,
-            '-y', spawn_y,
-            '-z', '0.15'
-        ],
-        output='screen'
-    )
+    # Gazebo는 PX4 SITL이 실행하므로 여기서는 띄우지 않음
 
     ros_gz_bridge = RosGzBridge(
         bridge_name='ros_gz_bridge',
@@ -293,30 +258,12 @@ def launch_setup(context):
         }],
     )
 
-    # After 5s: unpause Gazebo
-    unpause = TimerAction(
-        period=5.0,
-        actions=[
-            ExecuteProcess(
-                cmd=['gz', 'service', '-s', f'/world/{gz_world_name}/control',
-                     '--reqtype', 'gz.msgs.WorldControl',
-                     '--reptype', 'gz.msgs.Boolean',
-                     '--timeout', '2000',
-                     '--req', 'pause: false'],
-                output='screen',
-            ),
-        ],
-    )
-
     return [
         # Environment
         gz_resource_path,
-        # Simulation
+        # Simulation (Gazebo는 PX4 SITL이 실행)
         robot_state_publisher,
-        gazebo,
-        spawn_robot,
         ros_gz_bridge,
-        unpause,
         rviz2,
         # Localization
         ekf_node,

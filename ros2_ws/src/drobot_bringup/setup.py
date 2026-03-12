@@ -27,6 +27,7 @@ setup(
     entry_points={
         'console_scripts': [
             'world_ui = drobot_bringup.world_ui:main',
+            'total_ui = drobot_bringup.total_ui:main',
         ],
     },
 )
