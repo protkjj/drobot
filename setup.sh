@@ -28,7 +28,7 @@ if [ ! -d "$DROBOT_DIR/PX4-Autopilot" ]; then
 else
     echo "[1/5] PX4-Autopilot 이미 존재 -> pull 업데이트"
     cd "$DROBOT_DIR/PX4-Autopilot"
-    git pull origin drobot/vtol-rover-mode
+    git pull --rebase origin drobot/vtol-rover-mode
     git submodule update --init --recursive
 fi
 
