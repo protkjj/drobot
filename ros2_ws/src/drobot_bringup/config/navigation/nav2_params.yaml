@@ -2,7 +2,7 @@
 # Nav2 Parameters for Drobot - 목표 기반 자율주행 (Goal Navigation)
 # =============================================================================
 # 용도: drobot_bringup/launch/navigation.launch.py
-# 특징: 빠르고 공격적, 장애물 회피 강화
+# 특징: 안전 우선 수비적 주행, 장애물 충분한 회피 마진 확보
 # =============================================================================
 
 bt_navigator:
@@ -39,50 +39,90 @@ controller_server:
 
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.75       # 75cm 도착 인식 범위
-      yaw_goal_tolerance: 3.14      # yaw 제한 없음 (방향 무관하게 도착 인식)
+      xy_goal_tolerance: 0.40       # 40cm 도착 인식 범위
+      yaw_goal_tolerance: 0.5       # ~29° 이내로 도착 방향 맞춤
       stateful: true
 
     # Rotation Shim: 경로 시작 방향과 로봇 heading 차이가 크면 제자리 회전 후 출발
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
-      primary_controller: "dwb_core::DWBLocalPlanner"
-      angular_dist_threshold: 0.1  # rad (~45°) 이상 차이나면 제자리 회전
-      forward_sampling_distance: 1.0  # 경로 앞 1.0m 지점 방향 기준 (재계획 시 heading 흔들림 감소)
-      rotate_to_heading_angular_vel: 1.5  # 제자리 회전 속도 (rad/s)
-      max_angular_accel: 5.0          # 회전 가속 제한
-      # 속도 제한 (+30% 추가!)
-      min_vel_x: 0.0              # DWB 경로추종은 전진만 (후진은 BackUp 복구에서 처리)
-      max_vel_x: 0.4
-      min_vel_y: 0.0
-      max_vel_y: 0.0
-      max_vel_theta: 1.5            # 회전 속도 (~86°/s)
-      min_speed_xy: 0.0
-      max_speed_xy: 0.4
-      min_speed_theta: 0.5          # 0→직진 시 미세보정 허용 (Spin은 behavior_server에서 별도 제어)
-      # 가속 제한
-      acc_lim_x: 0.5
-      acc_lim_y: 0.0
-      acc_lim_theta: 5.0            # 부드러운 회전 가속
-      decel_lim_x: -0.5
-      decel_lim_theta: -5.0
-      # 샘플링
-      vx_samples: 20
-      vy_samples: 1
-      vtheta_samples: 40            # 회전 샘플 증가 (더 세밀한 회전 탐색)
-      sim_time: 2.5                 # 1.7→2.5 (더 멀리 보고 미리 회전 시작)
-      transform_tolerance: 1.0        # 시뮬레이션용 TF 허용 오차
-      xy_goal_tolerance: 0.50
-      # Critics - 장애물 회피 강화!
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "PathAlign", "PathDist", "GoalDist"]
-      Oscillation.scale: 1.0           # 진동 방지
-      BaseObstacle.scale: 0.5         # 장애물 회피
-      PathAlign.scale: 10.0
-      PathAlign.forward_point_distance: 0.5   # 0.3→0.5 (더 앞의 경로에 정렬 → 부드러운 커브)
-      PathDist.scale: 10.0
-      GoalDist.scale: 10.0
-      RotateToGoal.scale: 2.0
-      RotateToGoal.slowing_factor: 2.0
+      primary_controller: "nav2_mppi_controller::MPPIController"
+      angular_dist_threshold: 0.785    # ~45° 이상 차이나면 제자리 회전
+      forward_sampling_distance: 1.0
+      rotate_to_heading_angular_vel: 1.5
+      max_angular_accel: 3.2
+
+      # ---- MPPI Controller ----
+      time_steps: 56                   # 예측 스텝 수
+      model_dt: 0.05                   # 스텝 간격 → 56*0.05 = 2.8초 예측
+      batch_size: 2000                 # 샘플 궤적 수 (CPU에서 충분)
+      vx_std: 0.2                      # 전진 속도 노이즈
+      vy_std: 0.0                      # 비홀로노믹이므로 0
+      wz_std: 0.4                      # 회전 속도 노이즈
+      vx_max: 0.4
+      vx_min: -0.1                     # 약간의 후진 허용
+      vy_max: 0.0
+      wz_max: 1.5
+      ax_max: 0.5
+      ax_min: -0.5
+      az_max: 3.2
+      iteration_count: 1               # 최적화 반복 (1이면 충분)
+      temperature: 0.3                 # 낮을수록 최적 궤적에 집중
+      gamma: 0.015                     # 제어 입력 페널티
+      motion_model: "DiffDrive"
+      visualize: false
+      transform_tolerance: 1.0
+      # Critics
+      critics: ["ConstraintCritic", "ObstaclesCritic", "GoalCritic", "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic", "PathAngleCritic", "PreferForwardCritic"]
+      ConstraintCritic:
+        enabled: true
+        cost_weight: 4.0
+        cost_power: 1
+      ObstaclesCritic:
+        enabled: true
+        cost_weight: 2.0
+        repulsion_weight: 0.3          # 장애물 반발력
+        critical_weight: 20.0          # 치명적 장애물 가중치
+        consider_footprint: true
+        collision_cost: 10000.0
+        collision_margin_distance: 0.15
+        near_goal_distance: 0.5
+      GoalCritic:
+        enabled: true
+        cost_weight: 5.0
+        cost_power: 1
+        threshold_to_consider: 1.0
+      GoalAngleCritic:
+        enabled: true
+        cost_weight: 3.0
+        cost_power: 1
+        threshold_to_consider: 0.5
+      PathAlignCritic:
+        enabled: true
+        cost_weight: 14.0
+        cost_power: 1
+        max_path_occupancy_ratio: 0.05
+        trajectory_point_step: 3
+        threshold_to_consider: 0.5
+        offset_from_furthest: 20
+      PathFollowCritic:
+        enabled: true
+        cost_weight: 5.0
+        cost_power: 1
+        offset_from_furthest: 5
+        threshold_to_consider: 0.6
+      PathAngleCritic:
+        enabled: true
+        cost_weight: 2.0
+        cost_power: 1
+        offset_from_furthest: 4
+        threshold_to_consider: 0.5
+        max_angle_to_furthest: 1.0
+      PreferForwardCritic:
+        enabled: true
+        cost_weight: 5.0
+        cost_power: 1
+        threshold_to_consider: 0.5
 
 # =============================================================================
 # Local Costmap (실시간 장애물 감지)
@@ -96,8 +136,8 @@ local_costmap:
       robot_base_frame: base_footprint
       use_sim_time: true
       rolling_window: true
-      width: 4
-      height: 4
+      width: 7
+      height: 7
       resolution: 0.05
       # 직사각형 footprint (robot_radius 대신)
       # 로봇 실제: 0.30 x 0.40m → 안전마진 포함 0.40 x 0.40m
@@ -128,7 +168,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0      # 높을수록 lethal 근처만 고비용
-        inflation_radius: 0.25        # 최소 안전거리 (Global보다 작아서 유연함)
+        inflation_radius: 0.45        # 최소 안전거리 (로봇 footprint 수준)
 
       always_send_full_costmap: true
 
@@ -234,7 +274,7 @@ velocity_smoother:
     use_sim_time: true
     smoothing_frequency: 20.0
     scale_velocities: false
-    feedback: "OPEN_LOOP"
+    feedback: "CLOSED_LOOP"
     max_velocity: [0.4, 0.0, 2.0]
     min_velocity: [-0.2, 0.0, -1.5]
     max_accel: [1.0, 0.0, 3.0]
