@@ -19,7 +19,7 @@ bash setup.sh
 
 ```bash
 cd ~/Desktop/drobot/ros2_ws && source install/setup.bash
-ros2 launch drobot_bringup ui.launch.py
+ros2 launch drobot_bringup total_ui.launch.py
 ```
 
 Tkinter UI에서 월드/목표/옵션을 선택하면 Terminator 분할 창으로 필요한 노드들이 자동 실행됩니다.
@@ -50,9 +50,9 @@ ros2 launch drobot_bringup perception.launch.py
 t/b : 상승/하강          q/z : 전체 속도 증감
 w/x : 직진 속도 증감     e/c : 회전 속도 증감
 
-Arm:
-   1 : fold (지상 모드)
-   2 : unfold (비행 모드)
+Mode switch:
+   0 : rover mode (지상 모드)
+   1 : drone mode (비행 모드)
 ```
 
 ## 코드 업데이트 받기

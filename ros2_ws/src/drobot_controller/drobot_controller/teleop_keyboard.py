@@ -32,14 +32,12 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import math
 import sys
 import threading
 
 import geometry_msgs.msg
 import rcl_interfaces.msg
 import rclpy
-import sensor_msgs.msg
 import std_msgs.msg
 
 if sys.platform == 'win32':
@@ -50,7 +48,7 @@ else:
 
 
 msg = """
-drobot teleop — keyboard drive + arm control
+drobot teleop — keyboard drive + mode switch
 ----------------------------------------------
 Moving around:
    u    i    o
@@ -68,9 +66,9 @@ q/z : increase/decrease max speeds by 10%
 w/x : increase/decrease only linear speed by 10%
 e/c : increase/decrease only angular speed by 10%
 
-Arm control:
-   1 : fold arms   (ground mode, 0 deg)
-   2 : unfold arms (flight mode, 90 deg)
+Mode switch:
+   0 : rover mode   (fold arms, ground)
+   1 : drone mode   (unfold arms, flight)
 
 CTRL-C to quit
 """
@@ -105,16 +103,9 @@ speedBindings = {
     'c': (1, .9),
 }
 
-# Arm joint names and their command topics
-ARM_JOINTS = ['lf_arm_rev', 'lr_arm_rev', 'rf_arm_rev', 'rr_arm_rev']
-
-# Arm target positions (radians)
-ARM_FOLD = 0.0             # ground mode
-ARM_UNFOLD = 1.7   # flight mode (90 deg)
-
-# Transition parameters
-TRANSITION_DURATION = 2.5   # seconds
-TRANSITION_HZ = 20          # timer frequency
+# Mode command values
+MODE_ROVER = 0
+MODE_DRONE = 1
 
 
 def getKey(settings):
@@ -143,11 +134,6 @@ def vels(speed, turn):
     return 'currently:\tspeed %.2f\tturn %.2f ' % (speed, turn)
 
 
-def arm_status(mode, positions):
-    degs = [math.degrees(p) for p in positions]
-    avg_deg = sum(degs) / len(degs) if degs else 0.0
-    return 'arm: %s  avg_angle: %.1f deg' % (mode, avg_deg)
-
 
 def main():
     settings = saveTerminalSettings()
@@ -173,53 +159,10 @@ def main():
 
     pub = node.create_publisher(TwistMsg, 'cmd_vel', 10)
 
-    # --- Arm publishers ---
-    arm_pubs = {}
-    for jn in ARM_JOINTS:
-        arm_pubs[jn] = node.create_publisher(
-            std_msgs.msg.Float64, '/arm/%s/cmd_pos' % jn, 10)
-
-    # --- Arm state ---
-    arm_current = {jn: 0.0 for jn in ARM_JOINTS}
-    arm_start = {jn: 0.0 for jn in ARM_JOINTS}
-    arm_target = {jn: ARM_FOLD for jn in ARM_JOINTS}
-    arm_mode = 'folded'
-    arm_transition_t = 0.0
-    arm_transitioning = False
-    arm_lock = threading.Lock()
-
-    def joint_state_cb(msg):
-        with arm_lock:
-            for i, name in enumerate(msg.name):
-                if name in arm_current and i < len(msg.position):
-                    arm_current[name] = msg.position[i]
-
-    node.create_subscription(
-        sensor_msgs.msg.JointState, '/joint_states', joint_state_cb, 10)
-
-    # Publish initial fold position so PID holds arms from the start
-    for jn in ARM_JOINTS:
-        m = std_msgs.msg.Float64()
-        m.data = ARM_FOLD
-        arm_pubs[jn].publish(m)
-
-    def arm_timer_cb():
-        nonlocal arm_transition_t, arm_transitioning, arm_mode
-        with arm_lock:
-            if not arm_transitioning:
-                return
-            arm_transition_t += 1.0 / TRANSITION_HZ
-            alpha = min(arm_transition_t / TRANSITION_DURATION, 1.0)
-            for jn in ARM_JOINTS:
-                pos = arm_start[jn] + alpha * (arm_target[jn] - arm_start[jn])
-                m = std_msgs.msg.Float64()
-                m.data = pos
-                arm_pubs[jn].publish(m)
-            if alpha >= 1.0:
-                arm_transitioning = False
-                arm_mode = 'folded' if arm_target[ARM_JOINTS[0]] == ARM_FOLD else 'unfolded'
-
-    node.create_timer(1.0 / TRANSITION_HZ, arm_timer_cb)
+    # --- Mode command publisher (PX4 drobot_att_control로 중계됨) ---
+    mode_pub = node.create_publisher(
+        std_msgs.msg.Int32, '/drobot/mode_cmd', 10)
+    current_mode = 'rover'
 
     spinner = threading.Thread(target=rclpy.spin, args=(node,))
     spinner.start()
@@ -257,35 +200,19 @@ def main():
                 if (status == 14):
                     print(msg)
                 status = (status + 1) % 15
+            elif key == '0':
+                mode_msg = std_msgs.msg.Int32()
+                mode_msg.data = MODE_ROVER
+                mode_pub.publish(mode_msg)
+                current_mode = 'rover'
+                print('MODE -> ROVER (ground)')
+                continue
             elif key == '1':
-                with arm_lock:
-                    for jn in ARM_JOINTS:
-                        arm_start[jn] = arm_current[jn]
-                        arm_target[jn] = ARM_FOLD
-                    arm_transition_t = 0.0
-                    arm_transitioning = True
-                    arm_mode = 'transitioning'
-                print('ARM -> FOLD (ground mode)')
-                continue
-            elif key == '2':
-                with arm_lock:
-                    for jn in ARM_JOINTS:
-                        arm_start[jn] = arm_current[jn]
-                        arm_target[jn] = ARM_UNFOLD
-                    arm_transition_t = 0.0
-                    arm_transitioning = True
-                    arm_mode = 'transitioning'
-                print('ARM -> UNFOLD (flight mode)')
-                print(arm_current)
-                continue
-            elif key == '3': 
-                with arm_lock:
-                    arm_start['rr_arm_rev'] = arm_current['rr_arm_rev']
-                    arm_target['rr_arm_rev'] = ARM_UNFOLD
-                    arm_transition_t = 0.0
-                    arm_transitioning = True
-                    arm_mode = 'transitioning'
-                print('rrm unfold')
+                mode_msg = std_msgs.msg.Int32()
+                mode_msg.data = MODE_DRONE
+                mode_pub.publish(mode_msg)
+                current_mode = 'drone'
+                print('MODE -> DRONE (flight)')
                 continue
             else:
                 x = 0.0
@@ -306,9 +233,7 @@ def main():
             twist.angular.z = th * turn
             pub.publish(twist_msg)
 
-            with arm_lock:
-                positions = [arm_current[jn] for jn in ARM_JOINTS]
-            print(vels(speed, turn) + ' | ' + arm_status(arm_mode, positions))
+            print(vels(speed, turn) + ' | mode: ' + current_mode)
 
     except Exception as e:
         print(e)

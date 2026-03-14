@@ -12,5 +12,8 @@ def generate_launch_description():
         ExecuteProcess(
             cmd=[sys.executable, "-m", "drobot_bringup.total_ui"],
             output="screen",
+            sigterm_timeout="0",
+            sigkill_timeout="0",
+            emulate_tty=True,
         ),
     ])
