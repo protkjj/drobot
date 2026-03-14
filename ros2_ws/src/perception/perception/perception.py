@@ -3,6 +3,8 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
 from sensor_msgs.msg import Image, CameraInfo
 from std_msgs.msg import String, Float32
+from vision_msgs.msg import Detection3D, Detection3DArray, ObjectHypothesisWithPose
+from geometry_msgs.msg import Pose
 from cv_bridge import CvBridge
 import cv2
 import numpy as np
@@ -47,6 +49,12 @@ class PerceptionNode(Node):
         self.latest_depth_img = None
         self.is_processing = False
 
+        # Camera intrinsics (updated from CameraInfo)
+        self.fx = None
+        self.fy = None
+        self.cx = None
+        self.cy = None
+
         self.target_classes = ['cone']
 
         # --- 2. QoS Profile ---
@@ -69,9 +77,12 @@ class PerceptionNode(Node):
         # /robot_dog/speech | std_msgs/String
         self.pub_speech = self.create_publisher(String, '/robot_dog/speech', 10)
 
+        # /detections/detections3d | vision_msgs/Detection3DArray
+        self.pub_detections3d = self.create_publisher(Detection3DArray, '/detections/detections3d', 10)
+
         # --- 4. Subscribers ---
         self.create_subscription(Image, '/camera/image_raw', self.rgb_callback, qos_policy)
-        self.create_subscription(CameraInfo, '/camera/camera_info', lambda msg: None, qos_policy)
+        self.create_subscription(CameraInfo, '/camera/camera_info', self.camera_info_callback, qos_policy)
 
         depth_qos = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
@@ -104,6 +115,18 @@ class PerceptionNode(Node):
         self.get_logger().warn(f"Model file '{filename}' not found in any standard location.")
         return filename 
 
+    def camera_info_callback(self, msg):
+        """Store camera intrinsics from CameraInfo."""
+        if self.fx is None:
+            self.fx = msg.k[0]  # focal length x
+            self.fy = msg.k[4]  # focal length y
+            self.cx = msg.k[2]  # principal point x
+            self.cy = msg.k[5]  # principal point y
+            self.get_logger().info(
+                f'Camera intrinsics: fx={self.fx:.1f} fy={self.fy:.1f} '
+                f'cx={self.cx:.1f} cy={self.cy:.1f}'
+            )
+
     def depth_callback(self, msg):
         try:
             self.latest_depth_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='passthrough')
@@ -132,6 +155,10 @@ class PerceptionNode(Node):
             cv2.line(cv_img, (boundary_left, 0), (boundary_left, height), (0, 255, 255), 2)
             cv2.line(cv_img, (boundary_right, 0), (boundary_right, height), (0, 255, 255), 2)
 
+            # Build Detection3DArray for tracker
+            det3d_array = Detection3DArray()
+            det3d_array.header = msg.header
+
             for result in results:
                 for box in result.boxes:
                     cls_id = int(box.cls[0])
@@ -139,7 +166,7 @@ class PerceptionNode(Node):
 
                     if cls_id >= len(self.model.names): continue
                     cls_name = self.model.names[cls_id]
-                    
+
                     # 1. Check Class validity
                     if cls_name not in self.target_classes: continue
 
@@ -147,7 +174,7 @@ class PerceptionNode(Node):
                     center_x = int((x1 + x2) / 2)
                     center_y = int((y1 + y2) / 2)
 
-                    # 2. Get Distance
+                    # 2. Get Distance (depth)
                     dist = 0.0
                     if self.latest_depth_img is not None:
                         safe_x = np.clip(center_x, 0, width - 1)
@@ -173,9 +200,42 @@ class PerceptionNode(Node):
                         box_color = (0, 0, 255) # Red for active trigger
                         cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), -1)
 
+                        # 4. Project to 3D and add to Detection3DArray
+                        if self.fx is not None and dist > 0.0:
+                            X = (center_x - self.cx) * dist / self.fx
+                            Y = (center_y - self.cy) * dist / self.fy
+                            Z = dist
+
+                            det3d = Detection3D()
+                            det3d.header = msg.header
+
+                            hyp = ObjectHypothesisWithPose()
+                            hyp.hypothesis.class_id = cls_name
+                            hyp.hypothesis.score = conf
+                            hyp.pose.pose.position.x = float(X)
+                            hyp.pose.pose.position.y = float(Y)
+                            hyp.pose.pose.position.z = float(Z)
+                            hyp.pose.pose.orientation.w = 1.0
+                            det3d.results.append(hyp)
+
+                            # Bbox size from pixel dimensions (approximate)
+                            bbox_w = (x2 - x1) * dist / self.fx
+                            bbox_h = (y2 - y1) * dist / self.fy
+                            det3d.bbox.size.x = float(bbox_w)
+                            det3d.bbox.size.y = float(bbox_h)
+                            det3d.bbox.size.z = float(bbox_h)  # approximate
+                            det3d.bbox.center.position.x = float(X)
+                            det3d.bbox.center.position.y = float(Y)
+                            det3d.bbox.center.position.z = float(Z)
+
+                            det3d_array.detections.append(det3d)
+
                     cv2.rectangle(cv_img, (x1, y1), (x2, y2), box_color, 2)
-                    cv2.putText(cv_img, f"{cls_name} {dist:.1f}m ({conf:.2f})", (x1, y1 - 10), 
+                    cv2.putText(cv_img, f"{cls_name} {dist:.1f}m ({conf:.2f})", (x1, y1 - 10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, box_color, 2)
+
+            # Publish Detection3DArray (all valid detections this frame)
+            self.pub_detections3d.publish(det3d_array)
 
             # --- DEBUGGING OVERLAY ---
             overlay_h = 60
