@@ -16,6 +16,10 @@ __pycache__/
 .idea/
 .claude/
 
+# Docs & Research
+docs/
+ros2_ws/research/
+
 # macOS
 .DS_Store
 

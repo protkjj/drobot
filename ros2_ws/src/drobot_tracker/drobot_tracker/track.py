@@ -46,6 +46,7 @@ class Track:
         """Update with new detection."""
         self.kf.update(measurement)
         self.consecutive_hits += 1
+        self.total_hits += 1
         self.consecutive_misses = 0
         if confidence > self.confidence:
             self.confidence = confidence

@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'px4_bridge = drobot_px4_interface.px4_bridge:main',
         ],
     },
 )

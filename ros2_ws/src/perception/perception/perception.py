@@ -18,32 +18,48 @@ class PerceptionNode(Node):
 
         # --- 1. Parameters ---
         self.declare_parameter('model_path', 'cone.pt')
+        self.declare_parameter('use_general_model', True)
+        self.declare_parameter('general_model_path', 'yolov8n.pt')
         self.declare_parameter('debug_mode', False)
         self.declare_parameter('device', 'cpu')
         self.declare_parameter('conf_threshold', 0.9)
         self.declare_parameter('post_filter_conf', 0.7)
         self.declare_parameter('max_detect_distance', 5.0)
+        self.declare_parameter('target_classes', [''])  # empty = all classes
 
         model_filename = self.get_parameter('model_path').get_parameter_value().string_value
+        self.use_general_model = self.get_parameter('use_general_model').get_parameter_value().bool_value
+        general_model_filename = self.get_parameter('general_model_path').get_parameter_value().string_value
         self.debug_mode = self.get_parameter('debug_mode').get_parameter_value().bool_value
         self.device = self.get_parameter('device').get_parameter_value().string_value
         self.conf_threshold = self.get_parameter('conf_threshold').get_parameter_value().double_value
         self.post_filter_conf = self.get_parameter('post_filter_conf').get_parameter_value().double_value
         self.max_detect_distance = self.get_parameter('max_detect_distance').get_parameter_value().double_value
+        target_classes_raw = self.get_parameter('target_classes').get_parameter_value().string_array_value
+        self.target_classes = [c for c in target_classes_raw if c]  # filter empty strings
 
         # --- 2. Model Loading ---
+        # Custom model (e.g. cone.pt)
         final_model_path = self.find_model_path(model_filename)
-
-        self.get_logger().info(f'Loading YOLO model from: {final_model_path}')
-        self.get_logger().info(f'conf_threshold={self.conf_threshold}, post_filter_conf={self.post_filter_conf}, max_dist={self.max_detect_distance}m')
-        self.get_logger().info(f'Using inference device: {self.device}')
-
+        self.get_logger().info(f'Loading custom model: {final_model_path}')
         try:
-            self.model = YOLO(final_model_path)
+            self.custom_model = YOLO(final_model_path)
         except Exception as e:
-            self.get_logger().error(f"CRITICAL: Failed to load model at {final_model_path}. Error: {e}")
-            self.get_logger().warn("Downloading standard YOLOv8n.pt as emergency fallback...")
-            self.model = YOLO("yolov8n.pt")
+            self.get_logger().error(f"Failed to load custom model: {e}")
+            self.custom_model = None
+
+        # General model (e.g. yolov8n.pt - COCO 80 classes)
+        self.general_model = None
+        if self.use_general_model:
+            self.get_logger().info(f'Loading general model: {general_model_filename}')
+            try:
+                self.general_model = YOLO(general_model_filename)
+            except Exception as e:
+                self.get_logger().error(f"Failed to load general model: {e}")
+
+        self.get_logger().info(f'conf={self.conf_threshold}, post_filter={self.post_filter_conf}, max_dist={self.max_detect_distance}m')
+        self.get_logger().info(f'target_classes={self.target_classes if self.target_classes else "ALL"}')
+        self.get_logger().info(f'Device: {self.device}')
 
         self.bridge = CvBridge()
         self.latest_depth_img = None
@@ -55,7 +71,11 @@ class PerceptionNode(Node):
         self.cx = None
         self.cy = None
 
-        self.target_classes = ['cone']
+        self.models = []
+        if self.custom_model:
+            self.models.append(self.custom_model)
+        if self.general_model:
+            self.models.append(self.general_model)
 
         # --- 2. QoS Profile ---
         qos_policy = QoSProfile(
@@ -141,14 +161,11 @@ class PerceptionNode(Node):
             cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
             height, width, _ = cv_img.shape
             
-            # Inference
-            results = self.model(cv_img, verbose=False, imgsz=320, conf=self.conf_threshold, device=self.device)
-            
             # Default values to publish if nothing detected
             current_frame_label = "None"
             current_frame_dist = 0.0
             speech_cmd = "None"
-            
+
             # Visual boundaries (Optional visual aid)
             boundary_left = int(width * 0.2)
             boundary_right = int(width * 0.8)
@@ -159,80 +176,86 @@ class PerceptionNode(Node):
             det3d_array = Detection3DArray()
             det3d_array.header = msg.header
 
-            for result in results:
-                for box in result.boxes:
-                    cls_id = int(box.cls[0])
-                    conf = float(box.conf[0]) # Confidence score
+            # Run inference on all models and collect detections
+            all_detections = []  # (cls_name, conf, x1, y1, x2, y2)
+            for model in self.models:
+                results = model(cv_img, verbose=False, imgsz=320, conf=self.conf_threshold, device=self.device)
+                for result in results:
+                    for box in result.boxes:
+                        cls_id = int(box.cls[0])
+                        conf = float(box.conf[0])
+                        if cls_id >= len(model.names):
+                            continue
+                        cls_name = model.names[cls_id]
+                        coords = tuple(map(int, box.xyxy[0].cpu().numpy()))
+                        all_detections.append((cls_name, conf, *coords))
 
-                    if cls_id >= len(self.model.names): continue
-                    cls_name = self.model.names[cls_id]
+            for cls_name, conf, x1, y1, x2, y2 in all_detections:
+                # 1. Check Class validity (empty = accept all)
+                if self.target_classes and cls_name not in self.target_classes:
+                    continue
 
-                    # 1. Check Class validity
-                    if cls_name not in self.target_classes: continue
+                center_x = int((x1 + x2) / 2)
+                center_y = int((y1 + y2) / 2)
 
-                    x1, y1, x2, y2 = map(int, box.xyxy[0].cpu().numpy())
-                    center_x = int((x1 + x2) / 2)
-                    center_y = int((y1 + y2) / 2)
+                # 2. Get Distance (depth)
+                dist = 0.0
+                if self.latest_depth_img is not None:
+                    safe_x = np.clip(center_x, 0, width - 1)
+                    safe_y = np.clip(center_y, 0, height - 1)
+                    try:
+                        raw_dist = self.latest_depth_img[safe_y, safe_x]
+                        if not (np.isnan(raw_dist) or np.isinf(raw_dist)):
+                            dist = float(raw_dist)
+                    except IndexError:
+                        pass
 
-                    # 2. Get Distance (depth)
-                    dist = 0.0
-                    if self.latest_depth_img is not None:
-                        safe_x = np.clip(center_x, 0, width - 1)
-                        safe_y = np.clip(center_y, 0, height - 1)
-                        try:
-                            raw_dist = self.latest_depth_img[safe_y, safe_x]
-                            if not (np.isnan(raw_dist) or np.isinf(raw_dist)):
-                                dist = float(raw_dist)
-                        except IndexError: pass
+                # 3. Logic: found if Conf > post_filter_conf AND Dist <= max_detect_distance
+                is_confident = conf > self.post_filter_conf
+                is_near = 0.0 < dist <= self.max_detect_distance
 
-                    # 3. Logic: found if Conf > post_filter_conf AND Dist <= max_detect_distance
-                    is_confident = conf > self.post_filter_conf
-                    is_near = 0.0 < dist <= self.max_detect_distance
+                box_color = (0, 255, 0)  # Green for detection
 
-                    box_color = (0, 255, 0) # Green for detection
+                if is_confident and is_near:
+                    current_frame_label = cls_name
+                    current_frame_dist = dist
+                    speech_cmd = "found"
+                    self.get_logger().info(f'{cls_name} found! dist={dist:.2f}m conf={conf:.2f}')
+                    box_color = (0, 0, 255)  # Red for active trigger
+                    cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), -1)
 
-                    # If this object meets the criteria, it becomes the "active" detection for publishing
-                    if is_confident and is_near:
-                        current_frame_label = cls_name
-                        current_frame_dist = dist
-                        speech_cmd = "found"
-                        self.get_logger().info(f'Cone found! dist={dist:.2f}m conf={conf:.2f}')
-                        box_color = (0, 0, 255) # Red for active trigger
-                        cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), -1)
+                    # 4. Project to 3D and add to Detection3DArray
+                    if self.fx is not None and dist > 0.0:
+                        X = (center_x - self.cx) * dist / self.fx
+                        Y = (center_y - self.cy) * dist / self.fy
+                        Z = dist
 
-                        # 4. Project to 3D and add to Detection3DArray
-                        if self.fx is not None and dist > 0.0:
-                            X = (center_x - self.cx) * dist / self.fx
-                            Y = (center_y - self.cy) * dist / self.fy
-                            Z = dist
+                        det3d = Detection3D()
+                        det3d.header = msg.header
 
-                            det3d = Detection3D()
-                            det3d.header = msg.header
+                        hyp = ObjectHypothesisWithPose()
+                        hyp.hypothesis.class_id = cls_name
+                        hyp.hypothesis.score = conf
+                        hyp.pose.pose.position.x = float(X)
+                        hyp.pose.pose.position.y = float(Y)
+                        hyp.pose.pose.position.z = float(Z)
+                        hyp.pose.pose.orientation.w = 1.0
+                        det3d.results.append(hyp)
 
-                            hyp = ObjectHypothesisWithPose()
-                            hyp.hypothesis.class_id = cls_name
-                            hyp.hypothesis.score = conf
-                            hyp.pose.pose.position.x = float(X)
-                            hyp.pose.pose.position.y = float(Y)
-                            hyp.pose.pose.position.z = float(Z)
-                            hyp.pose.pose.orientation.w = 1.0
-                            det3d.results.append(hyp)
+                        bbox_w = (x2 - x1) * dist / self.fx
+                        bbox_h = (y2 - y1) * dist / self.fy
+                        det3d.bbox.size.x = float(bbox_w)
+                        det3d.bbox.size.y = float(bbox_h)
+                        det3d.bbox.size.z = float(bbox_h)
+                        det3d.bbox.center.position.x = float(X)
+                        det3d.bbox.center.position.y = float(Y)
+                        det3d.bbox.center.position.z = float(Z)
 
-                            # Bbox size from pixel dimensions (approximate)
-                            bbox_w = (x2 - x1) * dist / self.fx
-                            bbox_h = (y2 - y1) * dist / self.fy
-                            det3d.bbox.size.x = float(bbox_w)
-                            det3d.bbox.size.y = float(bbox_h)
-                            det3d.bbox.size.z = float(bbox_h)  # approximate
-                            det3d.bbox.center.position.x = float(X)
-                            det3d.bbox.center.position.y = float(Y)
-                            det3d.bbox.center.position.z = float(Z)
+                        det3d_array.detections.append(det3d)
 
-                            det3d_array.detections.append(det3d)
-
-                    cv2.rectangle(cv_img, (x1, y1), (x2, y2), box_color, 2)
-                    cv2.putText(cv_img, f"{cls_name} {dist:.1f}m ({conf:.2f})", (x1, y1 - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, box_color, 2)
+                cv2.rectangle(cv_img, (x1, y1), (x2, y2), box_color, 2)
+                cv2.putText(cv_img, f"{cls_name} {dist:.1f}m ({conf:.2f})", (x1, y1 - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, box_color, 2)
 
             # Publish Detection3DArray (all valid detections this frame)
             self.pub_detections3d.publish(det3d_array)
